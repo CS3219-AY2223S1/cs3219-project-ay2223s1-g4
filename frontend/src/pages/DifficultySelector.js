@@ -3,8 +3,15 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import { useAuth0 } from '@auth0/auth0-react';
 
 function DifficultySelector() {
+
+    const { isAuthenticated, isLoading } = useAuth0();
+
+    if (isLoading) {
+      return <div>Loading ...</div>;
+    }
 
     const difficulties = ['Easy', 'Medium', 'Hard'];
 
@@ -18,7 +25,7 @@ function DifficultySelector() {
     // };
 
     return (
-        <Box sx={{ width: '100%' }}>
+        isAuthenticated && (<Box sx={{ width: '100%' }}>
             <Typography
                 display="flex"
                 alignItems="center"
@@ -67,7 +74,7 @@ function DifficultySelector() {
             </Grid>
             </Grid>
         </Grid>
-        </Box>
+        </Box>)
     );
 }
 
