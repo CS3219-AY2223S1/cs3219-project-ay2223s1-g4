@@ -1,12 +1,5 @@
-import {
-    findById,
-    update,
-    remove,
-    findByUserId,
-    index,
-    create
-} from "./matching-controller.js";
 import express from "express";
+import { createMatchEntry, getRoomDetails, closeRoom } from "./matching-controller.js";
 
 const router = new express.Router();
 
@@ -15,16 +8,11 @@ router.get("/", (req, res) => {
     res.json();
 });
 
-router.route("/match/:match_id")
-    .get(findById)
-    .put(update)
-    .delete(remove);
+router.route("/match/create")
+    .post(createMatchEntry);
 
-router.route("/match/user/:user_id")
-    .get(findByUserId);
-
-router.route("/match")
-    .get(index)
-    .post(create);
+router.route("/room/:room_id")
+    .get(getRoomDetails)
+    .delete(closeRoom);
 
 export default router;

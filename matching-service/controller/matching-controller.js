@@ -1,62 +1,48 @@
-import { 
-    ormCreateMatch,
-    ormDeleteMatch,
-    ormFindByUserId,
-    ormFindByMatchId,
-    ormIndex
-} from '../model/matching-orm.js';
+import { ormCreateMatch, ormRemoveMatchById } from '../model/match-orm.js';
+import { ormCreateRoom, ormRemoveRoomById, ormFindRoomById, ormFindRoomByUserId } from '../model/room-orm.js';
 
-/*
-IDEA:
-browser calls POST to create, server returns match id
-browser then listens based on match id if there is a response on server end
-- if server finds match, then return output
-- if server doesnt, either timeout on server or on front end
-    - we then delete entry in db
-if match, update match to a partner id?
-*/
-
-const findById = (req, res) => {
-    return res.json();
+async function timerToCallback(data, callback, sec) {
+    setTimeout(() => callback(data), sec * 1000);
 };
 
-const findByUserId = (req, res) => {
-    res.json();
+async function createRoom(userid1, userid2, difficulty) {
+    let questionid = 1; // TODO getQuestionFromDifficulty(difficulty);
+    let room = await ormCreateRoom(userid1, userid2, questionid);
+    // TODO open socket to emit room id
+    return room;
 };
 
-const update = (req, res) => {
-    res.json();
+async function getRoomDetailsFromUserId(userid) {
+    let room = await ormFindRoomByUserId(userid);
+    return room;
 };
 
-const remove = (req, res) => {
-    return res.json();
-};
+export async function createMatchEntry(req, res) {
+    let diff = req.body.difficulty;
+    let userid = req.body.user.sub; // TODO check if object is valid
+    let match = await ormCreateMatch(userid, diff);
+    // TODO open socket to emit matching status
+    timerToCallback(id, ormRemoveMatchById, 30);
 
-const index = (req, res) => {
-    console.log("findById called");
-    ormIndex().then((matches) => {
-        console.log(matches);
-        return res.json({
-            data: matches
-        });
-    })
-    .catch((err) => { 
-        console.log(err);
-        return res.status(500).json({
-            message: 'Database failure when loading!'
-        });
+    return res.status(200).json({
+        matchId: match._id
     });
 };
 
-const create = (req, res) => {
-    return res.json();
+export async function closeRoom(req, res) {
+    let roomid = req.params.room_id;
+    await ormRemoveRoomById(roomid);
+    // TODO close room socket
+    return res.status(200);
 };
 
-export {
-    findById,
-    findByUserId,
-    update,
-    remove,
-    index,
-    create
+export async function getRoomDetails(req, res) {
+    let roomid = req.params.room_id;
+    let room = ormFindRoomById(roomid);
+    if (!room) {
+        return res.status(404);
+    }
+    return res.status(200).json({
+        room: room
+    });
 };
