@@ -15,8 +15,20 @@ mongoose.connect(
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+async function removeAllMatches() {
+    MatchModelSchema.deleteMany();
+}
+
+async function removeAllRooms() {
+    RoomModelSchema.deleteMany();
+}
+
 export async function createMatch(params) {
     return new MatchModelSchema(params);
+};
+
+export async function getAllMatches() {
+    return MatchModelSchema.find();
 };
 
 export async function findMatchByDifficulty(difficulty) {
@@ -81,4 +93,8 @@ export async function findRoomById(id) {
         } 
         return room;
     });
+};
+
+export async function getAllRooms() {
+    return RoomModelSchema.find();
 };

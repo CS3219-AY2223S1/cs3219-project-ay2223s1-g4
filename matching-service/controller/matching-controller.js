@@ -1,5 +1,5 @@
-import { ormCreateMatch, ormRemoveMatchById } from '../model/match-orm.js';
-import { ormCreateRoom, ormRemoveRoomById, ormFindRoomById, ormFindRoomByUserId } from '../model/room-orm.js';
+import { ormCreateMatch, ormRemoveMatchById, ormGetMatches } from '../model/match-orm.js';
+import { ormCreateRoom, ormRemoveRoomById, ormFindRoomById, ormFindRoomByUserId, ormGetRooms } from '../model/room-orm.js';
 
 async function timerToCallback(data, callback, sec) {
     setTimeout(() => callback(data), sec * 1000);
@@ -17,12 +17,22 @@ async function getRoomDetailsFromUserId(userid) {
     return room;
 };
 
+export async function getMatches(req, res) {
+    let matches = await ormGetMatches();
+    return res.status(200).json({
+        matches: matches
+    });
+};
+
 export async function createMatchEntry(req, res) {
     let diff = req.body.difficulty;
     let userid = req.body.user.sub; // TODO check if object is valid
     let match = await ormCreateMatch(userid, diff);
     // TODO open socket to emit matching status
-    timerToCallback(id, ormRemoveMatchById, 30);
+    timerToCallback(match._id, (id) => {
+        console.log(`Cleaning up match with userid ${id}`);
+        ormRemoveMatchById(id);
+    }, 30);
 
     return res.status(200).json({
         matchId: match._id
@@ -34,6 +44,13 @@ export async function closeRoom(req, res) {
     await ormRemoveRoomById(roomid);
     // TODO close room socket
     return res.status(200);
+};
+
+export async function getRooms(req, res) {
+    let rooms = ormGetRooms();
+    return res.status(200).json({
+        rooms: rooms
+    });
 };
 
 export async function getRoomDetails(req, res) {

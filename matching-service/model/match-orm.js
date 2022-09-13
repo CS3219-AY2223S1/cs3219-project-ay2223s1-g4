@@ -1,10 +1,20 @@
-import { createMatch, removeMatchById, findMatchByDifficulty } from './repository.js';
+import { createMatch, removeMatchById, findMatchByDifficulty, getAllMatches } from './repository.js';
 
 export async function ormCreateMatch(userid, difficulty) {
     try {
         const newMatch = await createMatch({ userid, difficulty });
         newMatch.save();
         return newMatch;
+
+    } catch (err) {
+        console.log('ERROR: Could not create new match');
+        return { err };
+    }
+};
+
+export async function ormGetMatches() {
+    try {
+        return await getAllMatches();
 
     } catch (err) {
         console.log('ERROR: Could not create new match');

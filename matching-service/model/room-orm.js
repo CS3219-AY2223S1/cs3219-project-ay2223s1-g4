@@ -1,4 +1,4 @@
-import { createRoom, removeRoomById, findRoomById, findRoomByUserId } from './repository.js';
+import { createRoom, removeRoomById, findRoomById, findRoomByUserId, getAllRooms } from './repository.js';
 
 export async function ormFindRoomByUserId(userid) {
     try {
@@ -6,6 +6,16 @@ export async function ormFindRoomByUserId(userid) {
 
     } catch (err) {
         console.log('ERROR: Could not find room');
+        return { err };
+    }
+};
+
+export async function ormGetRooms() {
+    try {
+        return await getAllRooms();
+
+    } catch (err) {
+        console.log('ERROR: Could not find rooms');
         return { err };
     }
 };
