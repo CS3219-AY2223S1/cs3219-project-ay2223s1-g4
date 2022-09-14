@@ -6,8 +6,15 @@ async function timerToCallback(data, callback, sec) {
 };
 
 async function createRoom(userid1, userid2, difficulty) {
-    let questionid = 1; // TODO getQuestionFromDifficulty(difficulty);
-    let room = await ormCreateRoom(userid1, userid2, questionid);
+    let questionidMap = {
+        EASY: 0,
+        MEDIUM: 1,
+        HARD: 2,
+    }; // TODO getQuestionFromDifficulty(difficulty);
+    let questionId = (questionidMap.get(difficulty))
+        ? questionidMap.get(difficulty)
+        : 0;
+    let room = await ormCreateRoom(userid1, userid2, questionId);
     // TODO open socket to emit room id
     return room;
 };
