@@ -21,14 +21,14 @@ async function createRoom(userid1, userid2, difficulty) {
 
 async function attemptToMatch(difficulty) {
     let existingMatches = await ormFindMatchByDifficulty(difficulty);
-    while (existingMatches.length >= 2) {
+    if (existingMatches.length >= 2) {
         let match1 = existingMatches.shift();
         let match2 = existingMatches.shift();
         createRoom(match1.userid, match2.userid, difficulty);
         ormRemoveMatchById(match1._id);
         ormRemoveMatchById(match2._id);
     }
-}
+};
 
 async function getRoomDetailsFromUserId(userid) {
     let room = await ormFindRoomByUserId(userid);
