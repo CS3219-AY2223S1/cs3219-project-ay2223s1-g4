@@ -50,7 +50,7 @@ function RoomPage() {
         <Box>
             <Typography>Coding session with {user1} and {user2} in room {roomId}</Typography>
             <QuestionBox questionId={questionId} />
-            <CodeBox/>
+            <CodeBox roomId={roomId} />
             <Button variant="contained" onclick={closeRoom}>End Session</Button>
         </Box>
     );

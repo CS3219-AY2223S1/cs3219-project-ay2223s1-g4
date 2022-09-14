@@ -1,7 +1,10 @@
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
-function CodeBox() {
+function CodeBox({ roomId }) {
+
+    // TODO add socket for this room
+
     return (
         <Box>
             <TextField
@@ -10,7 +13,7 @@ function CodeBox() {
                 rows={25}
                 fullWidth
                 variant="filled"
-                placeholder="Code here"
+                placeholder={`Code for room ${roomId ? roomId: '?'}`}
                 font="Consolas"
                 InputProps={{ style: { fontFamily: "Consolas" } }}        
             />
