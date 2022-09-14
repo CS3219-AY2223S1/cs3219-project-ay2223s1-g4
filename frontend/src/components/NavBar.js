@@ -13,12 +13,20 @@ function NavBar() {
             link: '/'
         },
         {
-            name: 'Select Difficulty',
+            name: 'Choose Difficulty',
             link: '/selectdifficulty'
         },
         {
             name: 'Register',
             link: '/register'
+        },
+        {
+            name: 'Train',
+            link: '/room'
+        },
+        {
+            name: 'Wait',
+            link: '/loading'
         }
     ];
 

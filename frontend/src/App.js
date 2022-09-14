@@ -4,6 +4,8 @@ import Home from './pages/Home';
 import NavBar from './components/NavBar';
 import DifficultySelector from './pages/DifficultySelector';
 import {Box} from "@mui/material";
+import RoomPage from "./pages/RoomPage";
+import LoadingPage from "./pages/LoadingPage";
 
 function App() {
     return (
@@ -16,6 +18,8 @@ function App() {
                     <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/selectdifficulty" element={<DifficultySelector />} />
+                    <Route path="/room" element={<RoomPage />} />
+                    <Route path="/loading" element={<LoadingPage />} />
                     {
                     /*
                     <Route path="/login" element={<Login />} />
