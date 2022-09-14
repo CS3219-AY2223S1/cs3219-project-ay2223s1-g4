@@ -20,7 +20,7 @@ function LoadingPage() {
             console.log('Matching failed');
             alert('No peer found for matching! Please try again another time')
             navigateTo('../selectdifficulty');
-        }, 30 * 1000);
+        }, (30 + 1) * 1000);
     }, [location, navigateTo]);
 
     // TODO: listen to socket based on match id
@@ -31,7 +31,6 @@ function LoadingPage() {
             <Countdown 
                 date={Date.now() + 30 * 1000}
             >
-                <Typography>Match not found :(</Typography>
             </Countdown>
         </Box>
     );
