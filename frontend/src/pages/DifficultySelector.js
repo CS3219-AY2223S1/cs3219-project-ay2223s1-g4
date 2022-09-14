@@ -3,19 +3,36 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import { URL_MATCHING_MATCH_SVC } from '../configs';
 
 function DifficultySelector() {
 
     const difficulties = ['Easy', 'Medium', 'Hard'];
 
-    const loadRoom = (difficulty) => {
-        // load 30s and attempt to link
-        alert(`${difficulty} selected`);
-    };
+    let navigateTo = useNavigate();
+    let id = 0; // TODO
 
-    // const showRetry = () => {
-    //     // show that timeout and give user option to retry or select other difficulty
-    // };
+    const loadRoom = (difficulty) => {
+        id++;
+        axios.post(URL_MATCHING_MATCH_SVC, {
+                difficulty: difficulty.toUpperCase(),
+                user: {
+                    sub: id
+                } // TODO
+            })
+            .then((res) => {
+                console.log(res);
+                navigateTo('../loading', {
+                    state: {matchid: res.data.matchId}
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+                alert('Opps... Something went wrong! Please try again.');
+            });
+    };
 
     return (
         <Box sx={{ width: '100%' }}>

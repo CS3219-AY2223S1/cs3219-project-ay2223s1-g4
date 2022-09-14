@@ -5,14 +5,17 @@ import EASY_QUESTION from '../mock/EasyQuestion';
 import MEDIUM_QUESTION from '../mock/MediumQuestion';
 import HARD_QUESTION from '../mock/HardQuestion';
 
-function QuestionBox({ difficulty }) {
+function QuestionBox({ questionid }) {
     const [content, setContent] = useState('Loading question...');
 
     useEffect(() => {
         const questions = [EASY_QUESTION, MEDIUM_QUESTION, HARD_QUESTION];
-        const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+        const randomQuestion = questions[Math.max(
+            0,
+            Math.min(questionid, questions.length - 1)
+        )];
         setContent(randomQuestion);
-    }, []);
+    }, [questionid]);
     
     return (
         <Box
