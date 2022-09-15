@@ -16,36 +16,27 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 async function removeAllMatches() {
-    MatchModelSchema.deleteMany();
+    await MatchModelSchema.deleteMany();
 }
 
 async function removeAllRooms() {
-    RoomModelSchema.deleteMany();
+    await RoomModelSchema.deleteMany();
 }
+
+await MatchModelSchema.deleteMany();
+await RoomModelSchema.deleteMany();
 
 export async function createMatch(params) {
     return new MatchModelSchema(params);
 };
 
 export async function getAllMatches() {
-    return MatchModelSchema.find();
+    return await MatchModelSchema.find({});
 };
 
 export async function findMatchByDifficulty(difficulty) {
-    MatchModelSchema.find({difficulty: difficulty})
-        .sort({date: 'ascending'})
-        .exec((err, matches) => {
-            if (!matches) {
-                return null;
-            }
-            if (err) {
-                console.log(err);
-                return null;
-            };
-            return matches;
-        });
+    return await MatchModelSchema.find({difficulty: difficulty});
 };
-
 
 export async function removeMatchById(id) {
     MatchModelSchema.findByIdAndDelete(id, (err) => {
@@ -86,15 +77,9 @@ export async function removeRoomById(id) {
 };
 
 export async function findRoomById(id) {
-    RoomModelSchema.findById(id, (err, room) => {
-        if (err) {
-            console.log(err);
-            return null;
-        } 
-        return room;
-    });
+    return await RoomModelSchema.findById(id);
 };
 
 export async function getAllRooms() {
-    return RoomModelSchema.find();
+    return await RoomModelSchema.find();
 };

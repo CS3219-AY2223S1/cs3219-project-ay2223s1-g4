@@ -4,6 +4,10 @@ import TextField from '@mui/material/TextField';
 function CodeBox({ roomId }) {
 
     // TODO add socket for this room
+    // const socket = io(URI_MATCHING_SVC);
+    // socket.on('connect', () => {
+    //     console.log(`Connected with id ${socket.id}`);
+    // });
 
     return (
         <Box>
