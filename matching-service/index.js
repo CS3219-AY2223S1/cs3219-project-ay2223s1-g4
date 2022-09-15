@@ -18,7 +18,16 @@ app.use("/api", router);
 const httpServer = createServer(app)
 httpServer.listen(8001);
 
-const io = new Server(httpServer, { cors: { origin: '*' } });
+const io = new Server(httpServer, {
+    cors: { origin: '*' }
+});
+
 io.on("connection", (socket) => {
     console.log(`Connected with socket id ${socket.id}`);
+    socket.on('join-room', (room) => {
+        socket.join(room);
+        console.log(`Socket id ${socket.id} joined room ${room}`);
+    });
 });
+
+export { io };

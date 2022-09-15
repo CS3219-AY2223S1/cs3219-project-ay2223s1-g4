@@ -12,14 +12,12 @@ function DifficultySelector() {
     const difficulties = ['Easy', 'Medium', 'Hard'];
 
     let navigateTo = useNavigate();
-    let id = 0; // TODO
 
     const loadRoom = (difficulty) => {
-        id++;
         axios.post(URL_MATCHING_MATCH_SVC, {
                 difficulty: difficulty.toUpperCase(),
                 user: {
-                    sub: id
+                    sub: Math.floor(Math.random() * 10000)
                 } // TODO
             })
             .then((res) => {

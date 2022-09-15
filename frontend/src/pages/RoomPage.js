@@ -12,7 +12,7 @@ function RoomPage() {
     const [roomId, setRoomId] = useState(0);
     const [questionId, setQuestionId] = useState(0);
     const [user1, setUser1] = useState(0);
-    const [user2, serUser2] = useState(0);
+    const [user2, setUser2] = useState(0);
 
     let navigateTo = useNavigate();
     const location = useLocation();
@@ -25,8 +25,8 @@ function RoomPage() {
         setRoomId(location.state.roomid);
         axios.get(`${URL_MATCHING_ROOM_SVC}/${location.state.roomid}`)
             .then((res) => {
-                setUser1(res.data.room.user1);
-                serUser2(res.data.room.user2);
+                setUser1(res.data.room.userid1);
+                setUser2(res.data.room.userid2);
                 setQuestionId(res.data.room.questionid);
             })
             .catch((err) => {
@@ -36,22 +36,23 @@ function RoomPage() {
     }, [location, navigateTo]);
 
     const closeRoom = () => {
-        axios.delete(`${URL_MATCHING_ROOM_SVC}/${location.state.roomid}`)
+        axios.delete(`${URL_MATCHING_ROOM_SVC}/${roomId}`)
             .then((res) => {
+                console.log(res.status);
                 alert('Session has been closed.');
-                navigateTo('../');
+                navigateTo('..');
             })
             .catch((err) => {
                 console.log(err);
             });
-    }
+    };
 
     return (
         <Box>
-            <Typography>Coding session with {user1} and {user2} in room {roomId}</Typography>
+            <Typography>Coding session with {user1} and {user2} in room {roomId} using question {questionId}</Typography>
             <QuestionBox questionId={questionId} />
             <CodeBox roomId={roomId} />
-            <Button variant="contained" onclick={closeRoom}>End Session</Button>
+            <Button variant="contained" onClick={closeRoom}>End Session</Button>
         </Box>
     );
 }

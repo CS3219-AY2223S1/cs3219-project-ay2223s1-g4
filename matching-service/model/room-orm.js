@@ -49,6 +49,7 @@ export async function ormRemoveRoomById(roomId) {
 
     } catch (err) {
         console.log(`ERROR: Could not remove room ${roomId}`);
+        console.log(err);
         return { err };
     }
 };
