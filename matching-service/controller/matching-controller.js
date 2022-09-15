@@ -55,7 +55,7 @@ export async function createMatchEntry(req, res) {
     // TODO check logic if already exist/in room
     
     console.log(`Match ${match._id} for ${match.difficulty} created`);
-    setTimeout(() => attemptToMatch(diff), 1 * 1000);
+    setTimeout(() => attemptToMatch(diff), 100); // 100ms
     timerToCallback(match._id, (id) => {
         console.log(`Cleaning up match with userid ${id}`);
         ormRemoveMatchById(id);
