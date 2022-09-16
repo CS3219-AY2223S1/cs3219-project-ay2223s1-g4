@@ -9,6 +9,8 @@ import DashBoard from "./pages/DashBoard";
 import RequireAuth from "./routers/RequireAuth";
 import { Box } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
+import RoomPage from "./pages/RoomPage";
+import LoadingPage from "./pages/LoadingPage";
 
 function App() {
   const { isLoading, error } = useAuth0();

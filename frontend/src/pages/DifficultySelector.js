@@ -4,6 +4,9 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { useAuth0 } from '@auth0/auth0-react';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import { URL_MATCHING_MATCH_SVC } from '../configs';
 
 function DifficultySelector() {
 
@@ -15,14 +18,26 @@ function DifficultySelector() {
 
     const difficulties = ['Easy', 'Medium', 'Hard'];
 
-    const loadRoom = (difficulty) => {
-        // load 30s and attempt to link
-        alert(`${difficulty} selected`);
-    };
+    let navigateTo = useNavigate();
 
-    // const showRetry = () => {
-    //     // show that timeout and give user option to retry or select other difficulty
-    // };
+    const loadRoom = (difficulty) => {
+        axios.post(URL_MATCHING_MATCH_SVC, {
+                difficulty: difficulty.toUpperCase(),
+                user: {
+                    sub: Math.floor(Math.random() * 10000)
+                } // TODO
+            })
+            .then((res) => {
+                console.log(res);
+                navigateTo('../loading', {
+                    state: {matchid: res.data.matchId}
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+                alert('Opps... Something went wrong! Please try again.');
+            });
+    };
 
     return (
         isAuthenticated && (<Box sx={{ width: '100%' }}>

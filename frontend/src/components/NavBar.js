@@ -7,16 +7,28 @@ import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 
 function NavBar() {
-  const navItems = [
-    {
-      name: "Dashboard",
-      link: "/dashboard",
-    },
-    {
-      name: "Select Difficulty",
-      link: "/selectdifficulty",
-    },
-  ];
+    const navItems = [
+        {
+            name: 'Home',
+            link: '/'
+        },
+        {
+            name: 'Choose Difficulty',
+            link: '/selectdifficulty'
+        },
+        {
+            name: 'Register',
+            link: '/register'
+        },
+        {
+            name: 'Train',
+            link: '/room'
+        },
+        {
+            name: 'Wait',
+            link: '/loading'
+        }
+    ];
 
   return (
     <Box sx={{ display: "flex" }}>
