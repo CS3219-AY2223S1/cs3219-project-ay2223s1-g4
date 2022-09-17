@@ -10,7 +10,9 @@ import { URL_MATCHING_MATCH_SVC } from '../configs';
 
 function DifficultySelector() {
 
-    const { isAuthenticated, isLoading } = useAuth0();
+    const { user, isAuthenticated, isLoading } = useAuth0();
+
+    let navigateTo = useNavigate();
 
     if (isLoading) {
       return <div>Loading ...</div>;
@@ -18,13 +20,12 @@ function DifficultySelector() {
 
     const difficulties = ['Easy', 'Medium', 'Hard'];
 
-    let navigateTo = useNavigate();
 
     const loadRoom = (difficulty) => {
         axios.post(URL_MATCHING_MATCH_SVC, {
                 difficulty: difficulty.toUpperCase(),
                 user: {
-                    sub: Math.floor(Math.random() * 10000)
+                    sub: user.sub
                 } // TODO
             })
             .then((res) => {
