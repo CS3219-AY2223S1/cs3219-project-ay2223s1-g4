@@ -3,12 +3,14 @@ import LoginButton from "../components/buttons/LoginButton";
 import Typography from "@mui/material/Typography";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
+import {Stack} from "@mui/material";
+import RegisterButton from '../components/buttons/RegisterButton';
 
 function LoginPage() {
 
   const { isAuthenticated, isLoading } = useAuth0();
-    console.log(isAuthenticated)
-    if (isLoading) {
+
+  if (isLoading) {
         return <div>Loading ...</div>;
     }
 
@@ -27,7 +29,10 @@ function LoginPage() {
           Sign up now to try out PeerPrep!
         </Typography>
       </Box>
-      <LoginButton margin="20px"></LoginButton>
+      <Stack justifyContent="center">
+        <LoginButton fullWidth='true' margin="20px"></LoginButton>
+        <RegisterButton fullWidth='true' margin="20px"></RegisterButton>
+      </Stack>
     </Box>
   );
 }

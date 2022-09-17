@@ -39,12 +39,6 @@ function App() {
                 </RequireAuth>
               }
             />
-            {/*
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/logout" element={<Logout />} />
-                    <Route path="/myaccount" element={<Myaccount />} />
-                    <Route path="/profile" element={<Profile />} />
-                    */}
             <Route
               path="/dashboard"
               element={
