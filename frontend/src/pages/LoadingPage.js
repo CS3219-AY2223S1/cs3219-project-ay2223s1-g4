@@ -1,16 +1,21 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Countdown from 'react-countdown';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { io } from 'socket.io-client'; 
 import { URI_MATCHING_SVC } from '../configs';
+import { useAuth0 } from "@auth0/auth0-react";
 
 function LoadingPage() {
+
     const [matchid, setMatchId] = useState(0);
 
     let navigateTo = useNavigate();
     const location = useLocation();
+
+    const { isAuthenticated, isLoading } = useAuth0();
+
     
     useEffect(() => {
         if (!location['state'] || !location.state['matchid']) {
@@ -47,7 +52,14 @@ function LoadingPage() {
     }, [location, navigateTo]);
 
     // TODO: listen to socket based on match id
+    if (isLoading) {
+        return <div>Loading ...</div>;
+    }
     
+    // not authenticated = back to homepage bich
+    if (!isAuthenticated) {
+        return <Navigate to="/" replace />;
+    }
     return (
         <Box>
             <Typography>Loading match 30s using match id {matchid}</Typography>
