@@ -48,6 +48,12 @@ function App() {
               }
             />
             <Route path="/login" element={<LoginPage />} />
+
+            <Route path="/loading" element={
+                <RequireAuth>
+                  <LoadingPage/>
+                </RequireAuth>
+          } />
           </Routes>
         </Router>
       </Box>
