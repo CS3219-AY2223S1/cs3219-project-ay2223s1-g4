@@ -17,10 +17,6 @@ function NavBar() {
             link: '/selectdifficulty'
         },
         {
-            name: 'Register',
-            link: '/register'
-        },
-        {
             name: 'Train',
             link: '/room'
         },
