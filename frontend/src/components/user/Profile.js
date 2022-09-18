@@ -58,6 +58,9 @@ const Profile = () => {
           
           " has id of : " + user.sub
         }
+        {
+          
+        }
       </div>
     )
   );
