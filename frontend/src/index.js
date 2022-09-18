@@ -4,16 +4,13 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Auth0Provider } from "@auth0/auth0-react";
-
-// const root = ReactDOM.createRoot(document.getElementById('root'));
-// root.render(
-//     <App/>
-// );
+import { AUTH0_CLIENT_ID, AUTH0_DOMAIN, AUTH0_SCOPE } from './configs'
 ReactDOM.render(
   <Auth0Provider
-    domain="elgoh.us.auth0.com"
-    clientId="3CVQjahdc8e1z1cUdqsZMw15FfhqylxW"
+    domain={AUTH0_DOMAIN}
+    clientId={AUTH0_CLIENT_ID}
     redirectUri={window.location.origin + "/dashboard"}
+    scope={AUTH0_SCOPE}
   >
     <App />
   </Auth0Provider>,
