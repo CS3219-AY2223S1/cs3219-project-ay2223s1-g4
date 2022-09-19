@@ -4,7 +4,7 @@ let MatchModelSchema = new mongoose.Schema({
     userid: {
         type: String,
         required: true,
-        unique: true,
+        // unique: true,
     },
     difficulty: {
         type: String,

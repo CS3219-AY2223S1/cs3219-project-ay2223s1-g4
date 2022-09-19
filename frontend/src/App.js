@@ -1,39 +1,67 @@
-import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
-import SignupPage from './pages/SignupPage';
-import Home from './pages/Home';
-import NavBar from './components/NavBar';
-import DifficultySelector from './pages/DifficultySelector';
-import {Box} from "@mui/material";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import NavBar from "./components/NavBar";
+import Loading from "./components/loading";
+
+import DifficultySelector from "./pages/DifficultySelector";
+import LoginPage from "./pages/LoginPage";
+import DashBoard from "./pages/DashBoard";
+import RequireAuth from "./routers/RequireAuth";
+import { Box } from "@mui/material";
+import { useAuth0 } from "@auth0/auth0-react";
 import RoomPage from "./pages/RoomPage";
 import LoadingPage from "./pages/LoadingPage";
 
 function App() {
-    return (
-        <div className="App">
-            <Box margin={"1rem"}>
-                <NavBar/>
-            </Box>
-            <Box display={"flex"} flexDirection={"column"} padding={"4rem"}>
-                <Router>
-                    <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/selectdifficulty" element={<DifficultySelector />} />
-                    <Route path="/room" element={<RoomPage />} />
-                    <Route path="/loading" element={<LoadingPage />} />
-                    {
-                    /*
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/logout" element={<Logout />} />
-                    <Route path="/myaccount" element={<Myaccount />} />
-                    <Route path="/profile" element={<Profile />} />
-                    */
-                    }
-                    <Route path="/register" element={<SignupPage />} />
-                    </Routes>
-                </Router>
-            </Box>
-        </div>
-    );
+  const { isLoading, error } = useAuth0();
+  if (error) {
+    return <div>Oops... {error.message}</div>;
+  }
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  return (
+    <div className="App">
+      <Box margin={"1rem"}>
+        <NavBar />
+      </Box>
+      <Box display={"flex"} flexDirection={"column"} padding={"4rem"}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<LoginPage />} />
+            <Route
+              path="/selectdifficulty"
+              element={
+                <RequireAuth>
+                  <DifficultySelector />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <RequireAuth>
+                  <DashBoard />
+                </RequireAuth>
+              }
+            />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/room" element={<RequireAuth>
+                  <RoomPage/>
+                </RequireAuth>} />
+
+            <Route path="/loading" element={
+                <RequireAuth>
+                  <LoadingPage/>
+                </RequireAuth>
+          } />
+          </Routes>
+        </Router>
+      </Box>
+    </div>
+  );
 }
 
 export default App;
