@@ -4,12 +4,12 @@ let RoomModelSchema = new mongoose.Schema({
     userid1: {
         type: String,
         required: true,
-        unique: true,
+        // unique: true,
     },
     userid2: {
         type: String,
         required: true,
-        unique: true,
+        // unique: true,
     },
     questionid: {
         type: Number,

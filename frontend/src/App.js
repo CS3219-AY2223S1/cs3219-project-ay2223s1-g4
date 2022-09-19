@@ -48,6 +48,9 @@ function App() {
               }
             />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/room" element={<RequireAuth>
+                  <RoomPage/>
+                </RequireAuth>} />
 
             <Route path="/loading" element={
                 <RequireAuth>
