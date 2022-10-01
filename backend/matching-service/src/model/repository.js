@@ -1,7 +1,8 @@
-import 'dotenv/config';
 import mongoose from "mongoose";
 import MatchModelSchema from './match-model.js';
 import RoomModelSchema from './room-model.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 let mongoDB = (process.env.ENV === "PROD")
     ? process.env.DB_CLOUD_URI
