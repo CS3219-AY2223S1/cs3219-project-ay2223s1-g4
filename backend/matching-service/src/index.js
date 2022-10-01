@@ -20,6 +20,7 @@ app.use("/api", router);
 const port = 8001 || process.env.SERVICE_PORT;
 const httpServer = createServer(app)
 httpServer.listen(port);
+console.log(`matching-service listening on port ${port}`)
 
 const io = new Server(httpServer, {
     cors: { origin: '*' }
