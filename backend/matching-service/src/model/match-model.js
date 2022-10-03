@@ -13,4 +13,6 @@ let MatchModelSchema = new mongoose.Schema({
     },
 });
 
-export default mongoose.model('Match', MatchModelSchema);
+const MatchModel = mongoose.model('Match', MatchModelSchema);
+
+export default MatchModel;

@@ -1,20 +1,26 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
-dotenv.config();
+import router from './routes/routes.js';
+import RoomSocketManager from './sockets/room-socket.js';
+import PubSubSocketManager from './sockets/pubsub-socket.js';
+import Respository from './models/repository.js';
+import { PORT, CLIENT_URL, PUBSUB_URL } from './configs/config.js';
 
 const app = express();
+const corsObj = cors({
+    origin: CLIENT_URL
+});
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors()); // config cors so that front-end can use
-app.options('*', cors());
-
-const router = express.Router();
-
-app.get('/', (req, res) => {
-    res.send('Hello World from room-service');
-});
+app.use(corsObj); 
+app.options('*', corsObj);
 app.use("/api", router);
 
-const port = 8002 || process.env.SERVICE_PORT;
-app.listen(port, () => console.log(`room-service listening on port ${port}`));
+let httpServer = app.listen(PORT, () => {
+    console.log(`room-service listening on port ${PORT}`)
+});
+
+Respository.start();
+RoomSocketManager.bind(httpServer);
+PubSubSocketManager.connect(PUBSUB_URL);
