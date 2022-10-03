@@ -1,9 +1,9 @@
 import enum
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Enum
+from sqlalchemy import Column, ForeignKey, Integer, String, Enum
 from sqlalchemy.dialects.mysql import MEDIUMTEXT
 from sqlalchemy.orm import relationship
 
-from connector import Base
+from question.connector import Base
 
 class Difficulty(enum.Enum):
     easy = 1
@@ -16,11 +16,16 @@ class QuestionIndex(Base):
     href = Column(String, unique=True)
     difficulty = Column(Enum(Difficulty), index=True)
     title = Column(String)
+    companies = relationship('CompanyQuestions', back_populates="questionindex")
+    solution = relationship("Solution")
+    question = relationship("Question")
+
+
 
 class CompanyQuestions(Base):
     __tablename__ = "company"
     companies = Column(String, primary_key = True, index = True)
-    id = Column(Integer, ForeignKey("questionindex.id"), primary_key = True, index=True)
+    questionid = Column(Integer, ForeignKey("questionindex.id"), primary_key = True, index=True)
 
 class Question(Base):
     __tablename__ = "question"
