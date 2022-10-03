@@ -1,39 +1,30 @@
-import {
-    ormCreateRoom,
-    ormRemoveRoomById,
-    ormFindRoomById,
-    ormGetRooms
-} from '../models/room-orm.js';
-import { getQuestionIdFromDifficulty } from './question.js';
+import HttpStatus from 'http-status-codes';
+import RoomORM from '../models/room-orm.js';
 
-async function createRoom(userid1, userid2, difficulty) {
-    const questionId = getQuestionIdFromDifficulty(difficulty);
-    let room = await ormCreateRoom(userid1, userid2, questionId);
-    console.log(`Room ${room} created`);
-    return room;
-};
-
-export async function closeRoom(req, res) {
-    let roomid = req.params.room_id;
-    await ormRemoveRoomById(roomid);
-    return res.status(200).json();
-};
-
-export async function getRooms(req, res) {
-    let rooms = await ormGetRooms();
-    return res.status(200).json({
-        rooms: rooms
-    });
-};
-
-export async function getRoomDetails(req, res) {
-    let roomid = req.params.room_id;
-    let room = await ormFindRoomById(roomid);
-    console.log(room);
-    if (!room || room.err) {
-        return res.status(404);
+let RoomController = {
+    closeRoom: async (req, res) => {
+        const roomid = req.params.room_id;
+        await RoomORM.removeRoomById(roomid);
+        return res.status(HttpStatus.OK).json();
+    },
+    
+    getRooms: async (req, res)  => {
+        const rooms = await RoomORM.getAllRooms();
+        return res.status(HttpStatus.OK).json({
+            rooms: rooms
+        });
+    },
+    
+    getRoomDetails: async (req, res)  => {
+        const roomid = req.params.room_id;
+        const room = await RoomORM.findRoomById(roomid);
+        if (!room || room.err) {
+            return res.status(HttpStatus.NOT_FOUND);
+        }
+        return res.status(HttpStatus.OK).json({
+            room: room
+        });
     }
-    return res.status(200).json({
-        room: room
-    });
 };
+
+export default RoomController;

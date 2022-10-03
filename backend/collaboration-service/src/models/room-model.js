@@ -1,15 +1,13 @@
 import mongoose from 'mongoose';
 
-let RoomModelSchema = new mongoose.Schema({
+const RoomModelSchema = new mongoose.Schema({
     userid1: {
         type: String,
         required: true,
-        // unique: true,
     },
     userid2: {
         type: String,
         required: true,
-        // unique: true,
     },
     questionid: {
         type: Number,
@@ -17,4 +15,6 @@ let RoomModelSchema = new mongoose.Schema({
     },
 });
 
-export default mongoose.model('Room', RoomModelSchema);
+const RoomModel = mongoose.model('Room', RoomModelSchema);
+
+export default RoomModel;

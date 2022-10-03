@@ -8,7 +8,19 @@ function getQuestionIdFromDifficulty(difficulty) {
     };
     return (questionidMap.hasOwnProperty(difficulty))
         ? questionidMap[difficulty]
-        : 0;
+        : questionidMap['EASY'];
+}
+
+async function getRandomQuestionIdFromDifficulty() {
+    const questionQueryUrl = ``; // TODO
+    axios.get(questionQueryUrl)
+        .then((res) => {
+            return res.data.questionId;
+        })
+        .catch((err) => {
+            console.error(err);
+            return null; // TODO return default id
+        });
 }
 
 export { getQuestionIdFromDifficulty };

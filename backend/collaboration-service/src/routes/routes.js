@@ -1,18 +1,17 @@
 import express from 'express';
-import { getRoomDetails, closeRoom, getRooms } from '../service/controller.js';
+import RoomController from '../service/controller.js';
 
 const router = new express.Router();
 
 router.get('/', (req, res) => {
-    console.log('/api route called');
-    res.json();
+    res.send('Hello World from room-service api');
 });
 
 router.route('/room/:room_id')
-    .get(getRoomDetails)
-    .delete(closeRoom);
+    .get(RoomController.getRoomDetails)
+    .delete(RoomController.closeRoom);
 
 router.route('/room')
-    .get(getRooms);
+    .get(RoomController.getRooms);
 
 export default router;
