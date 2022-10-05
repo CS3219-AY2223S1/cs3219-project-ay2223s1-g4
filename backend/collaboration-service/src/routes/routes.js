@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
 
 router.route('/room/:room_id')
     .get(RoomController.getRoomDetails)
-    .delete(RoomController.closeRoom);
+    .put(RoomController.closeRoom);
 
 router.route('/room')
     .get(RoomController.getRooms);

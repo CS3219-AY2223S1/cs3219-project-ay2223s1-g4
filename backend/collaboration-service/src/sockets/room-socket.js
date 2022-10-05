@@ -1,4 +1,5 @@
 import { Server } from 'socket.io';
+import { getDocumentGivenId, updateDocumentGivenId } from '../service/service.js';
 
 let RoomSocketManager = (function() {
     var io;
@@ -18,11 +19,17 @@ let RoomSocketManager = (function() {
                 socket.join(room);
                 console.log(`Socket id ${socket.id} joined room ${room}`);
             });
-            socket.on('send-code', (data, room) => {
-                socket.broadcast.to(room).emit('receive-code', data);
-            });
-            socket.on('send-chat', (data, room) => {
-                socket.broadcast.to(room).emit('receive-chat', data);
+            socket.on("get-code", async (roomId) => {
+                console.log(`Getting code for ${roomId}`);
+                const document = await getDocumentGivenId(roomId);
+                socket.emit("load-code", document);
+                
+                socket.on('send-code', (data, room) => {
+                    socket.broadcast.to(room).emit('receive-code', data);
+                });
+                socket.on("save-code", async (roomId, document) => {
+                    await updateDocumentGivenId(roomId, document);
+                });
             });
             socket.on('leave-room', (room) => {
                 console.log(`Socket id ${socket.id} left room ${room}`);

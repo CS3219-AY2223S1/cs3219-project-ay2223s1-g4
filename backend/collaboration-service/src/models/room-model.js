@@ -13,6 +13,14 @@ const RoomModelSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    document: {
+        type: String,
+        default: ''
+    },
+    isOpen: {
+        type: Boolean,
+        default: true
+    },
 });
 
 const RoomModel = mongoose.model('Room', RoomModelSchema);

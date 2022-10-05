@@ -4,7 +4,7 @@ import RoomORM from '../models/room-orm.js';
 let RoomController = {
     closeRoom: async (req, res) => {
         const roomid = req.params.room_id;
-        await RoomORM.removeRoomById(roomid);
+        await RoomORM.closeRoomById(roomid);
         return res.status(HttpStatus.OK).json();
     },
     
