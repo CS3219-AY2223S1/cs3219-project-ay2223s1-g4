@@ -53,7 +53,7 @@ function App() {
                   <RoomPage/>
                 </RequireAuth>} />
 
-            <Route path="/loading" element={
+            <Route path="/loading/:loadingId" element={
                 <RequireAuth>
                   <LoadingPage/>
                 </RequireAuth>

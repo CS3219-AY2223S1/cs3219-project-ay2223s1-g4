@@ -1,34 +1,24 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Countdown from 'react-countdown';
-import { useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { io } from 'socket.io-client'; 
 import { URI_MATCHING_SVC } from '../configs';
 import { useAuth0 } from "@auth0/auth0-react";
 
 function LoadingPage() {
-
-    const [matchid, setMatchId] = useState(0);
-
-    let navigateTo = useNavigate();
-    const location = useLocation();
-
+    const { loadingId: matchid } = useParams();
     const { isAuthenticated, isLoading } = useAuth0();
 
-    
-    useEffect(() => {
-        if (!location['state'] || !location.state['matchid']) {
-            navigateTo('../selectdifficulty');
-            return;
-        }
-        setMatchId(location.state.matchid);
+    let navigateTo = useNavigate();
 
+    useEffect(() => {
         const socket = io(URI_MATCHING_SVC);
         socket.on('connect', () => {
             console.log(`Connected with id ${socket.id}`);
         });
-        socket.emit('join-room', `match-${location.state.matchid}`);
+        socket.emit('join-room', `match-${matchid}`);
 
         const timeoutId = setTimeout(() => {
             console.log('Matching failed');
@@ -46,18 +36,16 @@ function LoadingPage() {
             navigateTo(`../room/${roomid}`);
             return;
         });
+    }, [matchid, navigateTo]);
 
-    }, [location, navigateTo]);
-
-    // TODO: listen to socket based on match id
     if (isLoading) {
         return <div>Loading ...</div>;
     }
     
-    // not authenticated = back to homepage bich
     if (!isAuthenticated) {
         return <Navigate to="/" replace />;
     }
+
     return (
         <Box>
             <Typography>Loading match 30s using match id {matchid}</Typography>
