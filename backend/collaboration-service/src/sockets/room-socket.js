@@ -18,11 +18,11 @@ let RoomSocketManager = (function() {
                 socket.join(room);
                 console.log(`Socket id ${socket.id} joined room ${room}`);
             });
-            socket.on('code', (data, room) => {
-                socket.broadcast.to(room).emit('sync-code', data);
+            socket.on('send-code', (data, room) => {
+                socket.broadcast.to(room).emit('receive-code', data);
             });
-            socket.on('chat', (data, room) => {
-                socket.broadcast.to(room).emit('sync-chat', data);
+            socket.on('send-chat', (data, room) => {
+                socket.broadcast.to(room).emit('receive-chat', data);
             });
             socket.on('leave-room', (room) => {
                 console.log(`Socket id ${socket.id} left room ${room}`);

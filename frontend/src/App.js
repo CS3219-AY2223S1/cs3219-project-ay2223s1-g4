@@ -7,6 +7,7 @@ import DifficultySelector from "./pages/DifficultySelector";
 import LoginPage from "./pages/LoginPage";
 import DashBoard from "./pages/DashBoard";
 import RequireAuth from "./routers/RequireAuth";
+import { Navigate } from 'react-router-dom';
 import { Box } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import RoomPage from "./pages/RoomPage";
@@ -48,7 +49,7 @@ function App() {
               }
             />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/room" element={<RequireAuth>
+            <Route path="/room/:collabId" element={<RequireAuth>
                   <RoomPage/>
                 </RequireAuth>} />
 
@@ -56,7 +57,12 @@ function App() {
                 <RequireAuth>
                   <LoadingPage/>
                 </RequireAuth>
-          } />
+               }
+            />
+            <Route path="*" element={
+                < Navigate to={{pathname: '/'}} />
+              }
+            />
           </Routes>
         </Router>
       </Box>

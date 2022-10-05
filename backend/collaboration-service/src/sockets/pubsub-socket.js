@@ -2,7 +2,6 @@ import { io } from 'socket.io-client';
 import { PUBSUB_SUBSCRIPTIONS, ROOM_CREATED_TAG, ROOM_CREATE_TAG } from '../configs/config.js';
 import { createRoom } from '../service/service.js';
 
-// https://medium.com/@irvingdinh/simple-pubsub-with-nodejs-socketio-2492c3b0ce94
 let PubSubSocketManager = (function() {
     var socket;
 

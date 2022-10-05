@@ -38,14 +38,12 @@ function LoadingPage() {
             navigateTo('../selectdifficulty');
         }, (30 + 1) * 1000);
         
-        socket.on('provide-room', (message) => {
-            console.log(`server provided ${message} room`);
+        socket.on('provide-room', (roomid) => {
+            console.log(`server provided room ${roomid}`);
             socket.disconnect(true);
             console.log(socket);
             clearTimeout(timeoutId);
-            navigateTo('../room', {
-                state: {roomid: message}
-            });
+            navigateTo(`../room/${roomid}`);
             return;
         });
 

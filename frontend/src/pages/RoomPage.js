@@ -4,26 +4,20 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { URL_MATCHING_ROOM_SVC } from "../configs";
 
 function RoomPage() {
-    const [roomId, setRoomId] = useState(0);
+    const { collabId: roomId } = useParams();
     const [questionId, setQuestionId] = useState(0);
     const [user1, setUser1] = useState(0);
     const [user2, setUser2] = useState(0);
 
     let navigateTo = useNavigate();
-    const location = useLocation();
     
     useEffect(() => {
-        if (!location['state'] || !location.state['roomid']) {
-            navigateTo('../selectdifficulty');
-            return;
-        }
-        setRoomId(location.state.roomid);
-        axios.get(`${URL_MATCHING_ROOM_SVC}/${location.state.roomid}`)
+        axios.get(`${URL_MATCHING_ROOM_SVC}/${roomId}`)
             .then((res) => {
                 setUser1(res.data.room.userid1);
                 setUser2(res.data.room.userid2);
@@ -33,7 +27,7 @@ function RoomPage() {
                 console.log(err);
                 navigateTo('../selectdifficulty');
             });
-    }, [location, navigateTo]);
+    }, [navigateTo, roomId]);
 
     const closeRoom = () => {
         axios.delete(`${URL_MATCHING_ROOM_SVC}/${roomId}`)
