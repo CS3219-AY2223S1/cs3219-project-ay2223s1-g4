@@ -11,12 +11,12 @@ function LoginPage() {
   const { isAuthenticated, isLoading } = useAuth0();
 
   if (isLoading) {
-        return <div>Loading ...</div>;
-    }
+    return <div>Loading ...</div>;
+  }
 
-    if (isAuthenticated) {
-        return <Navigate to="/dashboard" replace />;
-    }
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return (
     <Box display={"flex"} flexDirection={"row"} justifyContent={"flex-end"}>
