@@ -1,10 +1,12 @@
 import CodeBox from "../components/CodeBox";
 import QuestionBox from "../components/QuestionBox";
+import Prompt from "../components/dialogs/Prompt";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth0 } from "@auth0/auth0-react";
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { URL_MATCHING_ROOM_SVC } from "../configs";
 import { io } from 'socket.io-client';
@@ -15,7 +17,9 @@ function RoomPage() {
     const [ questionId, setQuestionId ] = useState(0);
     const [ user1, setUser1 ] = useState(0);
     const [ user2, setUser2 ] = useState(0);
+    const [ isPromptOpen, setIsPromptOpen ] = useState(false);
     const [ socket, setSocket ] = useState();
+    const { isAuthenticated, isLoading } = useAuth0();
 
     useEffect(() => {
         const s = io(URI_COLLAB_SVC);
@@ -37,7 +41,7 @@ function RoomPage() {
             })
             .catch((err) => {
                 console.log(err);
-                navigateTo('../selectdifficulty');
+                navigateTo('../');
             });
     }, [navigateTo, roomId]);
 
@@ -48,31 +52,53 @@ function RoomPage() {
         const handler = () => {
             console.log('Session is closed');
             alert('Peer has closed the session');
-            navigateTo('../');
+            setTimeout(() => navigateTo('../dashboard'), 3 * 1000);
         }
         socket.on('leave-room', handler);
         return;
     }, [navigateTo, socket]);
 
     const closeRoom = () => {
+        setIsPromptOpen(false);
         axios.delete(`${URL_MATCHING_ROOM_SVC}/${roomId}`)
             .then((res) => {
                 console.log(res.status);
                 socket.emit('leave-room', `room-${roomId}`);
-                alert('Session has been closed.');
-                navigateTo('..');
+                navigateTo('../dashboard');
             })
             .catch((err) => {
                 console.log(err);
             });
     };
+    
+    const prompt = () => {
+        setIsPromptOpen(true);
+    }
+
+    const undoPrompt = () => {
+        setIsPromptOpen(false);
+    }
+
+    if (isLoading) {
+        return <div>Loading ...</div>;
+    };
+  
+    if (!isAuthenticated) {
+        return <Navigate to="/dashboard" replace />;
+    };
 
     return (
         <Box>
+            <Prompt
+                message={"Are you sure you would like to close the session?"}
+                isOpen={isPromptOpen}
+                handleYes={closeRoom}
+                handleNo={undoPrompt}
+            />
             <Typography>Coding session with {user1} and {user2} in room {roomId} using question {questionId}</Typography>
             <QuestionBox questionId={questionId} />
             <CodeBox roomId={roomId} socket={socket} />
-            <Button variant="contained" onClick={closeRoom}>End Session</Button>
+            <Button variant="contained" onClick={prompt}>End Session</Button>
         </Box>
     );
 }
