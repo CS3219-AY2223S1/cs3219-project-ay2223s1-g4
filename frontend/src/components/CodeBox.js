@@ -1,22 +1,10 @@
 import "quill/dist/quill.snow.css"
 import Quill from 'quill';
 import Box from '@mui/material/Box';
-import { io } from 'socket.io-client';
 import { useEffect, useState } from 'react';
-import { URI_COLLAB_SVC } from '../configs';
 
-function CodeBox({ roomId }) {
-    const [ socket, setSocket ] = useState();
+function CodeBox({ roomId, socket }) {
     const [ quill, setQuill ] = useState();
-
-    useEffect(() => {
-        const s = io(URI_COLLAB_SVC);
-        s.emit('join-room', `room-${roomId}`);
-        setSocket(s);
-        return () => {
-            s.disconnect();
-        };
-    }, [roomId]);
     
     useEffect(() => {
         if (socket == null || quill == null) {

@@ -7,13 +7,25 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { URL_MATCHING_ROOM_SVC } from "../configs";
+import { io } from 'socket.io-client';
+import { URI_COLLAB_SVC } from '../configs';
 
 function RoomPage() {
     const { collabId: roomId } = useParams();
-    const [questionId, setQuestionId] = useState(0);
-    const [user1, setUser1] = useState(0);
-    const [user2, setUser2] = useState(0);
+    const [ questionId, setQuestionId ] = useState(0);
+    const [ user1, setUser1 ] = useState(0);
+    const [ user2, setUser2 ] = useState(0);
+    const [ socket, setSocket ] = useState();
 
+    useEffect(() => {
+        const s = io(URI_COLLAB_SVC);
+        s.emit('join-room', `room-${roomId}`);
+        setSocket(s);
+        return () => {
+            s.disconnect();
+        };
+    }, [roomId]);
+    
     let navigateTo = useNavigate();
     
     useEffect(() => {
@@ -29,10 +41,24 @@ function RoomPage() {
             });
     }, [navigateTo, roomId]);
 
+    useEffect(() => {
+        if (socket == null) {
+            return;
+        }
+        const handler = () => {
+            console.log('Session is closed');
+            alert('Peer has closed the session');
+            navigateTo('../');
+        }
+        socket.on('leave-room', handler);
+        return;
+    }, [navigateTo, socket]);
+
     const closeRoom = () => {
         axios.delete(`${URL_MATCHING_ROOM_SVC}/${roomId}`)
             .then((res) => {
                 console.log(res.status);
+                socket.emit('leave-room', `room-${roomId}`);
                 alert('Session has been closed.');
                 navigateTo('..');
             })
@@ -45,7 +71,7 @@ function RoomPage() {
         <Box>
             <Typography>Coding session with {user1} and {user2} in room {roomId} using question {questionId}</Typography>
             <QuestionBox questionId={questionId} />
-            <CodeBox roomId={roomId} />
+            <CodeBox roomId={roomId} socket={socket} />
             <Button variant="contained" onClick={closeRoom}>End Session</Button>
         </Box>
     );

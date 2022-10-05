@@ -26,6 +26,7 @@ let RoomSocketManager = (function() {
             });
             socket.on('leave-room', (room) => {
                 console.log(`Socket id ${socket.id} left room ${room}`);
+                socket.broadcast.to(room).emit('leave-room');
             });
         });
     };
