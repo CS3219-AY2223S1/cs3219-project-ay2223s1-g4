@@ -51,20 +51,21 @@ function RoomPage() {
         }
         const handler = () => {
             console.log('Session is closed');
+            socket.emit('leave-room', `room-${roomId}`);
             alert('Peer has closed the session');
             setTimeout(() => navigateTo('../dashboard'), 3 * 1000);
         }
         socket.on('leave-room', handler);
         return;
-    }, [navigateTo, socket]);
+    }, [navigateTo, socket, roomId]);
 
     const closeRoom = () => {
         setIsPromptOpen(false);
-        axios.delete(`${URL_MATCHING_ROOM_SVC}/${roomId}`)
+        socket.emit('leave-room', `room-${roomId}`);
+        navigateTo('../dashboard');
+        axios.put(`${URL_MATCHING_ROOM_SVC}/${roomId}`)
             .then((res) => {
                 console.log(res.status);
-                socket.emit('leave-room', `room-${roomId}`);
-                navigateTo('../dashboard');
             })
             .catch((err) => {
                 console.log(err);
@@ -82,7 +83,7 @@ function RoomPage() {
     if (isLoading) {
         return <div>Loading ...</div>;
     };
-  
+
     if (!isAuthenticated) {
         return <Navigate to="/dashboard" replace />;
     };

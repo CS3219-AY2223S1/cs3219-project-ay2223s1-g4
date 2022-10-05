@@ -10,20 +10,6 @@ let RoomORM = {
         room.save();
         return room;
     },
-    
-    findRoomByUserId: async (userId) => {
-        return RoomModel.findById(userId, (err, room) => {
-            if (!room) {
-                console.warn(`Room for user ${userId} does not exist`);
-                return null;
-            }
-            if (err) {
-                console.warn(`Unable to load room for user ${userId}`);
-                return null;
-            };
-            return room;
-        });
-    },
 
     removeRoomById: async (id) => {
         RoomModel.findByIdAndDelete(id, (err) => {
@@ -35,13 +21,24 @@ let RoomORM = {
         });
     },
 
+    closeRoomById: async (id) => {
+        return await RoomModel.findByIdAndUpdate(id, {
+            isOpen: false
+        });
+    },
+
     findRoomById: async (id) => {
         return await RoomModel.findById(id);
     },
-    
-    getAllRooms: async () => {
-        return await RoomModel.find();
-    }
+
+    updateDocumentFromId: async (id, document) => {
+        if (!(await RoomModel.findById(id)).isOpen) {
+            throw Error(`Room ${id} is already closed, unable to update document`);
+        }
+        return await RoomModel.findByIdAndUpdate(id, {
+            document: document
+        });
+    },
 }
 
 export default RoomORM;
