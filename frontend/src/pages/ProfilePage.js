@@ -18,7 +18,7 @@ function ProfilePage() {
           <Profile />
         </Box>
         <Box>
-            <DeleteAccount />
+            <DeleteAccount/>
         </Box>
       </Stack>
     )

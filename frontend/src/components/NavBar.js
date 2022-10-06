@@ -45,15 +45,13 @@ function NavBar() {
             PeerPrep
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {isAuthenticated
-              ? navItems.map((item) => (
+            {navItems.map((item) => isAuthenticated && (
                   <Link key={item.name} href={item.link}>
                     <Button key={item.name} sx={{ color: "#fff" }}>
                       {item.name}
                     </Button>
                   </Link>
-                ))
-              : null}
+                ))}
           </Box>
           <LogoutButton></LogoutButton>
         </Toolbar>
