@@ -20,8 +20,6 @@ class QuestionIndex(Base):
     solution = relationship("Solution")
     question = relationship("Question")
 
-
-
 class CompanyQuestions(Base):
     __tablename__ = "company"
     companies = Column(String, primary_key = True, index = True)
@@ -36,10 +34,15 @@ class Solution(Base):
     __tablename__= "solution"
     id = Column(Integer, ForeignKey("questionindex.id"), primary_key = True, index=True)
     problem = Column(MEDIUMTEXT, nullable=False)
+    leetcode = Column(String)
 
 class UserHistory(Base):
     __tablename__ = 'userhistory'
     id = Column(String, primary_key = True, index = True)
     question_id = Column(Integer, ForeignKey("questionindex.id"))
+
+class Tag(Base):
+    __tablename__ = 'topictag'
+    id = Column(Integer, ForeignKey("questionindex.id"), primary_key = True, index=True)
 
 

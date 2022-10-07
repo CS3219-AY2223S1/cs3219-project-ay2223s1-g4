@@ -53,26 +53,27 @@ def populateProblems(ids:list):
         print("Problem Description: ", textboxes[0].strip())
         print("Companies: ", textboxes[8].strip())
 
-# soupsieve.
-# scrapeIndex()
+def getPythonSolutions(id:int):
+    pythonSolutions = "https://github.com/cnkyrpsgl/leetcode/blob/master/solutions/python3"
+    url = f'{pythonSolutions}/{id}.py'
+    soup = getPage(url)
+    code = soup.find("table").getText().splitlines()
+    print("\n".join(list( filter( lambda x: len(x) > 0, code))))
 
-# url = f'{base_url}/{"196.html"}'
-# soup = getPage(url)
-# # soup2 = getPage(soup.find_all("a")[-2]['href'])
-# # print(soup.find('title').text)
-# # print(soup.find('p').text)
-# # print(soup.find('div', class_=["markdown-body"]))
-# parsable = soup.find('div', class_=["markdown-body"]).getText().strip()
-# textboxes = re.split("([\r\n]*Difficulty:[\r\n]*)|([\r\n]*Company:[\r\n]*)|([\r\n]*Problem Solution[\r\n]*)", parsable)
-# print("Next Task:")
-# #
-# # print("Problem Description: ", textboxes[0].strip())
-# # print("Difficulty: ", textboxes[4].strip())
-# # print("Companies: ", textboxes[8].strip())
-# print(soup.find_all('a')[-2]['href'])
-pythonSolutions = "https://github.com/cnkyrpsgl/leetcode/blob/master/solutions/python3/"
-url = f'{pythonSolutions}/{1}".py"'
-# print(url)
+
+url = 'https://leetcode.ca/tags/'
 soup = getPage(url)
-print(soup.find("table").getText())#.splitlines())
-# print("\n".join(list( filter( lambda x: len(x) > 0, ))))
+tagsToId = soup.find_all('h2')
+
+# print(tagsToId.find_next_sibling())
+# print(re.search('\d+', tagsToId.find_all('a')[0].getText()).group())
+for t in tagsToId:
+    tag = t['id'].replace('.', '').lower()
+    anchors = t.find_next_sibling()
+
+    for i in anchors.find_all('a'):
+        id = re.search('\d+', i.getText()).group()
+        print(tag, id)
+# for header in soup.find_all('h2'):
+#     print(header['id'].replace('.', '').lower())
+

@@ -1,18 +1,19 @@
-# This is a sample Python script.
+from fastapi import FastAPI, File, UploadFile, HTTPException, Form
+from pydantic import BaseModel
+import uvicorn
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+app = FastAPI()
 
-def createSession():
-    return
+@app.get("/get_id/{user_id}")
+async def generate_question_id(user_id:str, difficulty='easy', tag:str | None = None, company: str | None = None):
+    return {"id": 1}
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+@app.get("/get_question/{question_id}")
+async def getQuestion(question_id: int):
+    return {'question_id': question_id, 'problem': "2Sum"}
 
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+@app.get("/get_solution/{question_id}")
+async def getQuestion(question_id: int):
+    return {'question_id': question_id, 'solution': "2Sum"}
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
