@@ -5,7 +5,9 @@ import PubSubSocketManager from '../sockets/pubsub-socket.js';
 async function attemptToMatch(difficulty) {
     let existingMatches = await MatchORM.findMatchByDifficulty(difficulty);
     console.log(`Found ${existingMatches} for ${difficulty}`);
+    let matchFound = false;
     if (existingMatches.length >= 2) {
+        matchFound = true;
         PubSubSocketManager.publish(ROOM_CREATE_TAG, {
             userid1: existingMatches[0].userid,
             userid2: existingMatches[1].userid,
@@ -18,6 +20,7 @@ async function attemptToMatch(difficulty) {
             MatchORM.removeMatchById(existingMatches[1]._id);
         }, 0.1 * 1000);
     }
+    return matchFound;
 }
 
 export { attemptToMatch };
