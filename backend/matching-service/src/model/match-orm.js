@@ -11,11 +11,11 @@ let MatchORM = {
     },
     
     getAllMatches: async () => {
-        return await MatchModel.find({});
+        return await MatchModel.find({}).sort({_id: 1});
     },
     
     findMatchByDifficulty: async (difficulty) => {
-        return await MatchModel.find({difficulty: difficulty}).sort({date: 1});
+        return await MatchModel.find({difficulty: difficulty}).sort({_id: 1});
     },
     
     removeMatchById: async (id) => {
@@ -23,10 +23,17 @@ let MatchORM = {
             if (err) {
                 console.log(err);
                 return;
-            } 
-            console.log(`Match id ${id} removed`);
+            }
+            console.log("\x1b[31m%s\x1b[0m", `\tMatch id ${id} removed`);
         });
     },
+
+    checkMatchExist: async (id) => {
+        const matchExist = await MatchModel.exists({ _id: id }).then((result) => {
+            return result;
+        }) !== null;
+        return matchExist;
+    }
 }
 
 export default MatchORM;

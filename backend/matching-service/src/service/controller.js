@@ -13,14 +13,20 @@ let MatchController = {
         let diff = req.body.difficulty.toUpperCase();
         let userid = req.body.user.sub;
         let match = await MatchORM.createMatch(userid, diff);
-        console.log(await MatchORM.getAllMatches());
+        console.log("\nMatch List:\n" + await MatchORM.getAllMatches());
         // TODO check logic if already exist/in room
         
-        console.log(`Match ${match._id} for ${match.difficulty} created`);
+        console.log("\x1b[32m%s\x1b[0m", `Match ${match._id} for ${match.difficulty} created`);
         setTimeout(() => attemptToMatch(diff), 0.1 * 1000);
         setTimeout(() => {
-            console.log(`Cleaning up match with userid ${match._id}`);
-            MatchORM.removeMatchById(match._id);
+            async function cleanMatchIfNotPaired() {
+                const matchExist = await MatchORM.checkMatchExist(match._id);
+                if (matchExist) {
+                    console.log("\x1b[33m%s\x1b[0m", `Match ${match._id} timed out`);
+                    MatchORM.removeMatchById(match._id);
+                }
+            }
+            cleanMatchIfNotPaired();
         }, 30 * 1000);
     
         return res.status(200).json({
