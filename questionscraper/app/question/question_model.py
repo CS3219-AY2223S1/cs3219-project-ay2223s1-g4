@@ -3,7 +3,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String, Enum
 from sqlalchemy.dialects.mysql import MEDIUMTEXT
 from sqlalchemy.orm import relationship
 
-from question.connector import Base
+from app.question.connector import Base
 
 class Difficulty(enum.Enum):
     easy = 1
@@ -13,9 +13,9 @@ class Difficulty(enum.Enum):
 class QuestionIndex(Base):
     __tablename__ = "questionindex"
     id = Column(Integer, primary_key = True, index=True)
+    title = Column(String)
     href = Column(String, unique=True)
     difficulty = Column(Enum(Difficulty), index=True)
-    title = Column(String)
     companies = relationship('CompanyQuestions', back_populates="questionindex")
     solution = relationship("Solution")
     question = relationship("Question")
@@ -27,14 +27,14 @@ class CompanyQuestions(Base):
 
 class Question(Base):
     __tablename__ = "question"
-    id = Column(Integer, ForeignKey("questionindex.id"), primary_key = True)
+    id = Column(Integer, ForeignKey("questionindex.id"), primary_key=True, index=True)
+    title = Column(String)
     problem = Column(MEDIUMTEXT, nullable=False)
+    explanation = Column(String, unique=True)
+    code = Column(String)
 
-class Solution(Base):
-    __tablename__= "solution"
-    id = Column(Integer, ForeignKey("questionindex.id"), primary_key = True, index=True)
-    problem = Column(MEDIUMTEXT, nullable=False)
-    leetcode = Column(String)
+
+
 
 class UserHistory(Base):
     __tablename__ = 'userhistory'

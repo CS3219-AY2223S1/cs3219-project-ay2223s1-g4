@@ -1,18 +1,23 @@
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import LogoutButton from "../components/buttons/LogoutButton";
 import SelectDifficultyButton from "../components/buttons/SelectDifficultyButton";
 import Profile from "../components/user/Profile";
 import { useAuth0 } from "@auth0/auth0-react";
 import UpdateDetailsForm from "../components/form/UpdateDetailsForm";
 import DeleteAccount from "../components/buttons/DeleteUserButton";
+import { generateQuestionId } from "../services/question_service";
+import {useEffect, useState} from 'react';
 
 function DashBoard() {
-  const { isAuthenticated, isLoading } = useAuth0();
+  const {user, isAuthenticated, isLoading } = useAuth0();
+
+  
 
   if (isLoading) {
     return <div>Loading ...</div>;
   }
 
+  
   return (
     isAuthenticated && (
       <Stack>

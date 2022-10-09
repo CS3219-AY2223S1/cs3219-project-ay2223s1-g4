@@ -1,5 +1,5 @@
 # dependencies
-/node_modules
+*node_modules/*
 
 # production
 /build
@@ -12,3 +12,4 @@ npm-debug.log*
 *.gz
 secret.*
 .env
+*.idea/*

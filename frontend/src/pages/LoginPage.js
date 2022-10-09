@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
 import {Stack} from "@mui/material";
 import RegisterButton from '../components/buttons/RegisterButton';
+import QuestionBox from "../components/QuestionBox";
 
 function LoginPage() {
 
@@ -33,6 +34,8 @@ function LoginPage() {
         <LoginButton fullWidth='true' margin="20px"></LoginButton>
         <RegisterButton fullWidth='true' margin="20px"></RegisterButton>
       </Stack>
+    <QuestionBox questionId={1}></QuestionBox>
+
     </Box>
   );
 }
