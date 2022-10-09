@@ -4,9 +4,15 @@ import React, { useEffect, useState } from "react";
 import EASY_QUESTION from '../mock/EasyQuestion';
 import MEDIUM_QUESTION from '../mock/MediumQuestion';
 import HARD_QUESTION from '../mock/HardQuestion';
+import { Tab, Tabs, Typography } from '@mui/material';
+import TabPanel, { a11yProps } from './tab/TabPanel';
 
 function QuestionBox({ questionId }) {
-    const [content, setContent] = useState('Loading question...');
+    const [title, setTitle] = useState('Loading Title');
+    const [problem, setProblem] = useState('Loading question...');
+    const [solution, setSolution] = useState('Loading solution...');
+
+    const [tab, setTab] = React.useState(0);
 
     useEffect(() => {
         console.log(`Displaying question ${questionId}`);
@@ -15,9 +21,15 @@ function QuestionBox({ questionId }) {
             0,
             Math.min(questionId, questions.length - 1)
         )];
-        setContent(randomQuestion);
+        setTitle("Two Sum");
+        setProblem(randomQuestion);
+        setSolution('Solution')
     }, [questionId]);
-    
+
+    const handleChange = (event, tabVal) => {
+        setTab(tabVal);
+      };
+
     return (
         <Box
             sx={{
@@ -27,9 +39,21 @@ function QuestionBox({ questionId }) {
             paddingY='1px'
             margin='3px'
         >
-            <ReactMarkdown>
-                {content}
-            </ReactMarkdown>
+            <Typography variant='h2' >{title}</Typography>
+            <Tabs value={tab} onChange={handleChange} >
+                <Tab label="Problem" {...a11yProps(0)} />
+                <Tab label="Solution" {...a11yProps(1)} />
+            </Tabs>
+            <TabPanel value={tab} index={0}>
+                <ReactMarkdown>
+                    {problem}
+                </ReactMarkdown>
+            </TabPanel>
+            <TabPanel value={tab} index={1}>
+                <ReactMarkdown>
+                    {solution}
+                </ReactMarkdown>
+            </TabPanel>
         </Box>
     );
 }
