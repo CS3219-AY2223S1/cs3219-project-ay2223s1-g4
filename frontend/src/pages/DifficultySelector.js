@@ -3,8 +3,8 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
+import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from "react-router-dom";
 import { URL_MATCHING_MATCH_SVC } from '../configs';
 
@@ -20,19 +20,16 @@ function DifficultySelector() {
 
     const difficulties = ['Easy', 'Medium', 'Hard'];
 
-
     const loadRoom = (difficulty) => {
         axios.post(URL_MATCHING_MATCH_SVC, {
                 difficulty: difficulty.toUpperCase(),
                 user: {
                     sub: user.sub
-                } // TODO
+                }
             })
             .then((res) => {
                 console.log(res);
-                navigateTo('../loading', {
-                    state: {matchid: res.data.matchId}
-                });
+                navigateTo(`../loading/${res.data.matchId}`);
             })
             .catch((err) => {
                 console.log(err);

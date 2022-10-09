@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import MatchModel from './match-model.js';
+import RoomModel from './room-model.js';
 import { DB_URI } from '../configs/config.js';
 
 let Respository = {
@@ -11,7 +11,7 @@ let Respository = {
         let db = mongoose.connection;
         db.once('open', () => {
             console.log(`Connected to database ${DB_URI}`);
-            MatchModel.deleteMany({}).then((output) => {
+            RoomModel.deleteMany({}).then((output) => {
                 console.log('Database cleared');
             });
         });

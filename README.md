@@ -13,6 +13,7 @@ The following are the services present to support this application.
 | 2 | Matching | Provides matching services for users. | 8001 | MongoDB |
 | 3 | Collaboration | Provides collaboration service for users. | 8002 | MongoDB |
 | 4 | Question | Provides questions for collaboration practice. | 8003 | TBC |
+| 5 | PubSub | Allows inter-service communication. | 8004 | NIL |
 
 Note that Auth0 is also used for authentication and its services are called upon for each service for security reasons.
 
@@ -27,21 +28,29 @@ Note that Auth0 is also used for authentication and its services are called upon
 
 1. Rename `.env.sample` file to `.env`.
 2. Update relevant variables in the `.env` file.
-4. Install npm packages using `npm i`.
-5. Run service using `npm run dev`.
+3. Install npm packages using `npm i`.
+4. Run service using `npm run dev`.
 
 
 ## Collaboration Service
 
 1. Rename `.env.sample` file to `.env`.
 2. Update relevant variables in the `.env` file.
-4. Install npm packages using `npm i`.
-5. Run service using `npm run dev`.
+3. Install npm packages using `npm i`.
+4. Run service using `npm run dev`.
 
 
 ## Question Service
 
 1. Rename `.env.sample` file to `.env`.
 2. Update relevant variables in the `.env` file.
-4. Install npm packages using `npm i`.
-5. Run service using `npm run dev`.
+3. Install npm packages using `npm i`.
+4. Run service using `npm run dev`.
+
+
+## PubSub Service
+
+1. Rename `.env.sample` file to `.env`.
+2. Update relevant variables in the `.env` file.
+3. Install npm packages using `npm i`.
+4. Run service using `npm run dev`.
