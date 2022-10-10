@@ -19,20 +19,39 @@ function LoginPage() {
   }
 
   return (
-    <Box display={"flex"} flexDirection={"row"} justifyContent={"flex-end"}>
-      <Typography variant="h2">Welcome to PeerPrep!</Typography>
+    <Box
+      display={"flex"}
+      flexDirection={"row"}
+      alignItems={"center"}
+      justifyContent={"center"}
+    >
       <Box margin={"1rem"}>
-        <Typography variant="h4">About</Typography>
-        <Typography margin={"1rem"}>PeerPrep is a ...</Typography>
-        <Typography variant="h4">How to use</Typography>
+        <Typography variant="h2">Welcome to PeerPrep!</Typography>
+        <Typography variant="h4">What is PeerPrep?</Typography>
         <Typography margin={"1rem"}>
+          PeerPrep is a website for geeks to improve their algorithmic skills
+          with online peer coding sessions!
+        </Typography>
+        <Typography variant="h4">How to use PeerPrep?</Typography>
+        <Typography margin={"1rem"}>
+          Peer prep matches geeks in a 1 to 1 setting to complete a series of
+          common coding questions.
+        </Typography>
+        <Typography variant="h4">Why PeerPrep?</Typography>
+        <Typography margin={"1rem"}>
+          Peer prep simulates live technical interviews and also allows you to
+          improve your coding skills and hopefully to break through the OA
+          rounds!
+        </Typography>
+        <Typography variant="h4">
           Sign up now to try out PeerPrep!
         </Typography>
+
+        <Stack justifyContent="center">
+          <LoginButton fullWidth="true" margin="20px"></LoginButton>
+          <RegisterButton fullWidth="true" margin="20px"></RegisterButton>
+        </Stack>
       </Box>
-      <Stack justifyContent="center">
-        <LoginButton fullWidth='true' margin="20px"></LoginButton>
-        <RegisterButton fullWidth='true' margin="20px"></RegisterButton>
-      </Stack>
     </Box>
   );
 }
