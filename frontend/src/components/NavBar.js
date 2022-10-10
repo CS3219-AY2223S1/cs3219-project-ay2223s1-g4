@@ -20,14 +20,6 @@ function NavBar() {
       link: "/selectdifficulty",
     },
     {
-      name: "Train",
-      link: "/room",
-    },
-    {
-      name: "Wait",
-      link: "/loading",
-    },
-    {
       name: "Profile",
       link: "/ProfilePage",
     }
