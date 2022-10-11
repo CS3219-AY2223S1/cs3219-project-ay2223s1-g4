@@ -1,6 +1,7 @@
-const express = require("express");
-const cors = require("cors");
-const ManagementClient = require("auth0").ManagementClient;
+import express from "express";
+import cors from "cors";
+import { ManagementClient } from "auth0";
+import { PORT } from "./config/config.js";
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -31,6 +32,6 @@ app.post("/delete", (req, res) => {
     .finally(res.end("completed"));
 });
 
-app.listen(8393, () => {
-  console.log("Started on PORT 8393");
+app.listen(PORT, () => {
+  console.log("Started on PORT: " + PORT);
 });
