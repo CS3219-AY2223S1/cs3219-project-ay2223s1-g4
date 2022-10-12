@@ -1,7 +1,11 @@
 import express from "express";
-import { auth } from "express-oauth2-jwt-bearer";
+const app = express();
 import cors from "cors";
 import { ManagementClient } from "auth0";
+import { expressjwt } from "express-jwt";
+import jwksRsa from "jwks-rsa";
+import { auth, requiredScopes } from "express-oauth2-jwt-bearer";
+import dotenv from "dotenv";
 import {
   PORT,
   AUTH0_DOMAIN,
@@ -12,16 +16,17 @@ import {
   AUDIENCE,
 } from "./config/config.js";
 
-const app = express();
+dotenv.config();
+if (!process.env.ISSUER_BASE_URL || !AUDIENCE) {
+  throw "Make sure you have ISSUER_BASE_URL, and AUDIENCE in your .env file";
+}
+const corsOptions = {
+  origin: "http://localhost:3000",
+};
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors()); // config cors so that front-end can use
-app.options("*", cors());
-
-const checkJwt = auth({
-  audience: AUDIENCE,
-  issuerBaseURL: ISSUER_BASE_URL,
-});
+const checkJwt = auth();
 
 var auth0 = new ManagementClient({
   domain: AUTH0_DOMAIN,
@@ -30,7 +35,7 @@ var auth0 = new ManagementClient({
   scope: AUTH0_SCOPE,
 });
 
-app.post("/delete", checkJwt, (req, res) => {
+app.get("/delete", checkJwt, (req, res) => {
   console.log(req);
   // console.log(req.body.user.sub);
   // auth0
