@@ -6,7 +6,7 @@ import axios from "axios";
 
 const DeleteAccount = ({ margin, fullWidth }) => {
   const { user, getAccessTokenSilently } = useAuth0();
-  const handleClick = () => {
+  const handleClick = async () => {
     // TODO: update user data here, using same code that updates form
     // const getUserMetadata = async () => {
     //   const domain = AUTH0_DOMAIN;
@@ -35,9 +35,21 @@ const DeleteAccount = ({ margin, fullWidth }) => {
 
     //TODO: use the same config file as backend to prevent sync problems
     const deleteApiUrl = "http://localhost:8393/delete";
+    var token;
+    try {
+      token = await getAccessTokenSilently();
+    } catch (e) {
+      console.log("error is " + e);
+      token = "";
+    }
+    console.log(token);
     axios
       .post(deleteApiUrl, {
-        user,
+        headers: {
+          authorization: `Bearer ${token}`,
+          "content-type": "application/json",
+        },
+        body: { user },
       })
       .then((response) => {
         window.location.replace("/");
