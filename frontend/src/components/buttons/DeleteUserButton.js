@@ -34,7 +34,7 @@ const DeleteAccount = ({ margin, fullWidth }) => {
     // };
 
     //TODO: use the same config file as backend to prevent sync problems
-    var token;
+    const deleteApiUrl = "http://localhost:8393/delete";
     fetch("https://elgoh.us.auth0.com/oauth/token", {
       method: "POST",
       headers: {
@@ -42,24 +42,26 @@ const DeleteAccount = ({ margin, fullWidth }) => {
       },
       body: '{"client_id":"DDzHSSAHN9vZsaGL0BxDQ36vN5U1qOJH","client_secret":"s1eDnY854jJ-Flc06AxkQgHg8CBeikqouBZwY2proDdNKlZGYsRcNCp_wUP210SS","audience":"https://user-service.com","grant_type":"client_credentials"}',
     })
-      .then(res => res.json()).then(json => {
-        token = json.access_token
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        fetch(deleteApiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${json.access_token}`,
+          },
+          body: JSON.stringify({
+            id: user.sub,
+          }),
+        }).then((resp) => {
+          console.log(resp);
+          window.location.replace('/')
+        });
       })
       .catch((e) => {
         console.log(e);
       });
-      const deleteApiUrl = "http://localhost:8393/delete";
-      try {
-        const response = await fetch(deleteApiUrl, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        console.log(response);
-        // window.location.replace("/");
-      } catch (e) {
-        console.log(e);
-      }
   };
   return (
     <Button

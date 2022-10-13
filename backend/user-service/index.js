@@ -1,5 +1,6 @@
 import express from "express";
 const app = express();
+app.use(express.json());
 import cors from "cors";
 import { ManagementClient } from "auth0";
 import { expressjwt } from "express-jwt";
@@ -25,8 +26,24 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-const checkJwt = auth();
+
+const checkJwt = auth({
+  audience: AUDIENCE,
+  issuerBaseURL: ISSUER_BASE_URL,
+});
+
+var jwtCheck = expressjwt({
+  secret: jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: "https://elgoh.us.auth0.com/.well-known/jwks.json",
+  }),
+  audience: "https://user-service.com",
+  issuer: "https://elgoh.us.auth0.com/",
+  algorithms: ["RS256"],
+});
+app.use(jwtCheck);
 
 var auth0 = new ManagementClient({
   domain: AUTH0_DOMAIN,
@@ -35,15 +52,14 @@ var auth0 = new ManagementClient({
   scope: AUTH0_SCOPE,
 });
 
-app.get("/delete", checkJwt, (req, res) => {
-  console.log(req);
-  // console.log(req.body.user.sub);
-  // auth0
-  //   .deleteUser({ id: req.body.user.sub })
-  //   .catch((e) => {
-  //     console.log(e);
-  //   })
-  //   .finally(res.end("completed"));
+app.post("/delete", (req, res) => {
+  console.log(req.body.id);
+  auth0
+    .deleteUser({ id: req.body.id })
+    .catch((e) => {
+      console.log(e);
+    })
+    .finally(res.end("completed"));
 });
 
 app.listen(PORT, () => {
