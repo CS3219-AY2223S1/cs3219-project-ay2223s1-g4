@@ -27,10 +27,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 
-const checkJwt = auth({
-  audience: AUDIENCE,
-  issuerBaseURL: ISSUER_BASE_URL,
-});
 
 var jwtCheck = expressjwt({
   secret: jwksRsa.expressJwtSecret({
