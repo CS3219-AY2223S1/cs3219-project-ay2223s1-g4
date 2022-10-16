@@ -27,7 +27,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 
-
 var jwtCheck = expressjwt({
   secret: jwksRsa.expressJwtSecret({
     cache: true,
@@ -48,10 +47,30 @@ var auth0 = new ManagementClient({
   scope: AUTH0_SCOPE,
 });
 
-app.post("/delete", (req, res) => {
+app.delete("/delete", (req, res) => {
   console.log(req.body.id);
   auth0
     .deleteUser({ id: req.body.id })
+    .catch((e) => {
+      console.log(e);
+    })
+    .finally(res.end("completed"));
+});
+
+app.post("/updateusername", (req, res) => {
+  console.log(req.body.id);
+  auth0
+    .updateUser({ id: req.body.id }, { nickname: "neon tetras" })
+    .catch((e) => {
+      console.log(e);
+    })
+    .finally(res.end("completed"));
+});
+
+app.post("/changepassword", (req, res) => {
+  console.log(req.body.id);
+  auth0
+    .updateUser({ id: req.body.id }, { password: "SeCret123" })
     .catch((e) => {
       console.log(e);
     })

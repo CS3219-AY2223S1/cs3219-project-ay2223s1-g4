@@ -7,6 +7,7 @@ import DifficultySelector from "./pages/DifficultySelector";
 import LoginPage from "./pages/LoginPage";
 import DashBoard from "./pages/DashBoard";
 import ProfilePage from "./pages/ProfilePage";
+import ChangePasswordPage from "./pages/ChangePasswordPage"
 import RequireAuth from "./routers/RequireAuth";
 import { Navigate } from "react-router-dom";
 import { Box } from "@mui/material";
@@ -54,6 +55,14 @@ function App() {
               element={
                 <RequireAuth>
                   <ProfilePage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/ChangePasswordPage"
+              element={
+                <RequireAuth>
+                  <ChangePasswordPage />
                 </RequireAuth>
               }
             />
