@@ -5,8 +5,8 @@ import ChangePasswordButton from "../components/buttons/ChangePasswordButton";
 
 function ChangePasswordPage() {
   const { isAuthenticated, isLoading } = useAuth0();
-  const { newPassword, setNewPassword } = useState("");
-  const { confirmNewPassword, setNewConfirmationPassword } = useState("");
+  const [ newPassword, setNewPassword ] = useState("");
+  const [ confirmNewPassword, setConfirmNewPassword ] = useState("");
   if (isLoading) {
     return <div>Loading ...</div>;
   }
@@ -16,7 +16,7 @@ function ChangePasswordPage() {
   };
 
   const handleNewConfirmPassword = (event) => {
-    setNewConfirmationPassword(event.target.value);
+    setConfirmNewPassword(event.target.value);
   };
   return (
     isAuthenticated && (

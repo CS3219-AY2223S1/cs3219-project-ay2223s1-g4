@@ -1,10 +1,8 @@
-
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Button } from "@mui/material";
 
 const ChangePasswordButton = (props) => {
-
   const { user } = useAuth0();
   const handleClick = async (password) => {
     const changePasswordApiUrl = "http://localhost:8393/changepassword";
@@ -30,7 +28,7 @@ const ChangePasswordButton = (props) => {
           }),
         }).then((resp) => {
           console.log(resp);
-          window.confirm("Password successfully updated!")
+          window.confirm("Password successfully updated!");
         });
       })
       .catch((e) => {
@@ -47,13 +45,13 @@ const ChangePasswordButton = (props) => {
       }}
       sx={{ m: 2 }}
       onClick={() => {
-        if (props.newPassword != props.newConfirmPassword) {
+        if (props.newPassword != props.confirmNewPassword) {
           window.confirm(
             "Passwords are different. Please ensure that both passwords are the same."
           );
         } else if (
           window.confirm(
-            "Are you sure that you would like to delete your account?"
+            "Are you sures that you would like to delete your account?"
           )
         ) {
           // Delete account
