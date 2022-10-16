@@ -6,7 +6,7 @@ import { Button } from "@mui/material";
 const ChangePasswordButton = (props) => {
 
   const { user } = useAuth0();
-  const handleClick = async () => {
+  const handleClick = async (password) => {
     const changePasswordApiUrl = "http://localhost:8393/changepassword";
     fetch("https://elgoh.us.auth0.com/oauth/token", {
       method: "POST",
@@ -18,7 +18,7 @@ const ChangePasswordButton = (props) => {
       .then((res) => res.json())
       .then((json) => {
         console.log(json);
-        fetch(deleteApiUrl, {
+        fetch(changePasswordApiUrl, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -26,6 +26,7 @@ const ChangePasswordButton = (props) => {
           },
           body: JSON.stringify({
             id: user.sub,
+            pw: password,
           }),
         }).then((resp) => {
           console.log(resp);
@@ -34,6 +35,7 @@ const ChangePasswordButton = (props) => {
       })
       .catch((e) => {
         console.log(e);
+        // TODO: extract error message from e.
         window.confirm("Password failed to get updated");
       });
   };
@@ -45,13 +47,17 @@ const ChangePasswordButton = (props) => {
       }}
       sx={{ m: 2 }}
       onClick={() => {
-        if (
+        if (props.newPassword != props.newConfirmPassword) {
+          window.confirm(
+            "Passwords are different. Please ensure that both passwords are the same."
+          );
+        } else if (
           window.confirm(
             "Are you sure that you would like to delete your account?"
           )
         ) {
           // Delete account
-          handleClick();
+          handleClick(props.newPassword);
         }
       }}
     >

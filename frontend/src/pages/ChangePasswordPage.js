@@ -11,13 +11,13 @@ function ChangePasswordPage() {
     return <div>Loading ...</div>;
   }
 
-  function handleNewPassword(event) {
-    setNewPassword(event.target.value)
-  }
+  const handleNewPassword = (event) => {
+    setNewPassword(event.target.value);
+  };
 
-  function handleNewConfirmPassword(event) {
+  const handleNewConfirmPassword = (event) => {
     setNewConfirmationPassword(event.target.value);
-  }
+  };
   return (
     isAuthenticated && (
       <Stack>
@@ -38,7 +38,10 @@ function ChangePasswordPage() {
             />
             {}
           </div>
-          <ChangePasswordButton newPassword = {newPassword} confirmNewPassword = {confirmNewPassword}/>
+          <ChangePasswordButton
+            newPassword={newPassword}
+            confirmNewPassword={confirmNewPassword}
+          />
         </Box>
       </Stack>
     )

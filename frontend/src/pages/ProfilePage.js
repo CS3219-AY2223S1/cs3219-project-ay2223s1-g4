@@ -1,17 +1,16 @@
 import { Box, Stack } from "@mui/material";
-import Profile from "../components/user/Profile";
 import { useAuth0 } from "@auth0/auth0-react";
-import React, { useState } from "react";
-import UpdateDetailsForm from "../components/form/UpdateDetailsForm";
+import React, { useEffect, useState } from "react";
 import DeleteAccount from "../components/buttons/DeleteUserButton";
 import UpdateUsernameButton from "../components/buttons/UpdateUsernameButton";
-import ChangePasswordButton from "../components/buttons/ChangePasswordButton";
 import { Button } from "@mui/material";
 import Link from "@mui/material/Link";
 
 function ProfilePage() {
   const { user, isAuthenticated, isLoading } = useAuth0();
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(""); // This is for the input, it is also nickname
+  const [nickname, setNickname] = useState(user.nickname);
+
   if (isLoading) {
     return <div>Loading ...</div>;
   }
@@ -24,6 +23,10 @@ function ProfilePage() {
     setUsername("");
   };
 
+  const updateNickname = (nickname) => {
+    setNickname(nickname);
+  };
+
   return (
     isAuthenticated && (
       <Stack>
@@ -31,10 +34,14 @@ function ProfilePage() {
           <div>
             <img src={user.picture} alt={user.name} />
             <h3>Nickname (other users will see)</h3>
-            <body1>{user.nickname}</body1>
+            <body1>{nickname}</body1>
             <div />
             <input type="text" value={username} onChange={handleUpdate} />
-            <UpdateUsernameButton input={username} onClick={removeText} />
+            <UpdateUsernameButton
+              input={username}
+              onClick={removeText}
+              updateNickname={updateNickname}
+            />
             <h3>Email</h3>
             <p>{user.email}</p>
             {}

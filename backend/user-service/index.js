@@ -60,7 +60,7 @@ app.delete("/delete", (req, res) => {
 app.post("/updateusername", (req, res) => {
   console.log(req.body.id);
   auth0
-    .updateUser({ id: req.body.id }, { nickname: "neon tetras" })
+    .updateUser({ id: req.body.id }, { nickname: req.body.nickname })
     .catch((e) => {
       console.log(e);
     })
@@ -70,7 +70,7 @@ app.post("/updateusername", (req, res) => {
 app.post("/changepassword", (req, res) => {
   console.log(req.body.id);
   auth0
-    .updateUser({ id: req.body.id }, { password: "SeCret123" })
+    .updateUser({ id: req.body.id }, { password: "PassWord1234!" })
     .catch((e) => {
       console.log(e);
     })

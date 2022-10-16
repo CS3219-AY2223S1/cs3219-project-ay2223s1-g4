@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 
 const UpdateUsernameButton = (props) => {
   const { user } = useAuth0();
-  const handleClick = async () => {
+  const handleClick = async (nickname) => {
     console.log(props.input);
     const updateUserNameApiUrl = "http://localhost:8393/updateusername";
     fetch("https://elgoh.us.auth0.com/oauth/token", {
@@ -17,7 +17,7 @@ const UpdateUsernameButton = (props) => {
       .then((res) => res.json())
       .then((json) => {
         console.log(json);
-        fetch(deleteApiUrl, {
+        fetch(updateUserNameApiUrl, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -25,10 +25,12 @@ const UpdateUsernameButton = (props) => {
           },
           body: JSON.stringify({
             id: user.sub,
+            nickname: nickname,
           }),
         }).then((resp) => {
           console.log(resp);
-          window.confirm("Nickname has been updated!")
+          props.updateNickname(nickname);
+          window.confirm("Nickname has been updated!");
         });
       })
       .catch((e) => {
@@ -43,9 +45,13 @@ const UpdateUsernameButton = (props) => {
       }}
       sx={{ m: 2 }}
       onClick={() => {
-        if (window.confirm("Are you sure that you would like to ")) {
+        if (
+          window.confirm(
+            "Are you sure that you would like to change your nickname?"
+          )
+        ) {
           // Delete account
-          handleClick();
+          handleClick(props.input);
         }
       }}
     >
