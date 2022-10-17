@@ -16,13 +16,13 @@ let PubSubSocketManager = (function() {
             socket.emit('subscribe', event);
         });
         socket.on(ROOM_CREATED_TAG, (data) => {
-            console.log(`Received from event ${ROOM_CREATED_TAG} data ${JSON.stringify(data)}`);
+            console.log("\x1b[32m%s\x1b[0m", `Received from event ${ROOM_CREATED_TAG} data ${JSON.stringify(data)}`);
             MatchSocketManager.pushRoomDetails(data);
         });
     };
 
     function publish(event, data) {
-        console.log(`Publishing to ${event} with data ${JSON.stringify(data)}`);
+        console.log("\x1b[32m%s\x1b[0m", `Publishing to ${event} with data ${JSON.stringify(data)}`);
         socket.emit('publish', event, null, data);
     };
 

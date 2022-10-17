@@ -6,8 +6,10 @@ import Loading from "./components/loading";
 import DifficultySelector from "./pages/DifficultySelector";
 import LoginPage from "./pages/LoginPage";
 import DashBoard from "./pages/DashBoard";
+import ProfilePage from "./pages/ProfilePage";
+import ChangePasswordPage from "./pages/ChangePasswordPage"
 import RequireAuth from "./routers/RequireAuth";
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import RoomPage from "./pages/RoomPage";
@@ -48,21 +50,41 @@ function App() {
                 </RequireAuth>
               }
             />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/room/:collabId" element={<RequireAuth>
-                  <RoomPage/>
-                </RequireAuth>} />
-
-            <Route path="/loading/:loadingId" element={
+            <Route
+              path="/ProfilePage"
+              element={
                 <RequireAuth>
-                  <LoadingPage/>
+                  <ProfilePage />
                 </RequireAuth>
-               }
-            />
-            <Route path="*" element={
-                < Navigate to={{pathname: '/'}} />
               }
             />
+            <Route
+              path="/ChangePasswordPage"
+              element={
+                <RequireAuth>
+                  <ChangePasswordPage />
+                </RequireAuth>
+              }
+            />
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/room/:collabId"
+              element={
+                <RequireAuth>
+                  <RoomPage />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/loading/:loadingId"
+              element={
+                <RequireAuth>
+                  <LoadingPage />
+                </RequireAuth>
+              }
+            />
+            <Route path="*" element={<Navigate to={{ pathname: "/" }} />} />
           </Routes>
         </Router>
       </Box>
