@@ -18,7 +18,7 @@ const UpdateUsernameButton = (props) => {
       .then((json) => {
         console.log(json);
         fetch(updateUserNameApiUrl, {
-          method: "POST",
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${json.access_token}`,

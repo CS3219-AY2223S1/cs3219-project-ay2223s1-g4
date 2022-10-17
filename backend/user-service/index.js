@@ -57,7 +57,7 @@ app.delete("/delete", (req, res) => {
     .finally(res.end("completed"));
 });
 
-app.post("/updateusername", (req, res) => {
+app.patch("/updateusername", (req, res) => {
   console.log(req.body.id);
   auth0
     .updateUser({ id: req.body.id }, { nickname: req.body.nickname })
@@ -67,7 +67,7 @@ app.post("/updateusername", (req, res) => {
     .finally(res.end("completed"));
 });
 
-app.post("/changepassword", async (req, res) => {
+app.patch("/changepassword", async (req, res, next) => {
   console.log(req.body.pw);
   try {
     const response = await auth0.updateUser(
@@ -78,19 +78,9 @@ app.post("/changepassword", async (req, res) => {
     console.log("no error occured");
     res.end("complete");
   } catch (e) {
-    console.log(e.);
-    console.log("error thrown");
-    res.end("Did not change password");
+    console.log(e.message);
+    res.send(e.message);
   }
-  // auth0
-  //   .updateUser({ id: req.body.id }, { password: req.body.pw })
-  //   .then((response) => {
-  //     res.end(response);
-  //   })
-  //   .catch((e) => {
-  //     res.end(e);
-  //   })
-  //   .finally(res.end("error"));
 });
 
 app.listen(PORT, () => {

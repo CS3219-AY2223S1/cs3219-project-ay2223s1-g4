@@ -5,8 +5,8 @@ import ChangePasswordButton from "../components/buttons/ChangePasswordButton";
 
 function ChangePasswordPage() {
   const { isAuthenticated, isLoading } = useAuth0();
-  const [ newPassword, setNewPassword ] = useState("");
-  const [ confirmNewPassword, setConfirmNewPassword ] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
   if (isLoading) {
     return <div>Loading ...</div>;
   }
@@ -24,6 +24,15 @@ function ChangePasswordPage() {
         <Box>
           <div>
             <div />
+            <h3>Password requirements</h3>
+            <body>
+              Your password must contain: At least 8 characters and At least 3
+              of the following:
+            </body>
+            <body>- Lower case letters (a-z) </body>
+            <body>- Upper case letters (A-Z)</body>
+            <body>- Numbers (0-9) </body>
+            <body>- Special characters (e.g. !@#$%^&*)</body>
             <h3>New password</h3>
             <input
               type="password"

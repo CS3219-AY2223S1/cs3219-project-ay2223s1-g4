@@ -15,9 +15,8 @@ const ChangePasswordButton = (props) => {
     })
       .then((res) => res.json())
       .then((json) => {
-        console.log(json);
         fetch(changePasswordApiUrl, {
-          method: "POST",
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${json.access_token}`,
@@ -27,12 +26,16 @@ const ChangePasswordButton = (props) => {
             pw: password,
           }),
         }).then((resp) => {
-          console.log(resp);
-          window.confirm("Password successfully updated!");
+          console.log(resp.ok);
+          if (resp.ok) {
+            window.confirm("Password successfully updated!");
+          } else {
+            window.confirm("Password did not fulfill the requirements!");
+          }
         });
       })
       .catch((e) => {
-        console.log(e);
+        console.log(e.message);
         // TODO: extract error message from e.
         window.confirm("Password failed to get updated");
       });
@@ -45,13 +48,13 @@ const ChangePasswordButton = (props) => {
       }}
       sx={{ m: 2 }}
       onClick={() => {
-        if (props.newPassword != props.confirmNewPassword) {
+        if (props.newPassword !== props.confirmNewPassword) {
           window.confirm(
             "Passwords are different. Please ensure that both passwords are the same."
           );
         } else if (
           window.confirm(
-            "Are you sures that you would like to delete your account?"
+            "Are you sures that you would like to change your password?"
           )
         ) {
           // Delete account
