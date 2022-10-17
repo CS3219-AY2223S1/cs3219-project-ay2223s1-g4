@@ -13,6 +13,7 @@ The following are the services present to support this application.
 | 3   | Collaboration | Provides collaboration service for users.      | 8002         | MongoDB          |
 | 4   | Question      | Provides questions for collaboration practice. | 8003         | TBC              |
 | 5   | PubSub        | Allows inter-service communication.            | 8004         | NIL              |
+| 6   | User          | Allows update of user particulars .            | 8393         | NIL              |
 
 Note that Auth0 is also used for authentication and its services are called upon for each service for security reasons.
 
