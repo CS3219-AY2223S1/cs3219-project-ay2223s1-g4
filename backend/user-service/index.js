@@ -5,7 +5,6 @@ import cors from "cors";
 import { ManagementClient } from "auth0";
 import { expressjwt } from "express-jwt";
 import jwksRsa from "jwks-rsa";
-import { auth, requiredScopes } from "express-oauth2-jwt-bearer";
 import dotenv from "dotenv";
 import {
   PORT,
@@ -18,7 +17,7 @@ import {
 } from "./config/config.js";
 
 dotenv.config();
-if (!process.env.ISSUER_BASE_URL || !AUDIENCE) {
+if (!ISSUER_BASE_URL || !AUDIENCE) {
   throw "Make sure you have ISSUER_BASE_URL, and AUDIENCE in your .env file";
 }
 const corsOptions = {

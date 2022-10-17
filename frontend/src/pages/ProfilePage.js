@@ -1,6 +1,6 @@
 import { Box, Stack } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import DeleteAccount from "../components/buttons/DeleteUserButton";
 import UpdateUsernameButton from "../components/buttons/UpdateUsernameButton";
 import { Button } from "@mui/material";
