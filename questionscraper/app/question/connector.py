@@ -24,8 +24,8 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
     # secure - consider a more secure solution such as
     # Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
     # keep secrets safe.
-    db_host =  '34.173.118.97'#os.environ["INSTANCE_HOST"]  # e.g. '127.0.0.1' ('172.17.0.1' if deployed to GAE Flex)
-    db_user = 'questiongetter'#os.environ["DB_USER"]  # e.g. 'my-db-user'
+    db_host =  "localhost"#'34.173.118.97'#os.environ["INSTANCE_HOST"]  # e.g. '127.0.0.1' ('172.17.0.1' if deployed to GAE Flex)
+    db_user = 'questionservice' #'questiongetter'#os.environ["DB_USER"]  # e.g. 'my-db-user'
     db_pass = 'Password1!' #os.environ["DB_PASS"]  # e.g. 'my-db-password'
     db_name = 'testDB'#os.environ["DB_NAME"]  # e.g. 'my-database'
     db_port = 3306#os.environ["DB_PORT"]  # e.g. 3306
@@ -41,13 +41,14 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
             port=db_port,
             database=db_name,
         ),
-        pool_pre_ping=True
+        pool_pre_ping=True,
+        echo = True
     )
 
     return pool
 
 def createSession():
-    return sessionmaker(autocommit=False, autoflush=True,bind=createSession())
+    return sessionmaker(autocommit=False, autoflush=True,bind=connect_tcp_socket())
 
 Base = declarative_base()
 
