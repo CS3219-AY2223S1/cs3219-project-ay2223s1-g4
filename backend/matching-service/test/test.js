@@ -1,14 +1,17 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import httpServer from '../src/index.js';
-import { attemptToMatch } from '../src/service/matcher.js';
+import MatchORM from '../src/model/match-orm.js';
 
 // Configure chai
 chai.use(chaiHttp);
 chai.should();
+const expect = chai.expect;
 
-describe("Matching", () => {
-    it("Should create match 1", (done) => {
+let match1_id, match2_id, match3_id, match4_id, match5_id, match6_id, match7_id, match8_id, match9_id = null;
+
+describe("Testing Matching Service", () => {
+    it("Create match1 + match1 should be removed within 3 seconds after the 30 seconds timeout", async() => {
         chai.request(httpServer)
             .post('/api/match')
             .send({
@@ -21,32 +24,20 @@ describe("Matching", () => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 res.body.should.have.property('matchId');
-                done();
+                match1_id = res.body.matchId;
             });
+        
+        await new Promise(resolve => setTimeout(resolve, 33 * 1000));
+        await MatchORM.checkMatchExist(match1_id).then((result) => {
+            expect(result).to.be.false;
+        });
     });
-    
-    it("Should create match 2", (done) => {
+
+    it("Create match2 and match3 (of same difficulty) + match2 and match3 should pair together within 3 seconds", async () => {
         chai.request(httpServer)
             .post('/api/match')
             .send({
                 "difficulty": "EASY",
-                "user": {
-                    "sub": "auth0|987654321098765432109"
-                }
-            })
-            .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.be.a('object');
-                res.body.should.have.property('matchId');
-                done();
-            });
-    });
-
-    it("Should create match 3", (done) => {
-        chai.request(httpServer)
-            .post('/api/match')
-            .send({
-                "difficulty": "MEDIUM",
                 "user": {
                     "sub": "auth0|234567890123456789012"
                 }
@@ -55,56 +46,13 @@ describe("Matching", () => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 res.body.should.have.property('matchId');
-                done();
+                match2_id = res.body.matchId;
             });
-    });
-
-    it("Should create match 4", (done) => {
+        
         chai.request(httpServer)
             .post('/api/match')
             .send({
-                "difficulty": "HARD",
-                "user": {
-                    "sub": "auth0|876543210987654321098"
-                }
-            })
-            .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.be.a('object');
-                res.body.should.have.property('matchId');
-                done();
-            });
-    });
-
-    it("Should find a match with match 1 and match 2", (done) => {
-        setTimeout(() => {
-            console.log(
-                attemptToMatch('EASY').then((found) => {
-                    found.should.be.a('boolean');
-                    found.should.be.true;
-                }
-            ));
-        done();
-        }, 0.5 * 1000);
-    });
-
-    it("Should not find a match for match 3", (done) => {
-        setTimeout(() => {
-            console.log(
-                attemptToMatch('MEDIUM').then((found) => {
-                    found.should.be.a('boolean');
-                    found.should.be.false;
-                }
-            ));
-            done();
-        }, 30 * 1000);
-    });
-
-    it("Should create match 5", (done) => {
-        chai.request(httpServer)
-            .post('/api/match')
-            .send({
-                "difficulty": "HARD",
+                "difficulty": "EASY",
                 "user": {
                     "sub": "auth0|345678901234567890123"
                 }
@@ -113,32 +61,160 @@ describe("Matching", () => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 res.body.should.have.property('matchId');
-                done();
-            });
-    });
+                match3_id = res.body.matchId;
+            }
+        );
 
-    it("Should create match 6 and pair it with match 5 within the last second", (done) => {
+        await new Promise(resolve => setTimeout(resolve, 3 * 1000));
+        await MatchORM.checkMatchExist(match2_id).then((result) => {
+            expect(result).to.be.false;
+        });
+        await MatchORM.checkMatchExist(match3_id).then((result) => {
+            expect(result).to.be.false;
+        }
+        )
+    });
+    
+    it("Create match4 and match5 (of different difficulty) + match4 and match5 should time out", async () => {
         chai.request(httpServer)
             .post('/api/match')
             .send({
-                "difficulty": "HARD",
+                "difficulty": "EASY",
                 "user": {
-                    "sub": "auth0|765432109876543210987"
+                    "sub": "auth0|456789012345678901234"
                 }
             })
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 res.body.should.have.property('matchId');
-                setTimeout(() => {
-                    console.log(
-                        attemptToMatch('HARD').then((found) => {
-                            found.should.be.a('boolean');
-                            found.should.be.false;
-                        })
-                    )
-                    done();
-                }, 29 * 1000);
+                match4_id = res.body.matchId;
             });
+        
+        chai.request(httpServer)
+            .post('/api/match')
+            .send({
+                "difficulty": "MEDIUM",
+                "user": {
+                    "sub": "auth0|567890123456789012345"
+                }
+            })
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('matchId');
+                match5_id = res.body.matchId;
+            }
+        );
+
+        await new Promise(resolve => setTimeout(resolve, 27 * 1000));
+        await MatchORM.checkMatchExist(match4_id).then((result) => {
+            expect(result).to.be.true;
+        });
+        await MatchORM.checkMatchExist(match5_id).then((result) => {
+            expect(result).to.be.true;
+        });
+
+        await new Promise(resolve => setTimeout(resolve, 5 * 1000));
+        await MatchORM.checkMatchExist(match4_id).then((result) => {
+            expect(result).to.be.false;
+        });
+        await MatchORM.checkMatchExist(match5_id).then((result) => {
+            expect(result).to.be.false;
+        });
+    });
+
+    it("Create match6 and match7 (of same difficulty & within 2 seconds from match6's timeout) + match6 and match7 should pair together", async () => {
+        chai.request(httpServer)
+            .post('/api/match')
+            .send({
+                "difficulty": "HARD",
+                "user": {
+                    "sub": "auth0|678901234567890123456"
+                }
+            })
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('matchId');
+                match6_id = res.body.matchId;
+            });
+        
+        await new Promise(resolve => setTimeout(resolve, 27 * 1000));
+
+        chai.request(httpServer)
+            .post('/api/match')
+            .send({
+                "difficulty": "HARD",
+                "user": {
+                    "sub": "auth0|789012345678901234567"
+                }
+            })
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('matchId');
+                match7_id = res.body.matchId;
+            }
+        );
+
+        await new Promise(resolve => setTimeout(resolve, 3 * 1000));
+        await MatchORM.checkMatchExist(match6_id).then((result) => {
+            expect(result).to.be.false;
+        });
+        await MatchORM.checkMatchExist(match7_id).then((result) => {
+            expect(result).to.be.false;
+        });
+    });
+
+    it("Create match8 and match9 (of same difficulty & after match8's timeout) + match8 and match9 should not be paired together", async () => {
+        chai.request(httpServer)
+            .post('/api/match')
+            .send({
+                "difficulty": "EASY",
+                "user": {
+                    "sub": "auth0|890123456789012345678"
+                }
+            })
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('matchId');
+                match8_id = res.body.matchId;
+            });
+        
+        await new Promise(resolve => setTimeout(resolve, 27 * 1000));
+        await MatchORM.checkMatchExist(match8_id).then((result) => {
+            expect(result).to.be.true;
+        });
+        await new Promise(resolve => setTimeout(resolve, 5 * 1000));
+        await MatchORM.checkMatchExist(match8_id).then((result) => {
+            expect(result).to.be.false;
+        });
+
+        chai.request(httpServer)
+            .post('/api/match')
+            .send({
+                "difficulty": "EASY",
+                "user": {
+                    "sub": "auth0|901234567890123456789"
+                }
+            })
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('matchId');
+                match9_id = res.body.matchId;
+            }
+        );
+
+        await new Promise(resolve => setTimeout(resolve, 27 * 1000));
+        await MatchORM.checkMatchExist(match9_id).then((result) => {
+            expect(result).to.be.true;
+        });
+        await new Promise(resolve => setTimeout(resolve, 5 * 1000));
+        await MatchORM.checkMatchExist(match9_id).then((result) => {
+            expect(result).to.be.false;
+        });
     });
 });
