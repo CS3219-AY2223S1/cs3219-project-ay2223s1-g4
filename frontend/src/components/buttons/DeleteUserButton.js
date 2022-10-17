@@ -2,11 +2,10 @@ import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Button } from "@mui/material";
 import { AUTH0_DOMAIN } from "../../configs";
-import axios from "axios";
 
 const DeleteAccount = ({ margin, fullWidth }) => {
-  const { user, getAccessTokenSilently } = useAuth0();
-  const handleClick = () => {
+  const { user } = useAuth0();
+  const handleClick = async () => {
     // TODO: update user data here, using same code that updates form
     // const getUserMetadata = async () => {
     //   const domain = AUTH0_DOMAIN;
@@ -35,20 +34,41 @@ const DeleteAccount = ({ margin, fullWidth }) => {
 
     //TODO: use the same config file as backend to prevent sync problems
     const deleteApiUrl = "http://localhost:8393/delete";
-    axios
-      .post(deleteApiUrl, {
-        user,
-      })
-      .then((response) => {
-        window.location.replace("/");
+    fetch("https://elgoh.us.auth0.com/oauth/token", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: '{"client_id":"DDzHSSAHN9vZsaGL0BxDQ36vN5U1qOJH","client_secret":"s1eDnY854jJ-Flc06AxkQgHg8CBeikqouBZwY2proDdNKlZGYsRcNCp_wUP210SS","audience":"https://user-service.com","grant_type":"client_credentials"}',
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        fetch(deleteApiUrl, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${json.access_token}`,
+          },
+          body: JSON.stringify({
+            id: user.sub,
+          }),
+        }).then((resp) => {
+          console.log(resp);
+          window.location.replace("/");
+        });
       })
       .catch((e) => {
-        window.prompt("Failed to delete account");
+        console.log(e);
       });
   };
   return (
     <Button
-      variant={"outlined"}
+      variant={"contained"}
+      style={{
+        borderRadius: 35,
+        backgroundColor: "#FF0000",
+      }}
       sx={{ m: 2 }}
       onClick={() => {
         if (
