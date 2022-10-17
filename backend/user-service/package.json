@@ -2,10 +2,12 @@
   "name": "user-service",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
@@ -18,7 +20,7 @@
     "express-jwt-authz": "^2.4.1",
     "express-oauth2-jwt-bearer": "^1.1.0",
     "jwks-rsa": "^2.1.5",
+    "nodemon": "^2.0.20",
     "save": "^2.9.0"
-  },
-  "type": "module"
+  }
 }
