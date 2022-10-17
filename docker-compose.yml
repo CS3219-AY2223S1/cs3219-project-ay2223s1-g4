@@ -1,0 +1,143 @@
+version: "3"
+
+services:
+
+  ## frontend
+  frontend:
+    build: 
+      dockerfile: Dockerfile
+      context: ./frontend
+    volumes:
+      - ./frontend:/usr/app
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - collab
+      - matching
+      - room
+      - question
+      - user
+
+  ## backend
+  pubsub:
+    build: 
+      dockerfile: Dockerfile
+      context: ./backend/pubsub-service
+    volumes:
+      - ./backend/pubsub-service:/usr/app
+    restart: always
+    ports:
+      - "8004:8004"
+
+  collab:
+    build: 
+      dockerfile: Dockerfile
+      context: ./backend/collab-service
+    volumes:
+      - ./backend/collab-service:/usr/app
+    restart: always
+    ports:
+      - "8005:8005"
+    depends_on:
+      - pubsub
+      - collab-db
+    environment:
+      WAIT_HOSTS: mongodb:27017
+    networks:
+      - collab-network
+  collab-db:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=app_user
+      - MONGO_INITDB_ROOT_PASSWORD=app_password
+      - MONGO_INITDB_DATABASE=admin
+    networks:
+      - collab-network
+  
+  matching:
+    build: 
+      dockerfile: Dockerfile
+      context: ./backend/matching-service
+    volumes:
+      - ./backend/matching-service:/usr/app
+    restart: always
+    ports:
+      - "8001:8001"
+    depends_on:
+      - pubsub
+      - matching-db
+    environment:
+      WAIT_HOSTS: mongodb:27018
+    networks:
+      - matching-network
+  matching-db:
+    image: mongo
+    restart: always
+    ports:
+      - "27018:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=app_user
+      - MONGO_INITDB_ROOT_PASSWORD=app_password
+      - MONGO_INITDB_DATABASE=admin
+    networks:
+      - matching-network
+
+  room:
+    build: 
+      dockerfile: Dockerfile
+      context: ./backend/room-service
+    volumes:
+      - ./backend/room-service:/usr/app
+    restart: always
+    ports:
+      - "8002:8002"
+    depends_on:
+      - pubsub
+      - room-db
+    environment:
+      WAIT_HOSTS: mongodb:27019
+    networks:
+      - room-network
+  room-db:
+    image: mongo
+    restart: always
+    ports:
+      - "27019:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=app_user
+      - MONGO_INITDB_ROOT_PASSWORD=app_password
+      - MONGO_INITDB_DATABASE=admin
+    networks:
+      - room-network
+
+  question:
+    build: 
+      dockerfile: Dockerfile
+      context: ./backend/question-service
+    volumes:
+      - ./backend/question-service:/usr/app
+    restart: always
+    ports:
+      - "8003:8003"
+
+  user:
+    build: 
+      dockerfile: Dockerfile
+      context: ./backend/user-service
+    volumes:
+      - ./backend/user-service:/usr/app
+    restart: always
+    ports:
+      - "8393:8393"
+
+networks:
+  collab-network:
+    driver: bridge
+  matching-network:
+    driver: bridge
+  room-network:
+    driver: bridge
