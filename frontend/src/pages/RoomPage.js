@@ -10,7 +10,6 @@ import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { URL_MATCHING_ROOM_SVC } from "../configs";
 import { io } from 'socket.io-client';
-import { URI_COLLAB_SVC } from '../configs';
 
 function RoomPage() {
     const { collabId: roomId } = useParams();
@@ -22,7 +21,7 @@ function RoomPage() {
     const { isAuthenticated, isLoading } = useAuth0();
 
     useEffect(() => {
-        const s = io(URI_COLLAB_SVC);
+        const s = io('http://localhost:8005');
         s.emit('join-room', `room-${roomId}`);
         setSocket(s);
         return () => {

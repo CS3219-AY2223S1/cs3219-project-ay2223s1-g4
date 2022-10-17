@@ -1,14 +1,14 @@
 import { Server } from 'socket.io';
-import { getDocumentGivenId, updateDocumentGivenId } from '../service/service.js';
+import { getDocumentGivenId, updateDocumentFromRoomId } from '../service/service.js';
 
-let RoomSocketManager = (function() {
+let CollabSocketManager = (function() {
     var io;
 
     function bindSocket(httpServer) {
         io = new Server(httpServer, {
             cors: { origin: '*' }
         });
-        console.log('RoomSocketManager has binded with server');
+        console.log('CollabSocketManager has binded with server');
         initSocketRules();
     };
 
@@ -28,7 +28,7 @@ let RoomSocketManager = (function() {
                     socket.broadcast.to(room).emit('receive-code', data);
                 });
                 socket.on("save-code", async (roomId, document) => {
-                    await updateDocumentGivenId(roomId, document);
+                    await updateDocumentFromRoomId(roomId, document);
                 });
             });
             socket.on('leave-room', (room) => {
@@ -43,4 +43,4 @@ let RoomSocketManager = (function() {
     };
 })();
 
-export default RoomSocketManager;
+export default CollabSocketManager;
