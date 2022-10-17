@@ -16,7 +16,7 @@ app.use(corsObj);
 app.options('*', corsObj);
 app.use("/api", router);
 
-let httpServer = app.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`room-service listening on port ${PORT}`)
 });
 

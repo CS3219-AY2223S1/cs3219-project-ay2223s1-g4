@@ -1,16 +1,19 @@
 import HttpStatus from 'http-status-codes';
-import CollabORM from '../models/collab-orm.js';
+import SessionORM from '../models/session-orm.js';
 
 let CollabController = {
-    closeRoom: async (req, res) => {
+    closeSession: async (req, res) => {
         const roomid = req.params.room_id;
-        await CollabORM.closeSessionByRoomId(roomid);
-        return res.status(HttpStatus.OK).json();
+        if ((await SessionORM.findSessionByRoomId(roomid)) == null) {
+            return res.status(HttpStatus.NOT_FOUND).end();
+        }
+        await SessionORM.closeSessionByRoomId(roomid);
+        return res.status(HttpStatus.OK).end();
     },
 
     getSession: async (req, res) => {
         const roomid = req.params.room_id;
-        const document = await CollabORM.findSessionByRoomId(roomid);
+        const document = await SessionORM.findSessionByRoomId(roomid);
         if (document == null) {
             return res.status(HttpStatus.NOT_FOUND).end();
         }

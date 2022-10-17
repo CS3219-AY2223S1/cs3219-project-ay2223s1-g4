@@ -1,13 +1,13 @@
-import CollabORM from '../models/collab-orm.js';
+import SessionORM from '../models/session-orm.js';
 
-async function getDocumentGivenId(roomId) {
-    let output = (await CollabORM.findSessionByRoomId(roomId));
+async function getDocumentGivenRoomId(roomId) {
+    let output = (await SessionORM.findSessionByRoomId(roomId));
     return output.document;
 };
 
 async function updateDocumentFromRoomId(roomId, document) {
     try {
-        return await CollabORM.updateDocumentFromRoomId(roomId, document);
+        return await SessionORM.updateDocumentFromRoomId(roomId, document);
     } catch (err) {
         console.warn(err.message);
     }
@@ -15,10 +15,10 @@ async function updateDocumentFromRoomId(roomId, document) {
 
 async function createSessionFromRoomId(roomId) {
     try {
-        await CollabORM.createSession(roomId);
+        await SessionORM.createSession(roomId);
     } catch (err) {
         console.warn(err.message);
     }
 };
 
-export { getDocumentGivenId, updateDocumentFromRoomId, createSessionFromRoomId };
+export { getDocumentGivenRoomId, updateDocumentFromRoomId, createSessionFromRoomId };

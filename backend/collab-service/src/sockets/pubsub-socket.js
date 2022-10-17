@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client'; 
-import { PUBSUB_SUBSCRIPTIONS, ROOM_CREATED_TAG, ROOM_CREATED_TAG } from '../configs/config.js';
+import { PUBSUB_SUBSCRIPTIONS, ROOM_CREATED_TAG } from '../configs/config.js';
 import { createSessionFromRoomId } from '../service/service.js';
 
 let PubSubSocketManager = (function() {
@@ -16,7 +16,7 @@ let PubSubSocketManager = (function() {
             socket.emit('subscribe', event);
         });
         socket.on(ROOM_CREATED_TAG, (data) => {
-            createSessionFromRoomId(data);
+            createSessionFromRoomId(data.roomId);
         });
     };
 

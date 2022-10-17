@@ -7,8 +7,8 @@ router.get('/', (req, res) => {
     res.send('Hello World from collab-service api');
 });
 
-router.route('/collab/:room_id')
+router.route('/session/room/:room_id')
     .get(CollabController.getSession)
-    .put(CollabController.closeRoom);
+    .put(CollabController.closeSession);
 
 export default router;

@@ -8,6 +8,14 @@ let RoomController = {
             rooms: rooms
         });
     },
+
+    getRoomsByUserId: async (req, res)  => {
+        const userId = req.params.user_id;
+        const userRooms = await RoomORM.findRoomsByUser(userId);
+        return res.status(HttpStatus.OK).json({
+            rooms: userRooms
+        });
+    },
     
     getRoomDetails: async (req, res)  => {
         const roomid = req.params.room_id;

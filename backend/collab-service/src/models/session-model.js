@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const CollabModelSchema = new mongoose.Schema({
+const SessionModelSchema = new mongoose.Schema({
     roomid: {
         type: String,
         required: true,
@@ -16,6 +16,6 @@ const CollabModelSchema = new mongoose.Schema({
     },
 });
 
-const CollabModel = mongoose.model('Collab', CollabModelSchema);
+const SessionModel = mongoose.model('Session', SessionModelSchema);
 
-export default CollabModel;
+export default SessionModel;

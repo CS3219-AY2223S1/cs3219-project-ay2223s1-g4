@@ -21,6 +21,13 @@ let RoomORM = {
         });
     },
 
+    findRoomsByUser: async (userId) => {
+        return await RoomModel.find({$or: [
+            {userid1: userId},
+            {userid2: userId}
+        ]});
+    },
+
     findRoomById: async (id) => {
         return await RoomModel.findById(id);
     },

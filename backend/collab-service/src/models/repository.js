@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import CollabModel from './collab-model.js';
+import SessionModel from './session-model.js';
 import { DB_URI } from '../configs/config.js';
 
 let Respository = {
@@ -11,12 +11,12 @@ let Respository = {
         let db = mongoose.connection;
         db.once('open', () => {
             console.log(`Connected to database ${DB_URI}`);
-            CollabModel.deleteMany({}).then((output) => {
+            SessionModel.deleteMany({}).then((output) => {
                 console.log('Database cleared');
             });
         });
         db.on('error', () => {
-            console.error.bind(console, `Faced error when connecting to database ${DB_URI}`);
+            console.error(`Faced error when connecting to database ${DB_URI}`);
             process.exit(1);
         });
     }

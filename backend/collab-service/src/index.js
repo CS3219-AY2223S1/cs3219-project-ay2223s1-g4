@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import router from './routes/routes.js';
-import CollabSocketManager from './sockets/collab-socket.js';
+import SessionSocketManager from './sockets/session-socket.js';
 import PubSubSocketManager from './sockets/pubsub-socket.js';
 import Respository from './models/repository.js';
 import { PORT, CLIENT_URL, PUBSUB_URL } from './configs/config.js';
@@ -22,5 +22,5 @@ let httpServer = app.listen(PORT, () => {
 });
 
 Respository.start();
-CollabSocketManager.bind(httpServer);
+SessionSocketManager.bind(httpServer);
 PubSubSocketManager.connect(PUBSUB_URL);
