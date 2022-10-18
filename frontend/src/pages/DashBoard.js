@@ -1,17 +1,8 @@
-import { Box, Stack, Typography } from "@mui/material";
-import LogoutButton from "../components/buttons/LogoutButton";
-import SelectDifficultyButton from "../components/buttons/SelectDifficultyButton";
-import Profile from "../components/user/Profile";
+import { Box, Typography } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
-import UpdateDetailsForm from "../components/form/UpdateDetailsForm";
-import DeleteAccount from "../components/buttons/DeleteUserButton";
-import { generateQuestionId } from "../services/question_service";
-import {useEffect, useState} from 'react';
 
 function DashBoard() {
-  const {user, isAuthenticated, isLoading } = useAuth0();
-
-  
+  const { isAuthenticated, isLoading, user } = useAuth0();
 
   if (isLoading) {
     return <div>Loading ...</div>;
@@ -20,23 +11,14 @@ function DashBoard() {
   
   return (
     isAuthenticated && (
-      <Stack>
-        <Box display={"flex"} flexDirection={"row"} justifyContent={"flex-end"}>
-          <Profile />
-          <div>
-            <SelectDifficultyButton></SelectDifficultyButton>
-          </div>
-          <div>
-            <LogoutButton></LogoutButton>
-          </div>
-        </Box>
-        <Box>
-          <UpdateDetailsForm />
-          <div>
-            <DeleteAccount/>
-          </div>
-        </Box>
-      </Stack>
+      <Box>
+        <h2>Welcome to peer prep {user.name}!</h2>
+        <div>
+          Use the buttons on the navigation bar to begin the peer prep
+          experience!
+        </div>
+        <div>Instructions here...</div>
+      </Box>
     )
   );
 }
