@@ -18,12 +18,20 @@ The following are the services present to support this application.
 
 Note that Auth0 is also used for authentication and its services are called upon for each service for security reasons.
 
-## Frontend Service
+## Running whole application locally
+
+1. Open 2 terminals
+2. Run `./run-backend.sh r` in one terminal and `./run-frontend.sh r` in the other
+3. For each script, to terminate the session, press `CRTL-C`
+
+## Running individual service
+
+### Frontend Service
 
 1. Install npm packages using `npm i`.
 2. Run Frontend using `npm start`.
 
-## Backend Services
+### Backend Services
 
 1. Rename `.env.example` file to `.env`.
 2. Update relevant variables in the `.env` file.

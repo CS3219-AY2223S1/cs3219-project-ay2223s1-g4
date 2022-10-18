@@ -1,4 +1,5 @@
 import MatchModel from '../model/match-model.js';
+import MatchORM from '../model/match-orm.js';
 import { Server } from 'socket.io';
 
 let MatchSocketManager = (function() {
@@ -29,8 +30,14 @@ let MatchSocketManager = (function() {
             MatchModel.findOne({userid: details.userId2}).then((m2) => {
                 io.in(`match-${m1._id}`).emit('provide-room', details.roomId);
                 io.in(`match-${m2._id}`).emit('provide-room', details.roomId);
+                setTimeout(() => {
+                    console.log("\x1b[36m%s\x1b[0m", `Cleaning up paired matches: \n\tMatch1_id: ${m1._id} \n\tMatch2_id: ${m2._id}`);
+                    MatchORM.removeMatchById(m1._id);
+                    MatchORM.removeMatchById(m2._id);
+                }, 0.1 * 1000);
             });
         });
+
     }
 
     return {
