@@ -8,8 +8,10 @@ router.get('/', (req, res) => {
 });
 
 router.route('/room/:room_id')
-    .get(RoomController.getRoomDetails)
-    .put(RoomController.closeRoom);
+    .get(RoomController.getRoomDetails);
+
+router.route('/room/user/:user_id')
+    .get(RoomController.getRoomsByUserId);
 
 router.route('/room')
     .get(RoomController.getRooms);

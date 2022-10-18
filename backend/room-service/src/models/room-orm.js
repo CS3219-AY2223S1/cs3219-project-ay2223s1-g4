@@ -21,23 +21,15 @@ let RoomORM = {
         });
     },
 
-    closeRoomById: async (id) => {
-        return await RoomModel.findByIdAndUpdate(id, {
-            isOpen: false
-        });
+    findRoomsByUser: async (userId) => {
+        return await RoomModel.find({$or: [
+            {userid1: userId},
+            {userid2: userId}
+        ]});
     },
 
     findRoomById: async (id) => {
         return await RoomModel.findById(id);
-    },
-
-    updateDocumentFromId: async (id, document) => {
-        if (!(await RoomModel.findById(id)).isOpen) {
-            throw Error(`Room ${id} is already closed, unable to update document`);
-        }
-        return await RoomModel.findByIdAndUpdate(id, {
-            document: document
-        });
     },
 }
 

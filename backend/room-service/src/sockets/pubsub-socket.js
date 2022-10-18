@@ -7,7 +7,9 @@ let PubSubSocketManager = (function() {
 
     function connect(url) {
         socket = io(url);
-        console.log(`PubSubSocketManager has binded with server ${url}`);
+        socket.on("connect", () => { 
+            console.log(`PubSubSocketManager has binded with server ${url}`);
+        });
         setRules();
     };
 
