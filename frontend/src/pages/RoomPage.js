@@ -96,7 +96,7 @@ function RoomPage() {
                 handleNo={undoPrompt}
             />
             <Typography>Coding session with {user1} and {user2} in room {roomId} using question {questionId}</Typography>
-            <QuestionBox questionId={questionId} />
+            <QuestionBox questionId={questionId} interviewer={true} />
             <CodeBox roomId={roomId} socket={socket} />
             <Button variant="contained" onClick={prompt}>End Session</Button>
         </Box>

@@ -59,4 +59,4 @@ if __name__ == "__main__":
     print(FilterByDifficulty(db=session).scalar())
     addHistory(session, "foo", 1)
     print(getHistory(session, "foo"))
-    print(getQuestionIndex(session))
+    # print(getQuestionIndex(session))

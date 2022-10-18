@@ -11,14 +11,15 @@
 # db_connection = mysql.connect(host=HOST, database=DATABASE, user=USER, password=PASSWORD)
 # print("Connected to:", db_connection.get_server_info())
 #
-# import os
+import os
+import pprint
 
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 # connect_tcp_socket initializes a TCP connection pool
 # for a Cloud SQL instance of MySQL.
-password = "w*BEVbrhQ9P@F26K6w9N"
+env_var = os.environ
 def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
     # Note: Saving credentials in environment variables is convenient, but not
     # secure - consider a more secure solution such as
@@ -52,5 +53,6 @@ def createSession():
 Base = declarative_base()
 
 if __name__ == "__main__":
+    pprint.pprint(dict(env_var), width = 1)
     connect = connect_tcp_socket()
     print(connect.connect())

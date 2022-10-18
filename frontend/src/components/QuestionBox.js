@@ -6,12 +6,11 @@ import TabPanel, { a11yProps } from './tab/TabPanel';
 import { generateQuestionId, getQuestion } from '../services/question_service';
 import { useAuth0 } from '@auth0/auth0-react';
 
-function QuestionBox({ questionId = 1, interviewer = true}) {
+function QuestionBox({ questionId = 1, interviewer = false}) {
     const [title, setTitle] = useState('Loading Title');
     const [problem, setProblem] = useState('Loading question...');
     const [solution, setSolution] = useState('Loading solution...');
-    const { user } = useAuth0();
-    const [id, setId] = React.useState(0);
+    // const [id, setId] = React.useState(0);
     const [tab, setTab] = React.useState(0);
 
     useEffect(() => {
@@ -20,7 +19,7 @@ function QuestionBox({ questionId = 1, interviewer = true}) {
         
 
         getQuestion(questionId, {solution: interviewer}).then((res) => {
-            console.log(res)
+            // console.log(res)
             setTitle(res.title);
             setProblem(res.question);
             setSolution(res.solution);
@@ -45,7 +44,7 @@ function QuestionBox({ questionId = 1, interviewer = true}) {
             margin='3px'
         >
             <Typography variant='h2' >{title}</Typography>
-            <Typography variant='h2' >{id}</Typography>
+            {/* <Typography variant='h2' >{id}</Typography> */}
             <Tabs value={tab} onChange={handleChange} >
                 <Tab label="Problem" {...a11yProps(0)} />
                 <Tab label="Solution" {...a11yProps(1)} />

@@ -21,7 +21,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("api/question")
+@app.get("/api/question")
 def info():
     return {
         "GET: api/question/index": {
@@ -61,10 +61,11 @@ def info():
 async def get_all_questions():
     return {"questions": jsonable_encoder(getQuestionIndex(session)) }
 
+# TODO: Do authentication?
 @app.post("/api/question/id/{user_id}")
-async def generate_question_id(user_id: str, difficulty='easy', tag: str | None = None, company: str | None = None):
+async def generate_question_id(user_id: str, difficulty='medium', tag: list | None = None, company: str | None = None):
     difficulty = Difficulty[difficulty]
-    return {"id": FilterByDifficulty(session, difficulty)}
+    return {"id": FilterByDifficulty(session, difficulty).scalar()}
 
 @app.get("/api/question/{question_id}")
 async def getSolution(question_id: int, solution: bool | None):
