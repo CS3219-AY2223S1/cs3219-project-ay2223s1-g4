@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 start() {
-    docker-compose up
+    docker-compose up --force-recreate --renew-anon-volumes
 }
 
 stop() {
     docker-compose down
+    docker image prune -a -f
 }
 
 main() {
