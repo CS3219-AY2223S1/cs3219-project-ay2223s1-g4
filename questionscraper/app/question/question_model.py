@@ -17,6 +17,10 @@ class QuestionIndex(Base):
     href = Column(String(255), unique=True)
     difficulty = Column(Enum(Difficulty), index=True, default=Difficulty.medium)
 
+    companies = relationship("CompanyQuestions", backref="questionindex")
+    history = relationship("UserHistory", backref="questionindex")
+    question = relationship("Question", backref="questionindex")
+
     def __repr__(self):
         return f"< id={self.id} problem_title= {self.title} href= {self.href} difficulty:{self.difficulty} />"
 
@@ -25,7 +29,6 @@ class CompanyQuestions(Base):
     company = Column(String(255), primary_key = True, index = True)
     questionid = Column(Integer, ForeignKey("questionindex.id"), primary_key = True, index=True)
 
-    question = relationship("QuestionIndex", backref="companytags")
     def __repr__(self):
         return f"< id={self.questionid} company= {self.company} />"
 
@@ -36,7 +39,6 @@ class Question(Base):
     problem = Column(MEDIUMTEXT, nullable=False)
     explanation = Column(MEDIUMTEXT, nullable=False, default="Not Populated Yet.")
 
-    question_index = relationship("QuestionIndex", backref="question")
     def __repr__(self):
         return f"< id={self.id} title= {self.title} problem= {self.problem} explanation= {self.explanation}/>"
 
@@ -45,7 +47,6 @@ class UserHistory(Base):
     id = Column(String(255), primary_key = True, index = True)
     question_id = Column(Integer, ForeignKey("questionindex.id"))
 
-    question = relationship("QuestionIndex", backref="userhistory")
 
     def __repr__(self):
         return f"< user_id={self.id} question_id= {self.question_id} />"
@@ -54,7 +55,7 @@ class UserHistory(Base):
 class Tag(Base):
     __tablename__ = 'topictag'
     id = Column(Integer, ForeignKey("questionindex.id"), primary_key = True, index=True)
-    tag = Column(String(255), index=True)
+    tag = Column(String(255), primary_key = True, index=True)
 
     # Relationship
     question = relationship("QuestionIndex", backref="topictag")

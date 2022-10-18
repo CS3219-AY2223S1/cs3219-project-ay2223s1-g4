@@ -42,7 +42,6 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
             database=db_name,
         ),
         pool_pre_ping=True,
-        echo = True
     )
 
     return pool

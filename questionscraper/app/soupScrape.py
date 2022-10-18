@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import markdownify
 from question.question_model import *
 from question.connector import createSession
+from question.question_crud import getLastQuestionIdScraped
 # class Scraper():
 #     def __init__(self, connector: sqlalchemy.engine.Engine):
 #         self.connector = connector
@@ -44,12 +45,12 @@ def scrapeIndex(index:int = 1, populate:bool = True) -> list:
         print(questions)
         if populate:
             session.add(questions)
-        ids.append((id, problemTitle, subUrl))
+        ids.append((int(id), problemTitle, subUrl, questions))
     return ids
 # scrapeIndex(1)
 def populateProblems(ids:list):
-    solutions = []
-    for qid, title, i in ids:
+    numNoSolutions = []
+    for qid, title, i, qnModel in ids:
         url = f'{base_url}/all/{i}'
         soup = getPage(url)
         # soup2 = getPage(soup.find_all("a")[-2]['href'])
@@ -59,26 +60,32 @@ def populateProblems(ids:list):
         parsable = str(soup.find('div', class_=["markdown-body"]))
         textboxes = re.split("([\r\n]*Difficulty:[\r\n]*)|([\r\n]*Company:[\r\n]*)|([\r\n]*Problem Solution[\r\n]*)", parsable)
         print("Next Task:", i)
-        print(textboxes)
+        # print(textboxes)
         solutionLink = soup.find_all('a')[-2]['href']
         problemDescription = markdownify.markdownify(textboxes[0])
         # print("Problem Description: ", markdownify.markdownify(textboxes[0]))
         # print("Companies: ", textboxes[8].strip())
-        companyQuestions = list(map(lambda x: CompanyQuestions(questionid=qid,company=x.text.lower()), soup.find_all("span", class_=["label"])[2:]))
+        companyQuestions = list(map(lambda x: CompanyQuestions(questionid=qnModel.id,company=x.text.lower()), soup.find_all("span", class_=["label"])[2:]))
         # solutions.append((qid, solutionLink))
         try:
             solSoup = getPage(solutionLink)
             solSoup.find('h1', {'id': "all-problems"}).decompose()
             solSoup.find('h1', {'id': "all-solutions"}).decompose()
             solution = markdownify.markdownify(str(solSoup.find('article')))
-            question = Question(id=i, title=title, problem=problemDescription, explanation=solution)
+            question = Question(title=title, problem=problemDescription, explanation=solution, id=qnModel.id)
         except:
-            question = Question(id=i, title=title, problem=problemDescription)
+            numNoSolutions.append([qid, solutionLink])
+            print("Unparsed")
+            question = Question(title=title, problem=problemDescription, id=qnModel.id)
 
-        print(question)
+        # print(question)
+
         session.add(question)
         for j in companyQuestions:
             session.add(j)
+        if (int(qid) % 50) == 1:
+            session.commit()
+    print("Unable to parse and get these solutions", numNoSolutions)
 
 def getPythonSolutions(id:int):
     pythonSolutions = "https://github.com/cnkyrpsgl/leetcode/blob/master/solutions/python3"
@@ -102,10 +109,10 @@ def populateTags() -> None:
         for i in anchors.find_all('a'):
             id = re.search('\d+', i.getText()).group()
             t = Tag(tag=tag, id=int(id))
-            print(t)
+            # print(t)
             session.add(t)
 
-ids = scrapeIndex(populate=False)
+ids = scrapeIndex(getLastQuestionIdScraped(session)+1, populate=False)
 session.commit()
 populateProblems(ids)
 session.commit()
