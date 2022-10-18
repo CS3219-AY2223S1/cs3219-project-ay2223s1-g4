@@ -11,7 +11,7 @@ const expect = chai.expect;
 let match1_id, match2_id, match3_id, match4_id, match5_id, match6_id, match7_id, match8_id, match9_id = null;
 
 describe("Testing Matching Service", () => {
-    it("Create match1 + match1 should be removed within 3 seconds after the 30 seconds timeout", async() => {
+    it("Create match1 + match1 should be removed within 3 seconds after the 30 seconds timeout", async () => {
         chai.request(httpServer)
             .post('/api/match')
             .send({
@@ -71,8 +71,7 @@ describe("Testing Matching Service", () => {
         });
         await MatchORM.checkMatchExist(match3_id).then((result) => {
             expect(result).to.be.false;
-        }
-        )
+        });
     });
     
     it("Create match4 and match5 (of different difficulty) + match4 and match5 should time out", async () => {
@@ -124,7 +123,7 @@ describe("Testing Matching Service", () => {
         });
     });
 
-    it("Create match6 and match7 (of same difficulty & within 2 seconds from match6's timeout) + match6 and match7 should pair together", async () => {
+    it("Create match6 and match7 (of same difficulty & within 3 seconds from match6's timeout) + match6 and match7 should pair together", async () => {
         chai.request(httpServer)
             .post('/api/match')
             .send({
@@ -215,6 +214,23 @@ describe("Testing Matching Service", () => {
         await new Promise(resolve => setTimeout(resolve, 5 * 1000));
         await MatchORM.checkMatchExist(match9_id).then((result) => {
             expect(result).to.be.false;
+        });
+    });
+
+    it("Should support up to 1000 sessions", async () => {
+        for (let i = 0; i < 2000; i++) {
+            chai.request(httpServer)
+                .post('/api/match')
+                .send({
+                    "difficulty": "EASY",
+                    "user": {
+                        "sub": `auth0|${Math.floor(Math.random() * 900000000000000000000) + 100000000000000000000}`
+                    }
+                })
+        }
+        await new Promise(resolve => setTimeout(resolve, 40 * 1000));
+        await MatchORM.getMatchesCount().then((result) => {
+            expect(result).to.be.equal(0);
         });
     });
 });
