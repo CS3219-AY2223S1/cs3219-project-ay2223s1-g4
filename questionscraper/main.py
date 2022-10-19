@@ -1,6 +1,8 @@
+from typing import List
+
 from fastapi import FastAPI, File, UploadFile, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from app.question.question_crud import *
 import uvicorn
 from app.question.connector import createSession
@@ -28,7 +30,7 @@ def info():
             "Function" : "Returns an Index of Questions and their corresponding difficulty",
             "Response" : "{'questions': [{'id': 1, 'question title': '2sum', 'difficulty' : 'easy', 'href': '/1.html', 'done' : False}] }"
         },
-        "GET: api/question/id/{user_id}": {
+        "POST: api/question/id/{user_id}": {
             "Function": "Generate an Question ID that the user has not seen before",
             "Optional Parameters":
                 {
@@ -57,14 +59,20 @@ def info():
         }
     }
 
+
 @app.get("/api/question/index")
 async def get_all_questions():
     return {"questions": jsonable_encoder(getQuestionIndex(session)) }
 
+class QuestionRequestBody(BaseModel):
+    difficulty: str = Field (default="medium")
+    tags: List[str] | None
+    company: str | None
+
 # TODO: Do authentication?
 @app.post("/api/question/id/{user_id}")
-async def generate_question_id(user_id: str, difficulty='medium', tag: list | None = None, company: str | None = None):
-    difficulty = Difficulty[difficulty]
+async def generate_question_id(user_id: str, question: QuestionRequestBody):
+    difficulty = Difficulty[question.difficulty]
     return {"id": FilterByDifficulty(session, difficulty).scalar()}
 
 @app.get("/api/question/{question_id}")
