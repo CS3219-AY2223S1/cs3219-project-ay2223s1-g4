@@ -13,23 +13,24 @@
 #
 import os
 import pprint
-
+from dotenv import load_dotenv
+load_dotenv()
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 # connect_tcp_socket initializes a TCP connection pool
 # for a Cloud SQL instance of MySQL.
-env_var = os.environ
+
 def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
     # Note: Saving credentials in environment variables is convenient, but not
     # secure - consider a more secure solution such as
     # Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
     # keep secrets safe.
-    db_host =  "localhost"#'34.173.118.97'#os.environ["INSTANCE_HOST"]  # e.g. '127.0.0.1' ('172.17.0.1' if deployed to GAE Flex)
-    db_user = 'questionservice' #'questiongetter'#os.environ["DB_USER"]  # e.g. 'my-db-user'
-    db_pass = 'Password1!' #os.environ["DB_PASS"]  # e.g. 'my-db-password'
-    db_name = 'testDB'#os.environ["DB_NAME"]  # e.g. 'my-database'
-    db_port = 3306#os.environ["DB_PORT"]  # e.g. 3306
+    db_host =  os.environ["INSTANCE_HOST"]  # e.g. '127.0.0.1' ('172.17.0.1' if deployed to GAE Flex)
+    db_user = os.environ["DB_USER"]  # e.g. 'my-db-user'
+    db_pass = os.environ["DB_PASS"]  # e.g. 'my-db-password'
+    db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
+    db_port = os.environ["DB_PORT"]  # e.g. 3306
 
     pool = sqlalchemy.create_engine(
         # Equivalent URL:
@@ -53,6 +54,5 @@ def createSession():
 Base = declarative_base()
 
 if __name__ == "__main__":
-    pprint.pprint(dict(env_var), width = 1)
     connect = connect_tcp_socket()
     print(connect.connect())
