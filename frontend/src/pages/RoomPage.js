@@ -13,7 +13,7 @@ import { io } from 'socket.io-client';
 
 function RoomPage() {
     const { collabId: roomId } = useParams();
-    const [ questionId, setQuestionId ] = useState(0);
+    const [ questionId, setQuestionId ] = useState(1);
     const [ user1, setUser1 ] = useState(0);
     const [ user2, setUser2 ] = useState(0);
     const [ isPromptOpen, setIsPromptOpen ] = useState(false);

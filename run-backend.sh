@@ -5,7 +5,6 @@ PATH_LIST=(
     "backend/collab-service"
     "backend/matching-service"
     "backend/room-service"
-    "backend/question-service"
     "backend/user-service"
 )
 ROOT_PATH=$(pwd)
@@ -64,7 +63,7 @@ main() {
         set -x
         stop
         build
-        start
+        run
         trap stop INT
         sleep infinity
         exit 
