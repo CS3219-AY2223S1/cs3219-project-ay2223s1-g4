@@ -13,6 +13,10 @@ let MatchORM = {
     getAllMatches: async () => {
         return await MatchModel.find({}).sort({_id: 1});
     },
+
+    getMatchesCount: async () => {
+        return await MatchModel.countDocuments();
+    },
     
     findMatchByDifficulty: async (difficulty) => {
         return await MatchModel.find({difficulty: difficulty}).sort({_id: 1});
