@@ -34,7 +34,9 @@ stop() {
             kill -9 $task_id
         done
     done
-    exit
+    if [ $# -eq 0 ]; then
+        exit
+    fi
 }
 
 sleep_inf() {
@@ -47,7 +49,7 @@ sleep_inf() {
 main() {
     if [ $# -eq 0 ]; then
         set -x
-        stop
+        stop 0
         build
         run
         sleep_inf

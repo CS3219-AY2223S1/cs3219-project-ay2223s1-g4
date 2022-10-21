@@ -1,7 +1,6 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Button } from "@mui/material";
-
+import Button from "react-bootstrap/Button";
 const UpdateUsernameButton = (props) => {
   const { user } = useAuth0();
   const handleClick = async (nickname) => {
@@ -39,11 +38,7 @@ const UpdateUsernameButton = (props) => {
   };
   return (
     <Button
-      variant={"outlined"}
-      style={{
-        borderRadius: 35,
-      }}
-      sx={{ m: 2 }}
+      variant="outline-primary"
       onClick={() => {
         if (
           window.confirm(

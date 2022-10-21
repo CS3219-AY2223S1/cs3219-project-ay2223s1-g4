@@ -1,38 +1,10 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Button } from "@mui/material";
-// import { AUTH0_DOMAIN } from "../../configs";
+import Button from "react-bootstrap/Button";
 
 const DeleteAccount = ({ margin, fullWidth }) => {
   const { user } = useAuth0();
   const handleClick = async () => {
-    // TODO: update user data here, using same code that updates form
-    // const getUserMetadata = async () => {
-    //   const domain = AUTH0_DOMAIN;
-
-    //   try {
-    //     const accessToken = await getAccessTokenSilently({
-    //       audience: `https://${domain}/api/v2/${user.sub}`,
-    //       scope: "update:users",
-    //     });
-
-    //     const userDetailsByIdUrl = `https://${domain}/api/v2/users/${user.sub}`;
-
-    //     const metadataResponse = await fetch(userDetailsByIdUrl, {
-    //       headers: {
-    //         Authorization: `Bearer ${accessToken}`,
-    //       },
-    //     });
-
-    //     const { user_metadata } = await metadataResponse.json();
-
-    //     //   do something to user_metadata and push back to auth0
-    //   } catch (e) {
-    //     console.log(e.message);
-    //   }
-    // };
-
-    //TODO: use the same config file as backend to prevent sync problems
     const deleteApiUrl = "http://localhost:8393/delete";
     fetch("https://elgoh.us.auth0.com/oauth/token", {
       method: "POST",
@@ -64,12 +36,7 @@ const DeleteAccount = ({ margin, fullWidth }) => {
   };
   return (
     <Button
-      variant={"contained"}
-      style={{
-        borderRadius: 35,
-        backgroundColor: "#FF0000",
-      }}
-      sx={{ m: 2 }}
+      variant="danger"
       onClick={() => {
         if (
           window.confirm(

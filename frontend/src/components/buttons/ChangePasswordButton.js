@@ -1,6 +1,6 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Button } from "@mui/material";
+import Button from "react-bootstrap/Button";
 
 const ChangePasswordButton = (props) => {
   const { user } = useAuth0();
@@ -42,11 +42,7 @@ const ChangePasswordButton = (props) => {
   };
   return (
     <Button
-      variant={"outlined"}
-      style={{
-        borderRadius: 35,
-      }}
-      sx={{ m: 2 }}
+      variant="outline-danger"
       onClick={() => {
         if (props.newPassword !== props.confirmNewPassword) {
           window.confirm(
