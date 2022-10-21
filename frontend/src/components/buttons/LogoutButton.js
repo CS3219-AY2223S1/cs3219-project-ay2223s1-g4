@@ -8,8 +8,7 @@ const LogoutButton = () => {
   return (
     isAuthenticated && (
       <Button
-        variant={"outlined"}
-        sx={{ color: "#fff" }}
+        sx={{ color: "red" }}
         onClick={() =>
           logout({
             returnTo: window.location.origin,

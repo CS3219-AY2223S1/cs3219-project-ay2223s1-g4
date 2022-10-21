@@ -3,11 +3,10 @@ import LoginButton from "../components/buttons/LoginButton";
 import Typography from "@mui/material/Typography";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
-import {Stack} from "@mui/material";
-import RegisterButton from '../components/buttons/RegisterButton';
+import { Stack } from "@mui/material";
+import RegisterButton from "../components/buttons/RegisterButton";
 
 function LoginPage() {
-
   const { isAuthenticated, isLoading } = useAuth0();
 
   if (isLoading) {
@@ -26,26 +25,25 @@ function LoginPage() {
       justifyContent={"center"}
     >
       <Box margin={"1rem"}>
-        <Typography variant="h2">Welcome to PeerPrep!</Typography>
-        <Typography variant="h4">What is PeerPrep?</Typography>
+        <Typography variant="h2">
+          Welcome to Software Interview Xchange (SIX)!
+        </Typography>
+        <Typography variant="h4">What is SIX?</Typography>
         <Typography margin={"1rem"}>
-          PeerPrep is a website for geeks to improve their algorithmic skills
-          with online peer coding sessions!
+          SIX is a solution for geeks to improve their algorithmic skills with
+          online peer coding sessions!
         </Typography>
-        <Typography variant="h4">How to use PeerPrep?</Typography>
+        <Typography variant="h4">How to use SIX?</Typography>
         <Typography margin={"1rem"}>
-          Peer prep matches geeks in a 1 to 1 setting to complete a series of
-          common coding questions.
+          SIX matches geeks in a 1 to 1 setting to complete a series of coding
+          questions.
         </Typography>
-        <Typography variant="h4">Why PeerPrep?</Typography>
+        <Typography variant="h4">Why use SIX?</Typography>
         <Typography margin={"1rem"}>
-          Peer prep simulates live technical interviews and also allows you to
-          improve your coding skills and hopefully to break through the OA
-          rounds!
+          SIX simulates live technical interviews and also allows you to improve
+          your coding skills and hopefully to break through the OA rounds!
         </Typography>
-        <Typography variant="h4">
-          Sign up now to try out PeerPrep!
-        </Typography>
+        <Typography variant="h4">Sign up now to try out SIX!</Typography>
 
         <Stack justifyContent="center">
           <LoginButton fullWidth="true" margin="20px"></LoginButton>
