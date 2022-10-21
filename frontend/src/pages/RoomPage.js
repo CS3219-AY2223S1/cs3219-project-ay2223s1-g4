@@ -14,7 +14,7 @@ import Loading from "../components/Loading";
 
 function RoomPage() {
     const { collabId: roomId } = useParams();
-    const [ questionId, setQuestionId ] = useState(0);
+    const [ questionId, setQuestionId ] = useState(1);
     const [ user1, setUser1 ] = useState(0);
     const [ user2, setUser2 ] = useState(0);
     const [ isPromptOpen, setIsPromptOpen ] = useState(false);
@@ -97,7 +97,7 @@ function RoomPage() {
                 handleNo={undoPrompt}
             />
             <Typography>Coding session with {user1} and {user2} in room {roomId} using question {questionId}</Typography>
-            <QuestionBox questionId={questionId} />
+            <QuestionBox questionId={questionId} interviewer={true} />
             <CodeBox roomId={roomId} socket={socket} />
             <Button variant="contained" onClick={prompt}>End Session</Button>
         </Box>
