@@ -4,12 +4,17 @@ from typing import List, Optional
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from app.question.question_crud import *
-from app.question.connector import createSession
 from fastapi.encoders import jsonable_encoder
 from dotenv import load_dotenv
 
 load_dotenv()
+
+does_require_database = bool(os.environ["DB_HOST"])
+if does_require_database:
+    from app.question.question_crud import *
+    from app.question.connector import createSession
+    session = createSession()() 
+
 app = FastAPI()
 origins = [
     "http://localhost",
@@ -17,7 +22,6 @@ origins = [
     "http://localhost:8001",
     "http://localhost:8002",
 ]
-session = createSession()() 
 
 app.add_middleware(
     CORSMiddleware,
@@ -64,10 +68,11 @@ def info():
         }
     }
 
-
 @app.get("/api/question/index")
 async def get_all_questions():
-    return {"questions": jsonable_encoder(getQuestionIndex(session)) }
+    if not does_require_database:
+        return {"questions": []}
+    return {"questions": jsonable_encoder(getQuestionIndex(session))}
 
 class QuestionRequestBody(BaseModel):
     user_id: str
@@ -77,11 +82,20 @@ class QuestionRequestBody(BaseModel):
 
 @app.post("/api/question/id")
 async def generate_question_id(question: QuestionRequestBody):
+    if not does_require_database:
+        return {"id": 0}
     difficulty = Difficulty[question.difficulty]
     return {"id": FilterByDifficulty(session, difficulty).scalar()}
 
 @app.get("/api/question/{question_id}")
 async def getSolution(question_id: int, solution: Optional[bool]):
+    if not does_require_database:
+        return {
+        'question_id': 0,
+        'title': '2SUM',
+        'question': 'Do 2SUM',
+        'solution': '' if not solution else 'TBC'
+    }
     question = getQuestion(session, question_id)
     output = {
         'question_id': question_id,

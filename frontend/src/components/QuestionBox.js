@@ -5,20 +5,16 @@ import { Tab, Tabs, Typography } from '@mui/material';
 import TabPanel, { a11yProps } from './tab/TabPanel';
 import { getQuestion } from '../services/question_service';
 
-function QuestionBox({ questionId = 1, interviewer = false}) {
+function QuestionBox({ questionId = 0, interviewer = false }) {
     const [title, setTitle] = useState('Loading Title');
     const [problem, setProblem] = useState('Loading question...');
     const [solution, setSolution] = useState('Loading solution...');
-    // const [id, setId] = React.useState(0);
     const [tab, setTab] = React.useState(0);
 
     useEffect(() => {
-        console.log(`Displaying question ${questionId}`);
-        // const questions = [EASY_QUESTION, MEDIUM_QUESTION, HARD_QUESTION];
-        
+        console.log(`Displaying question ${questionId}`);        
 
-        getQuestion(questionId, {solution: interviewer}).then((res) => {
-            // console.log(res)
+        getQuestion(questionId, {solution: interviewer}).then((res) => {            
             setTitle(res.title);
             setProblem(res.question);
             setSolution(res.solution);

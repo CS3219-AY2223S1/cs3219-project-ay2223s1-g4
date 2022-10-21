@@ -1,4 +1,4 @@
-const EASY_QUESTION = `
+const question = `
 # Two Sum
 
 **Difficulty:** Easy
@@ -39,7 +39,12 @@ Output: [0,1]
 Only one valid answer exists.
 
 **Follow-up:** Can you come up with an algorithm that is less than O(n**2) time complexity?
-
 `;
 
-export default EASY_QUESTION;
+const MOCK_QUESTION = {
+    title: "Two Sum",
+    question: question,
+    solution: "TBC"
+};
+
+export default MOCK_QUESTION;

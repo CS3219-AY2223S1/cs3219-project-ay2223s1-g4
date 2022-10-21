@@ -12,7 +12,7 @@ async function getQuestionIdFromDifficulty(userId, difficulty) {
         })
         .catch((err) => {
             console.error(err);
-            return 1;
+            return 0;
         });
 }
 

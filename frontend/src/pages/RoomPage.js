@@ -15,11 +15,11 @@ import Loading from "../components/Loading";
 function RoomPage() {
     const { collabId: roomId } = useParams();
     const [ questionId, setQuestionId ] = useState(1);
-    const [ user1, setUser1 ] = useState(0);
-    const [ user2, setUser2 ] = useState(0);
+    const [ peer, setPeer ] = useState("Peer");
     const [ isPromptOpen, setIsPromptOpen ] = useState(false);
+    const [ isInterviewer, setIsInterviewer ] = useState(false);
     const [ socket, setSocket ] = useState();
-    const { isAuthenticated, isLoading } = useAuth0();
+    const { isAuthenticated, isLoading, user } = useAuth0();
 
     useEffect(() => {
         const s = io('http://localhost:8005');
@@ -35,15 +35,19 @@ function RoomPage() {
     useEffect(() => {
         axios.get(`${URL_MATCHING_ROOM_SVC}/${roomId}`)
             .then((res) => {
-                setUser1(res.data.room.userid1);
-                setUser2(res.data.room.userid2);
+                if (user.sub === res.data.room.userid1) {
+                    setIsInterviewer(true);
+                    setPeer(res.data.room.userid2)
+                } else {
+                    setPeer(res.data.room.userid1)
+                }
                 setQuestionId(res.data.room.questionid);
             })
             .catch((err) => {
                 console.log(err);
                 navigateTo('../');
             });
-    }, [navigateTo, roomId]);
+    }, [navigateTo, roomId, user]);
 
     useEffect(() => {
         if (socket == null) {
@@ -53,7 +57,7 @@ function RoomPage() {
             console.log('Session is closed');
             socket.emit('leave-room', `room-${roomId}`);
             alert('Peer has closed the session');
-            setTimeout(() => navigateTo('../dashboard'), 3 * 1000);
+            setTimeout(() => navigateTo('../dashboard'), 1 * 1000);
         }
         socket.on('leave-room', handler);
         return;
@@ -96,8 +100,8 @@ function RoomPage() {
                 handleYes={closeRoom}
                 handleNo={undoPrompt}
             />
-            <Typography>Coding session with {user1} and {user2} in room {roomId} using question {questionId}</Typography>
-            <QuestionBox questionId={questionId} interviewer={true} />
+            <Typography>Coding session with {peer} in room {roomId} using question {questionId}</Typography>
+            <QuestionBox questionId={questionId} interviewer={isInterviewer} />
             <CodeBox roomId={roomId} socket={socket} />
             <Button variant="contained" onClick={prompt}>End Session</Button>
         </Box>
