@@ -1,10 +1,16 @@
 import { Box } from "@mui/material";
 import LoginButton from "../components/buttons/LoginButton";
+import RegisterButton from "../components/buttons/RegisterButton";
 import Typography from "@mui/material/Typography";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
 import { Stack } from "@mui/material";
-import RegisterButton from "../components/buttons/RegisterButton";
+
+import Carousel from "react-bootstrap/Carousel";
+import slideOne from "../assets/slide-1.svg";
+import slideTwo from "../assets/slide-2.svg";
+import slideThree from "../assets/slide-3.svg";
+import slideFour from "../assets/slide-4.svg";
 
 function LoginPage() {
   const { isAuthenticated, isLoading } = useAuth0();
@@ -18,38 +24,21 @@ function LoginPage() {
   }
 
   return (
-    <Box
-      display={"flex"}
-      flexDirection={"row"}
-      alignItems={"center"}
-      justifyContent={"center"}
-    >
-      <Box margin={"1rem"}>
-        <Typography variant="h2">
-          Welcome to Software Interview Xchange (SIX)!
-        </Typography>
-        <Typography variant="h4">What is SIX?</Typography>
-        <Typography margin={"1rem"}>
-          SIX is a solution for geeks to improve their algorithmic skills with
-          online peer coding sessions!
-        </Typography>
-        <Typography variant="h4">How to use SIX?</Typography>
-        <Typography margin={"1rem"}>
-          SIX matches geeks in a 1 to 1 setting to complete a series of coding
-          questions.
-        </Typography>
-        <Typography variant="h4">Why use SIX?</Typography>
-        <Typography margin={"1rem"}>
-          SIX simulates live technical interviews and also allows you to improve
-          your coding skills and hopefully to break through the OA rounds!
-        </Typography>
-        <Typography variant="h4">Sign up now to try out SIX!</Typography>
+    <Box>
+      <Carousel>
+        <Carousel.Item>
+          <img className="d-block w-100" src={slideOne} alt="First slide" />
+        </Carousel.Item>
+        <Carousel.Item>
+          <img className="d-block w-100" src={slideTwo} alt="Second slide" />
+        </Carousel.Item>
+        <Carousel.Item>
+          <img className="d-block w-100" src={slideThree} alt="Third slide" />
+        </Carousel.Item>
+      </Carousel>
 
-        <Stack justifyContent="center">
-          <LoginButton fullWidth="true" margin="20px"></LoginButton>
-          <RegisterButton fullWidth="true" margin="20px"></RegisterButton>
-        </Stack>
-      </Box>
+      <LoginButton fullWidth="true" margin="20px"></LoginButton>
+      <RegisterButton fullWidth="true" margin="20px"></RegisterButton>
     </Box>
   );
 }
