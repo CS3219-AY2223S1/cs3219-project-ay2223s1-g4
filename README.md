@@ -37,3 +37,10 @@ Note that Auth0 is also used for authentication and its services are called upon
 2. Update relevant variables in the `.env` file.
 3. Install npm packages using `./run.sh b`.
 4. Run service using `./run.sh r`.
+
+Note: For `question-service` under the backend side, explore its `README.md` to setup locally.
+
+### TODO: Running with docker
+
+1. Run `./run-docker.sh` to run all the services.
+2. To kill services, run `./run-docker.sh k`.

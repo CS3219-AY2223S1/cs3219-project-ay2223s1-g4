@@ -6,7 +6,7 @@ Performs scraping, question service and history for users.
 
 ## Setup
 
-1. Have Python installed on the system
+1. Have python 3.10+ installed on the system
 2. Install poetry
     ``` bash 
     $ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | env POETRY_VERSION=1.1.9 python -
