@@ -2,6 +2,8 @@ import { Box, Stack } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import React, { useState } from "react";
 import ChangePasswordButton from "../components/buttons/ChangePasswordButton";
+import PasswordRequirementAlert from "../components/PasswordRequirementAlert";
+import Badge from "react-bootstrap/Badge";
 
 function ChangePasswordPage() {
   const { isAuthenticated, isLoading } = useAuth0();
@@ -24,29 +26,29 @@ function ChangePasswordPage() {
         <Box>
           <div>
             <div />
-            <h3>Password requirements</h3>
-            <body>
-              Your password must contain: At least 8 characters and At least 3
-              of the following:
-            </body>
-            <body>- Lower case letters (a-z) </body>
-            <body>- Upper case letters (A-Z)</body>
-            <body>- Numbers (0-9) </body>
-            <body>- Special characters (e.g. !@#$%^&*)</body>
-            <h3>New password</h3>
+            <PasswordRequirementAlert></PasswordRequirementAlert>
+            <br />
+            <body>New password </body>
             <input
               type="password"
+              placeholder="new password"
               value={newPassword}
               onChange={handleNewPassword}
             />
-            <h3>Confirm new password</h3>
+
+            <br />
+            <br />
+            <body>Confirm new password </body>
             <input
               type="password"
+              placeholder="new password"
               value={confirmNewPassword}
               onChange={handleNewConfirmPassword}
             />
             {}
           </div>
+          <br />
+          <br />
           <ChangePasswordButton
             newPassword={newPassword}
             confirmNewPassword={confirmNewPassword}

@@ -7,13 +7,14 @@ import DifficultySelector from "./pages/DifficultySelector";
 import LoginPage from "./pages/LoginPage";
 import DashBoard from "./pages/DashBoard";
 import ProfilePage from "./pages/ProfilePage";
-import ChangePasswordPage from "./pages/ChangePasswordPage"
+import ChangePasswordPage from "./pages/ChangePasswordPage";
 import RequireAuth from "./routers/RequireAuth";
 import { Navigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import RoomPage from "./pages/RoomPage";
 import LoadingPage from "./pages/LoadingPage";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   const { isLoading, error } = useAuth0();
