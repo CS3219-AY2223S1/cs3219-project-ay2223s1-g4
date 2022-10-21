@@ -67,35 +67,39 @@ function NavBar() {
           />{" "}
           SIX
         </Navbar.Brand>{" "}
-        <Navbar.Toggle
-          style={{ color: "white" }}
-          aria-controls="basic-navbar-nav"
-        />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link style={{ color: "white" }} href="/">
-              Home
-            </Nav.Link>
-            <Nav.Link style={{ color: "white" }} href="/selectdifficulty">
-              Train
-            </Nav.Link>
-            <NavDropdown
-              title={<span style={{ color: "white" }}>Profile</span>}
-              id="basic-nav-dropdown"
-            >
-              <NavDropdown.Item href="/ProfilePage">
-                View Profile
-              </NavDropdown.Item>
-              <NavDropdown.Item href="/changepasswordpage">
-                Change Password
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item>
-                <LogoutButton />
-              </NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
-        </Navbar.Collapse>
+        {isAuthenticated && (
+          <Navbar.Toggle
+            style={{ color: "white" }}
+            aria-controls="basic-navbar-nav"
+          />
+        )}
+        {isAuthenticated && (
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link style={{ color: "white" }} href="/">
+                Home
+              </Nav.Link>
+              <Nav.Link style={{ color: "white" }} href="/selectdifficulty">
+                Train
+              </Nav.Link>
+              <NavDropdown
+                title={<span style={{ color: "white" }}>Profile</span>}
+                id="basic-nav-dropdown"
+              >
+                <NavDropdown.Item href="/ProfilePage">
+                  View Profile
+                </NavDropdown.Item>
+                <NavDropdown.Item href="/changepasswordpage">
+                  Change Password
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item>
+                  <LogoutButton />
+                </NavDropdown.Item>
+              </NavDropdown>
+            </Nav>
+          </Navbar.Collapse>
+        )}
       </Container>
     </Navbar>
   );
