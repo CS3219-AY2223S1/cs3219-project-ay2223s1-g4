@@ -5,6 +5,7 @@ import DeleteAccount from "../components/buttons/DeleteUserButton";
 import UpdateUsernameButton from "../components/buttons/UpdateUsernameButton";
 import { Button } from "@mui/material";
 import Link from "@mui/material/Link";
+import Loading from "../components/Loading";
 
 function ProfilePage() {
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -12,7 +13,7 @@ function ProfilePage() {
   const [nickname, setNickname] = useState(user.nickname);
 
   if (isLoading) {
-    return <div>Loading ...</div>;
+    return <Loading/>;
   }
 
   const handleUpdate = (event) => {
@@ -48,7 +49,7 @@ function ProfilePage() {
           </div>
         </Box>
         <Box>
-          <Link key="Change password" href="/ChangePasswordPage">
+          <Link key="Change password" href="/change-password">
             <Button
               variant={"outlined"}
               style={{

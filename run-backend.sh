@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+## must be in order of dependencies
 PATH_LIST=(
     "backend/pubsub-service"
     "backend/collab-service"
@@ -13,7 +14,7 @@ ROOT_PATH=$(pwd)
 build() {
     for service in "${PATH_LIST[@]}"; do
         cd $service
-        $(which npm) ci
+        ./run.sh b
         cd $ROOT_PATH
     done
 }
@@ -21,52 +22,51 @@ build() {
 run() {
     for service in "${PATH_LIST[@]}"; do
         cd $service
-        $(which npm) run dev &
+        ./run.sh r &
         cd $ROOT_PATH
     done
 }
 
 stop() {
-    to_kill=$(pgrep -f nodemon)
-    for service in $to_kill; do
-        kill -9 $service
+    for service in "${PATH_LIST[@]}"; do
+        to_kill=$(pgrep -f ${service})
+        for task_id in $to_kill; do
+            kill -9 $task_id
+        done
     done
+    exit
+}
 
-    to_kill=$(pgrep -f node)
-    for service in $to_kill; do
-        kill -9 $service
+sleep_inf() {
+    trap stop INT
+    while :; do
+        sleep 2073600; ## 24 days
     done
 }
 
 main() {
     if [ $# -eq 0 ]; then
-        echo "Invalid usage"
-        echo "Usage: $./run-backend.sh <op>"
-        echo "op: d - delete/kill"
-        echo "    s - start"
-        echo "    r - rebuild and start"
-        exit
-
-    elif [ $1 == "d" ]; then
         set -x
         stop
+        build
+        run
+        sleep_inf
         exit 
 
-    elif [ $1 == "s" ]; then
+    elif [ $1 == "b" ]; then
         set -x
-        stop
-        run
-        trap stop INT
-        sleep infinity
+        build
         exit 
 
     elif [ $1 == "r" ]; then
         set -x
+        run
+        sleep_inf
+        exit 
+
+    elif [ $1 == "k" ]; then
+        set -x
         stop
-        build
-        start
-        trap stop INT
-        sleep infinity
         exit 
     fi
 }

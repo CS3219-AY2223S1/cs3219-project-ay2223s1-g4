@@ -9,19 +9,19 @@ import Link from "@mui/material/Link";
 import { useAuth0 } from "@auth0/auth0-react";
 
 function NavBar() {
-  const { isAuthenticated, isLoading } = useAuth0();
+  const { isAuthenticated } = useAuth0();
   const navItems = [
     {
       name: "Home",
       link: "/",
     },
     {
-      name: "Select Difficulty",
-      link: "/selectdifficulty",
+      name: "Train",
+      link: "/train",
     },
     {
       name: "Profile",
-      link: "/ProfilePage",
+      link: "/profile",
     }
   ];
 

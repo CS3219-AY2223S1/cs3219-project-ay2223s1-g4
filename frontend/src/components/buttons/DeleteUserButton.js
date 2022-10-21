@@ -1,7 +1,7 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Button } from "@mui/material";
-import { AUTH0_DOMAIN } from "../../configs";
+// import { AUTH0_DOMAIN } from "../../configs";
 
 const DeleteAccount = ({ margin, fullWidth }) => {
   const { user } = useAuth0();

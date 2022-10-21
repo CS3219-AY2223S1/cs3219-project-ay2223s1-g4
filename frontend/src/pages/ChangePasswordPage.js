@@ -2,13 +2,15 @@ import { Box, Stack } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import React, { useState } from "react";
 import ChangePasswordButton from "../components/buttons/ChangePasswordButton";
+import Loading from "../components/Loading";
 
 function ChangePasswordPage() {
   const { isAuthenticated, isLoading } = useAuth0();
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+    
   if (isLoading) {
-    return <div>Loading ...</div>;
+    return <Loading/>;
   }
 
   const handleNewPassword = (event) => {

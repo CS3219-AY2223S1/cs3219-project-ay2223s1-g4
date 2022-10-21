@@ -1,17 +1,11 @@
 #!/usr/bin/env bash
 
-ROOT_PATH=$(pwd)
-
 build() {
-    cd frontend
-    npm ci
-    cd $ROOT_PATH
+    $(which npm) ci
 }
 
 run() {
-    cd frontend
-    npm start
-    cd $ROOT_PATH
+    $(which npm) run dev
 }
 
 main() {

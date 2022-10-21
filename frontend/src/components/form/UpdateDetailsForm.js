@@ -3,16 +3,18 @@ import axios from "axios";
 import FileUploader from "./FileUploader";
 import { TextField, Button } from "@mui/material";
 import {useAuth0} from '@auth0/auth0-react';
+import Loading from "../loading";
+
 const UpdateDetailsForm =  () => {
     const [name, setName] = useState("");
     const [email,  setEmail] = useState("");
     const [password,  setPassword] = useState("");
 
     const [selectedFile, setSelectedFile] = useState(null);
-    const { user , isLoading } = useAuth0();
+    const { isLoading } = useAuth0();
     
     if (isLoading) {
-      return <div>Loading ...</div>;
+      return <Loading/>;
     }
 
     const submitForm = () => {

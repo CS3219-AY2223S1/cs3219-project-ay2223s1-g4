@@ -2,7 +2,7 @@ import React from "react";
 import loading from "../assets/loading.svg";
 
 const Loading = () => (
-  <div className="spinner">
+  <div>
     <img src={loading} alt="Loading" />
   </div>
 );

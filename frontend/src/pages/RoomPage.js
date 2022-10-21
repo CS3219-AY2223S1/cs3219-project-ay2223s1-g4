@@ -10,6 +10,7 @@ import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { URL_MATCHING_ROOM_SVC } from "../configs";
 import { io } from 'socket.io-client';
+import Loading from "../components/Loading";
 
 function RoomPage() {
     const { collabId: roomId } = useParams();
@@ -80,8 +81,8 @@ function RoomPage() {
     }
 
     if (isLoading) {
-        return <div>Loading ...</div>;
-    };
+        return <Loading/>;
+    }
 
     if (!isAuthenticated) {
         return <Navigate to="/dashboard" replace />;
