@@ -3,8 +3,7 @@ import ReactMarkdown from 'react-markdown'
 import React, { useEffect, useState } from "react";
 import { Tab, Tabs, Typography } from '@mui/material';
 import TabPanel, { a11yProps } from './tab/TabPanel';
-import { generateQuestionId, getQuestion } from '../services/question_service';
-import { useAuth0 } from '@auth0/auth0-react';
+import { getQuestion } from '../services/question_service';
 
 function QuestionBox({ questionId = 1, interviewer = false}) {
     const [title, setTitle] = useState('Loading Title');

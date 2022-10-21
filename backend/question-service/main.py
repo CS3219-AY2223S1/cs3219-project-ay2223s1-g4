@@ -1,13 +1,15 @@
-from typing import List
-
-from fastapi import FastAPI, File, UploadFile, HTTPException, Form
+import os
+import uvicorn
+from typing import List, Optional
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from app.question.question_crud import *
-import uvicorn
 from app.question.connector import createSession
 from fastapi.encoders import jsonable_encoder
+from dotenv import load_dotenv
 
+load_dotenv()
 app = FastAPI()
 origins = [
     "http://localhost",
@@ -15,7 +17,7 @@ origins = [
     "http://localhost:8001",
     "http://localhost:8002",
 ]
-session = createSession()()
+session = createSession()() 
 
 app.add_middleware(
     CORSMiddleware,
@@ -70,25 +72,29 @@ async def get_all_questions():
 class QuestionRequestBody(BaseModel):
     user_id: str
     difficulty: str = Field (default="medium")
-    tags: List[str] | None
-    company: str | None
+    tags: Optional[List[str]]
+    company: Optional[str]
 
-# TODO: Do authentication?
 @app.post("/api/question/id")
 async def generate_question_id(question: QuestionRequestBody):
     difficulty = Difficulty[question.difficulty]
     return {"id": FilterByDifficulty(session, difficulty).scalar()}
 
 @app.get("/api/question/{question_id}")
-async def getSolution(question_id: int, solution: bool | None):
+async def getSolution(question_id: int, solution: Optional[bool]):
     question = getQuestion(session, question_id)
-
+    output = {
+        'question_id': question_id,
+        'title': question.title,
+        'question': question.problem
+    }
     if solution:
-        return {'question_id': question_id, 'title': question.title, 'question': question.problem, 'solution': question.explanation}
-    else:
-        return {'question_id': question_id, 'title': question.title, 'question': question.problem}
+        output['solution'] = question.explanation
+    return output
 
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=8003)
+    uvicorn.run(
+        app,
+        host=os.environ["SERVICE_HOST"],
+        port=int(os.environ["SERVICE_PORT"])
+    )

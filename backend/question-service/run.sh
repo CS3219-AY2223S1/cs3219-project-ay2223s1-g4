@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 build() {
-    $(which npm) ci
+    poetry run python3 app/soupScrape.py
 }
 
 run() {
-    $(which npm) run dev
+    poetry run python3 main.py
 }
 
 main() {

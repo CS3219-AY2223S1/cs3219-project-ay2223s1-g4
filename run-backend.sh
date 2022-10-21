@@ -7,6 +7,7 @@ PATH_LIST=(
     "backend/matching-service"
     "backend/room-service"
     "backend/user-service"
+    "backend/question-service"
 )
 ROOT_PATH=$(pwd)
 
