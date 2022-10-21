@@ -21,7 +21,7 @@ Note that Auth0 is also used for authentication and its services are called upon
 ## Running whole application locally
 
 1. Open 2 terminals
-2. Run `./run-backend.sh r` in one terminal and `./run-frontend.sh r` in the other
+2. Run `./run-backend.sh` in one terminal and `./run-frontend.sh` in the other
 3. For each script, to terminate the session, press `CRTL-C`
 
 ## Running individual service
@@ -35,5 +35,12 @@ Note that Auth0 is also used for authentication and its services are called upon
 
 1. Rename `.env.example` file to `.env`.
 2. Update relevant variables in the `.env` file.
-3. Install npm packages using `npm i`.
-4. Run service using `npm run dev`.
+3. Install npm packages using `./run.sh b`.
+4. Run service using `./run.sh r`.
+
+Note: For `question-service` under the backend side, explore its `README.md` to setup locally.
+
+### TODO: Running with docker
+
+1. Run `./run-docker.sh` to run all the services.
+2. To kill services, run `./run-docker.sh k`.

@@ -75,7 +75,7 @@ function CodeBox({ roomId, socket }) {
 
     return (
         <Box style={{ marginTop: 10, marginBottom: 10, overflowY: 'auto', height: 400 }}>
-            <div id="code-box" style={{ fontFamily: 'Consolas', fontSize: 14 }}></div>
+            <div id="code-box" class="code" style={{ fontSize: 14 }}></div>
         </Box>
     );
 }

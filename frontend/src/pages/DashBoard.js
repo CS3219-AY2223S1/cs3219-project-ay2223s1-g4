@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
+import Loading from "../components/Loading";
 import Carousel from "react-bootstrap/Carousel";
 import slideOne from "../assets/slide-1.svg"
 import slideTwo from "../assets/slide-2.svg";
@@ -7,12 +7,12 @@ import slideThree from "../assets/slide-3.svg";
 import slideFour from "../assets/slide-4.svg";
 
 function DashBoard() {
-  const { isAuthenticated, isLoading, user } = useAuth0();
-
+  const { isAuthenticated, isLoading } = useAuth0();
+    
   if (isLoading) {
-    return <div>Loading ...</div>;
+    return <Loading/>;
   }
-  console.log(user);
+
   return (
     isAuthenticated && (
       <Carousel>

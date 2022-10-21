@@ -10,10 +10,11 @@ import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { URL_MATCHING_ROOM_SVC } from "../configs";
 import { io } from 'socket.io-client';
+import Loading from "../components/Loading";
 
 function RoomPage() {
     const { collabId: roomId } = useParams();
-    const [ questionId, setQuestionId ] = useState(0);
+    const [ questionId, setQuestionId ] = useState(1);
     const [ user1, setUser1 ] = useState(0);
     const [ user2, setUser2 ] = useState(0);
     const [ isPromptOpen, setIsPromptOpen ] = useState(false);
@@ -80,8 +81,8 @@ function RoomPage() {
     }
 
     if (isLoading) {
-        return <div>Loading ...</div>;
-    };
+        return <Loading/>;
+    }
 
     if (!isAuthenticated) {
         return <Navigate to="/dashboard" replace />;
@@ -96,7 +97,7 @@ function RoomPage() {
                 handleNo={undoPrompt}
             />
             <Typography>Coding session with {user1} and {user2} in room {roomId} using question {questionId}</Typography>
-            <QuestionBox questionId={questionId} />
+            <QuestionBox questionId={questionId} interviewer={true} />
             <CodeBox roomId={roomId} socket={socket} />
             <Button variant="contained" onClick={prompt}>End Session</Button>
         </Box>

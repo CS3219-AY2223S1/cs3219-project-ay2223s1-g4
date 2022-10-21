@@ -15,7 +15,7 @@ main() {
         stop
         start
         exit 
-    elif [ $1 == "d" ]; then
+    elif [ $1 == "k" ]; then
         set -x
         stop
         exit 

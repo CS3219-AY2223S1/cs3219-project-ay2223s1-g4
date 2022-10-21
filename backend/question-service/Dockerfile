@@ -1,19 +1,15 @@
-# pull official base image
-FROM node:alpine
+FROM python:3.7
 
-# set working directory
+ENV PIP_DISABLE_PIP_VERSION_CHECK=on
+
+RUN pip install poetry
+
 WORKDIR /app
+COPY poetry.lock pyproject.toml /app/
 
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+RUN poetry config virtualenvs.create false
+RUN poetry install --no-interaction
 
-# install app dependencies
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm ci
+COPY . /app
 
-# add app
-COPY . ./
-
-# start app
-CMD ["npm", "start"]
+RUN poetry run python main.py

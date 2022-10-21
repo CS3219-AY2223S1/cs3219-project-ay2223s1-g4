@@ -1,25 +1,18 @@
 import axios from 'axios';
 
-function getQuestionIdFromDifficulty(difficulty) {
-    let questionidMap = {
-        EASY: 0,
-        MEDIUM: 1,
-        HARD: 2,
-    };
-    return (questionidMap.hasOwnProperty(difficulty))
-        ? questionidMap[difficulty]
-        : questionidMap['EASY'];
-}
-
-async function getRandomQuestionIdFromDifficulty() {
-    const questionQueryUrl = ``; // TODO
-    axios.get(questionQueryUrl)
+async function getQuestionIdFromDifficulty(userId, difficulty) {
+    return axios.post(
+        'http://localhost:8003/api/question/id', 
+        {
+            difficulty: difficulty.toLowerCase(),
+            user_id : userId.toString()
+        })
         .then((res) => {
-            return res.data.questionId;
+            return res.data.id;
         })
         .catch((err) => {
             console.error(err);
-            return null; // TODO return default id
+            return 1;
         });
 }
 

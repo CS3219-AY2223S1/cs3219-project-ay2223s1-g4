@@ -7,15 +7,16 @@ import axios from 'axios';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from "react-router-dom";
 import { URL_MATCHING_MATCH_SVC } from '../configs';
+import Loading from '../components/Loading';
 
 function DifficultySelector() {
 
     const { user, isAuthenticated, isLoading } = useAuth0();
 
     let navigateTo = useNavigate();
-
+    
     if (isLoading) {
-      return <div>Loading ...</div>;
+        return <Loading/>;
     }
 
     const difficulties = ['Easy', 'Medium', 'Hard'];

@@ -1,22 +1,19 @@
 import { Box } from "@mui/material";
 import LoginButton from "../components/buttons/LoginButton";
 import RegisterButton from "../components/buttons/RegisterButton";
-import Typography from "@mui/material/Typography";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
-import { Stack } from "@mui/material";
-
+import Loading from "../components/Loading";
 import Carousel from "react-bootstrap/Carousel";
 import slideOne from "../assets/slide-1.svg";
 import slideTwo from "../assets/slide-2.svg";
 import slideThree from "../assets/slide-3.svg";
-import slideFour from "../assets/slide-4.svg";
 
 function LoginPage() {
   const { isAuthenticated, isLoading } = useAuth0();
-
+    
   if (isLoading) {
-    return <div>Loading ...</div>;
+    return <Loading/>;
   }
 
   if (isAuthenticated) {

@@ -10,7 +10,8 @@ import LoginButton from "../components/buttons/LoginButton";
 import RegisterButton from "../components/buttons/RegisterButton";
 
 function NavBar() {
-  const { isAuthenticated, isLoading } = useAuth0();
+  const { isAuthenticated } = useAuth0();
+
   return (
     <Navbar bg="secondary" expand="lg">
       <Container style={{ color: "white" }}>
@@ -20,6 +21,7 @@ function NavBar() {
             width="30"
             height="30"
             className="d-inline-block align-top"
+            alt="logo"
           />{" "}
           SIX
         </Navbar.Brand>{" "}
@@ -33,17 +35,17 @@ function NavBar() {
               <Nav.Link style={{ color: "white" }} href="/">
                 Home
               </Nav.Link>
-              <Nav.Link style={{ color: "white" }} href="/selectdifficulty">
+              <Nav.Link style={{ color: "white" }} href="/train">
                 Train
               </Nav.Link>
               <NavDropdown
                 title={<span style={{ color: "white" }}>Profile</span>}
                 id="basic-nav-dropdown"
               >
-                <NavDropdown.Item href="/ProfilePage">
+                <NavDropdown.Item href="/profile">
                   View Profile
                 </NavDropdown.Item>
-                <NavDropdown.Item href="/changepasswordpage">
+                <NavDropdown.Item href="/change-password">
                   Change Password
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
@@ -60,7 +62,7 @@ function NavBar() {
               <Nav.Link style={{ color: "white" }} href="/">
                 <LoginButton />
               </Nav.Link>
-              <Nav.Link style={{ color: "white" }} href="/selectdifficulty">
+              <Nav.Link style={{ color: "white" }} href="/train">
                 <RegisterButton />
               </Nav.Link>
             </Nav>

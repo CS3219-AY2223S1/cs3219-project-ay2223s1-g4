@@ -3,9 +3,9 @@ import { useAuth0 } from "@auth0/auth0-react";
 import React, { useState } from "react";
 import DeleteAccount from "../components/buttons/DeleteUserButton";
 import UpdateUsernameButton from "../components/buttons/UpdateUsernameButton";
-import { Buttonn } from "@mui/material";
 import Button from "react-bootstrap/Button";
 import Link from "@mui/material/Link";
+import Loading from "../components/Loading";
 
 function ProfilePage() {
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -13,7 +13,7 @@ function ProfilePage() {
   const [nickname, setNickname] = useState(user.nickname);
 
   if (isLoading) {
-    return <div>Loading ...</div>;
+    return <Loading/>;
   }
 
   const handleUpdate = (event) => {
@@ -55,7 +55,7 @@ function ProfilePage() {
           </div>
         </Box>
         <Box>
-          <Link key="Change password" href="/ChangePasswordPage">
+          <Link key="Change password" href="/change-password">
             <Button variant="outline-primary" key="Change password">
               Change password
             </Button>
