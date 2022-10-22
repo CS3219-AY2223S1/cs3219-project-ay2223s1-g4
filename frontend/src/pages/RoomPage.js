@@ -53,13 +53,23 @@ function RoomPage() {
         if (socket == null) {
             return;
         }
-        const handler = () => {
+        const handleLeaveRoom = () => {
             console.log('Session is closed');
             socket.emit('leave-room', `room-${roomId}`);
             alert('Peer has closed the session');
             setTimeout(() => navigateTo('../dashboard'), 1 * 1000);
         }
-        socket.on('leave-room', handler);
+        socket.on('leave-room', handleLeaveRoom);
+
+        const handleBreakRoom = () => {
+            alert('Peer has left the session. You may continue coding');
+        }
+        socket.on('break-room', handleBreakRoom);
+
+        const handlePeerJoinRoom = () => {
+            alert('Peer has joined the session.');
+        }
+        socket.on('peer-join-room', handlePeerJoinRoom);
         return;
     }, [navigateTo, socket, roomId]);
 
