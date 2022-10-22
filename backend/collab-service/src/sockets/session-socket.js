@@ -1,4 +1,5 @@
 import { Server } from 'socket.io';
+import SessionORM from '../models/session-orm.js';
 import { getDocumentGivenRoomId, updateDocumentFromRoomId } from '../service/service.js';
 
 let SessionSocketManager = (function() {
@@ -21,10 +22,23 @@ let SessionSocketManager = (function() {
             socket.on('join-room', (room) => {
                 socket.join(room);
                 console.log(`Socket id ${socket.id} joined room ${room}`);
+                setTimeout(() => socket.broadcast.to(room).emit('peer-join-room'), 1 * 1000);
             });
+
             socket.on('leave-room', (room) => {
                 console.log(`Socket id ${socket.id} left room ${room}`);
                 socket.broadcast.to(room).emit('leave-room');
+                setTimeout(() => checkIfCanClose(room), 1 * 1000);
+            });
+
+            socket.on('disconnecting', () => {
+                for (const r of socket.rooms) {
+                    if (r.startsWith('room')) {
+                        console.log(`Socket id ${socket.id} broke from room ${r}`);
+                        socket.broadcast.to(r).emit('break-room');
+                        setTimeout(() => checkIfCanClose(r), 1 * 1000);
+                    }
+                }
             });
         });
     };
@@ -41,12 +55,21 @@ let SessionSocketManager = (function() {
                 socket.on('send-code', (data, room) => {
                     socket.broadcast.to(room).emit('receive-code', data);
                 });
+
                 socket.on("save-code", async (roomId, document) => {
                     await updateDocumentFromRoomId(roomId, document);
                 });
             });
         });
     };
+
+    function checkIfCanClose(room) {
+        const presentRooms = io.sockets.adapter.rooms;
+        if (!presentRooms.hasOwnProperty(room)) {
+            console.log(`Closed ${room} as no more clients are present`);
+            SessionORM.closeSessionByRoomId(room.substring(4));
+        }
+    }
 
     return {
         bind: bindSocket,
