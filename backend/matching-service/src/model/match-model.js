@@ -11,6 +11,10 @@ let MatchModelSchema = new mongoose.Schema({
         enum : ["EASY", "MEDIUM", "HARD"],
         required: true,
     },
+    socketid: {
+        type: String,
+        required: false,
+    },
 });
 
 const MatchModel = mongoose.model('Match', MatchModelSchema);

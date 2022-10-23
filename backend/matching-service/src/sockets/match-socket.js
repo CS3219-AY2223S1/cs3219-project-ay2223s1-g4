@@ -18,9 +18,13 @@ let MatchSocketManager = (function() {
             socket.on('join-room', (room) => {
                 socket.join(room);
                 console.log(`Socket id ${socket.id} joined ${room}`);
+                MatchORM.updateSocketId(room.substring(6), socket.id);
             });
             socket.on('leave-room', (room) => {
                 console.log(`Socket id ${socket.id} left ${room}`);
+            });
+            socket.on('disconnect', (room) => {
+                MatchORM.removeMatchBySocketId(socket.id);
             });
         });
     };
