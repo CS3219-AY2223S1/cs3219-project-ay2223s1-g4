@@ -5,7 +5,7 @@ import DeleteAccount from "../components/buttons/DeleteUserButton";
 import UpdateUsernameButton from "../components/buttons/UpdateUsernameButton";
 import Button from "react-bootstrap/Button";
 import Link from "@mui/material/Link";
-import Loading from "../components/Loading";
+import Loading from "../components/loading";
 
 function ProfilePage() {
   const { user, isAuthenticated, isLoading } = useAuth0();

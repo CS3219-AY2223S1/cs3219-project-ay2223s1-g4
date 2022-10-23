@@ -3,7 +3,7 @@ import LoginButton from "../components/buttons/LoginButton";
 import RegisterButton from "../components/buttons/RegisterButton";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
-import Loading from "../components/Loading";
+import Loading from "../components/loading";
 import Carousel from "react-bootstrap/Carousel";
 import slideOne from "../assets/slide-1.svg";
 import slideTwo from "../assets/slide-2.svg";

@@ -2,7 +2,7 @@ import { Box, Stack } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import React, { useState } from "react";
 import ChangePasswordButton from "../components/buttons/ChangePasswordButton";
-import Loading from "../components/Loading";
+import Loading from "../components/loading";
 import PasswordRequirementAlert from "../components/PasswordRequirementAlert";
 
 function ChangePasswordPage() {

@@ -10,7 +10,7 @@ import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { URL_MATCHING_ROOM_SVC } from "../configs";
 import { io } from 'socket.io-client';
-import Loading from "../components/Loading";
+import Loading from "../components/loading";
 
 function RoomPage() {
     const { collabId: roomId } = useParams();

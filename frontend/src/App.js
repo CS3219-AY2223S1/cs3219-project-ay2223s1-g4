@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import NavBar from "./components/NavBar";
-import Loading from "./components/Loading";
+import Loading from "./components/loading";
 
 import DifficultySelector from "./pages/DifficultySelector";
 import LoginPage from "./pages/LoginPage";
