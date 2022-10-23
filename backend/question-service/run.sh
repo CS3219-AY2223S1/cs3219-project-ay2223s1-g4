@@ -8,6 +8,12 @@ run() {
     poetry run python3 main.py
 }
 
+verify() {
+    set -e
+    echo "No tests specified"
+    ## TODO ADD TEST AND SCRIPT
+}
+
 main() {
     if [ $# -eq 0 ]; then
         set -x
@@ -23,6 +29,11 @@ main() {
     elif [ $1 == "r" ]; then
         set -x
         run
+        exit 
+
+    elif [ $1 == "t" ]; then
+        set -x
+        verify
         exit 
     fi
 }
