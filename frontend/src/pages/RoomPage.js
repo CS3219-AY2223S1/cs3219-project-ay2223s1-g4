@@ -35,13 +35,13 @@ function RoomPage() {
     useEffect(() => {
         axios.get(`${URL_MATCHING_ROOM_SVC}/${roomId}`)
             .then((res) => {
-                if (user.sub === res.data.room.userid1) {
+                if (user.sub === res.data.userid1) {
                     setIsInterviewer(true);
-                    setPeer(res.data.room.userid2)
+                    setPeer(res.data.userid2)
                 } else {
-                    setPeer(res.data.room.userid1)
+                    setPeer(res.data.userid1)
                 }
-                setQuestionId(res.data.room.questionid);
+                setQuestionId(res.data.questionid);
             })
             .catch((err) => {
                 console.log(err);

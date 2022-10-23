@@ -7,12 +7,12 @@ let RoomORM = {
             userid2: userId2,
             questionid: questionId
         });
-        room.save();
+        await room.save();
         return room;
     },
 
     removeRoomById: async (id) => {
-        RoomModel.findByIdAndDelete(id, (err) => {
+        await RoomModel.findByIdAndDelete(id, (err) => {
             if (err) {
                 console.log(err);
                 return;
@@ -22,14 +22,28 @@ let RoomORM = {
     },
 
     findRoomsByUser: async (userId) => {
-        return await RoomModel.find({$or: [
+        return RoomModel.find({$or: [
             {userid1: userId},
             {userid2: userId}
-        ]});
+        ]})
+        .then((docs) => {
+            return docs;
+        })
+        .catch((err) => {
+            console.log(err.message);
+            return [];
+        });
     },
 
     findRoomById: async (id) => {
-        return await RoomModel.findById(id);
+        return RoomModel.findById(id)
+            .then((doc) => {
+                return doc;
+            })
+            .catch((err) => {
+                console.log(err.message);
+                return null;
+            });
     },
 }
 
