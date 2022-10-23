@@ -125,7 +125,7 @@ describe('pubsub logic', () => {
         let mockPubSubPort = 1234;
         pubsub = createMockPubSub(mockPubSubPort);
         client = new Client(`http://localhost:${mockPubSubPort}`);
-        done();
+        setTimeout(() => done(), 3 * 1000);
     });
 
     it('should receive, create and publish', (done) => {
@@ -144,8 +144,6 @@ describe('pubsub logic', () => {
             difficulty: 'EASY'
         };
         console.log(`Sending ${JSON.stringify(roomReq)} to pubsub`);
-        setTimeout(() => {
-            pubsub.to(ROOM_CREATE_TAG).emit(ROOM_CREATE_TAG, roomReq);
-        }, 1 * 1000);
+        pubsub.to(ROOM_CREATE_TAG).emit(ROOM_CREATE_TAG, roomReq);
     });
 });

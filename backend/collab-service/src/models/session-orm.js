@@ -8,7 +8,14 @@ let SessionORM = {
     },
 
     findSessionByRoomId: async (roomid) => {
-        return await SessionModel.findOne({ roomid: roomid });
+        return SessionModel.findOne({ roomid: roomid })
+            .then((doc) => {
+                return doc;
+            })
+            .catch((err) => {
+                console.log(err.message);
+                return null;
+            });;
     },
 
     closeSessionByRoomId: async (roomid) => {
@@ -18,7 +25,12 @@ let SessionORM = {
     },
 
     updateDocumentFromRoomId: async (roomid, document) => {
-        if (!(await SessionModel.findOne({ roomid: roomid })).isOpen) {
+        let session = findSessionByRoomId(roomid);
+        if (session == null) {
+            console.warn(`Room ${roomid} does not exist`);
+            return;
+        }
+        if (!(session.isOpen)) {
             console.warn(`Room ${roomid} is already closed, unable to update document`);
             return;
         }
