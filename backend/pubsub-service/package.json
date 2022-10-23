@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "test": "mocha"
+    "test": "mocha --timeout 5000 --exit"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +18,7 @@
     "express": "^4.18.1",
     "mocha": "^10.1.0",
     "nodemon": "^2.0.20",
-    "socket.io": "^4.5.2"
+    "socket.io": "^4.5.2",
+    "socket.io-client": "^4.5.3"
   }
 }
