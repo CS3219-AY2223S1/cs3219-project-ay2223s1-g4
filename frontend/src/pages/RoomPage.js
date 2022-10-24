@@ -35,13 +35,13 @@ function RoomPage() {
     useEffect(() => {
         axios.get(`${URL_MATCHING_ROOM_SVC}/${roomId}`)
             .then((res) => {
-                if (user.sub === res.data.room.userid1) {
+                if (user.sub === res.data.userid1) {
                     setIsInterviewer(true);
-                    setPeer(res.data.room.userid2)
+                    setPeer(res.data.userid2)
                 } else {
-                    setPeer(res.data.room.userid1)
+                    setPeer(res.data.userid1)
                 }
-                setQuestionId(res.data.room.questionid);
+                setQuestionId(res.data.questionid);
             })
             .catch((err) => {
                 console.log(err);
@@ -50,6 +50,7 @@ function RoomPage() {
     }, [navigateTo, roomId, user]);
 
     useEffect(() => {
+        let isRunning = true;
         if (socket == null) {
             return;
         }
@@ -57,12 +58,15 @@ function RoomPage() {
             console.log('Session is closed');
             socket.emit('leave-room', `room-${roomId}`);
             alert('Peer has closed the session');
-            setTimeout(() => navigateTo('../dashboard'), 1 * 1000);
+            isRunning = false;
+            navigateTo('../dashboard');
         }
         socket.on('leave-room', handleLeaveRoom);
 
         const handleBreakRoom = () => {
-            alert('Peer has left the session. You may continue coding');
+            if (isRunning) {
+                alert('Peer has left the session. You may continue coding');
+            }
         }
         socket.on('break-room', handleBreakRoom);
 

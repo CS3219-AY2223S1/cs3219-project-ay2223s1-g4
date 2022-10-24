@@ -13,7 +13,4 @@ router.route('/room/:room_id')
 router.route('/room/user/:user_id')
     .get(RoomController.getRoomsByUserId);
 
-router.route('/room')
-    .get(RoomController.getRooms);
-
 export default router;

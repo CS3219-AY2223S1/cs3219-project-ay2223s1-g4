@@ -17,8 +17,10 @@ app.options('*', corsObj);
 app.use("/api", router);
 
 app.listen(PORT, () => {
-    console.log(`room-service listening on port ${PORT}`)
+    console.log(`room-service listening on port ${PORT}`);
 });
 
 Respository.start();
 PubSubSocketManager.connect(PUBSUB_URL);
+
+export default app;
