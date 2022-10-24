@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { io } from 'socket.io-client'; 
 import { URI_MATCHING_SVC } from '../configs';
 import { useAuth0 } from "@auth0/auth0-react";
-import Loading from '../components/Loading';
+import Loading from '../components/loading';
 
 function LoadingPage() {
     const { loadingId: matchid } = useParams();

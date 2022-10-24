@@ -7,7 +7,7 @@ import axios from 'axios';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from "react-router-dom";
 import { URL_MATCHING_MATCH_SVC } from '../configs';
-import Loading from '../components/Loading';
+import Loading from '../components/loading';
 
 function DifficultySelector() {
 
