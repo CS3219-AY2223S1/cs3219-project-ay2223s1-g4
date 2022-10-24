@@ -50,6 +50,7 @@ function RoomPage() {
     }, [navigateTo, roomId, user]);
 
     useEffect(() => {
+        let isRunning = true;
         if (socket == null) {
             return;
         }
@@ -57,12 +58,15 @@ function RoomPage() {
             console.log('Session is closed');
             socket.emit('leave-room', `room-${roomId}`);
             alert('Peer has closed the session');
-            setTimeout(() => navigateTo('../dashboard'), 1 * 1000);
+            isRunning = false;
+            navigateTo('../dashboard');
         }
         socket.on('leave-room', handleLeaveRoom);
 
         const handleBreakRoom = () => {
-            alert('Peer has left the session. You may continue coding');
+            if (isRunning) {
+                alert('Peer has left the session. You may continue coding');
+            }
         }
         socket.on('break-room', handleBreakRoom);
 

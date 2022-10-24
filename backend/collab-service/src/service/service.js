@@ -1,7 +1,12 @@
 import SessionORM from '../models/session-orm.js';
 
 async function getDocumentGivenRoomId(roomId) {
+    console.log(`Getting document for room ${roomId}`)
     let output = (await SessionORM.findSessionByRoomId(roomId));
+    console.log(`Found ${output}`);
+    if (output == null) {
+        return '';
+    }
     return output.document;
 };
 
@@ -15,7 +20,10 @@ async function updateDocumentFromRoomId(roomId, document) {
 
 async function createSessionFromRoomId(roomId) {
     try {
-        await SessionORM.createSession(roomId);
+        console.log(`Creating session with room id ${roomId}`);
+        const newSession = await SessionORM.createSession(roomId);
+        console.log(`Created session ${newSession}`);
+        return newSession;
     } catch (err) {
         console.warn(err.message);
     }

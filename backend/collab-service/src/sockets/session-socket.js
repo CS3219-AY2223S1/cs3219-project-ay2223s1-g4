@@ -28,7 +28,7 @@ let SessionSocketManager = (function() {
             socket.on('leave-room', (room) => {
                 console.log(`Socket id ${socket.id} left room ${room}`);
                 socket.broadcast.to(room).emit('leave-room');
-                setTimeout(() => checkIfCanClose(room), 1 * 1000);
+                setTimeout(() => checkIfCanClose(room), 10 * 1000);
             });
 
             socket.on('disconnecting', () => {
@@ -36,7 +36,7 @@ let SessionSocketManager = (function() {
                     if (r.startsWith('room')) {
                         console.log(`Socket id ${socket.id} broke from room ${r}`);
                         socket.broadcast.to(r).emit('break-room');
-                        setTimeout(() => checkIfCanClose(r), 1 * 1000);
+                        setTimeout(() => checkIfCanClose(r), 10 * 1000);
                     }
                 }
             });
@@ -64,10 +64,10 @@ let SessionSocketManager = (function() {
     };
 
     function checkIfCanClose(room) {
-        const presentRooms = io.sockets.adapter.rooms;
-        if (!presentRooms.hasOwnProperty(room)) {
+        console.log(io.sockets.adapter.rooms);
+        if (!(io.sockets.adapter.rooms.has(room))) {
             console.log(`Closed ${room} as no more clients are present`);
-            SessionORM.closeSessionByRoomId(room.substring(4));
+            SessionORM.closeSessionByRoomId(room.substring(5));
         }
     }
 
