@@ -24,3 +24,5 @@ let httpServer = app.listen(PORT, () => {
 Respository.start();
 SessionSocketManager.bind(httpServer);
 PubSubSocketManager.connect(PUBSUB_URL);
+
+export default httpServer;

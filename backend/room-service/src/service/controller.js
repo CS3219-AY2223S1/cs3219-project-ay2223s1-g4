@@ -2,30 +2,27 @@ import HttpStatus from 'http-status-codes';
 import RoomORM from '../models/room-orm.js';
 
 let RoomController = {    
-    getRooms: async (req, res)  => {
-        const rooms = await RoomORM.getAllRooms();
-        return res.status(HttpStatus.OK).json({
-            rooms: rooms
-        });
-    },
-
     getRoomsByUserId: async (req, res)  => {
         const userId = req.params.user_id;
+        console.log(`Finding rooms for user id ${userId}`);
+        
         const userRooms = await RoomORM.findRoomsByUser(userId);
-        return res.status(HttpStatus.OK).json({
-            rooms: userRooms
-        });
+        console.log(`Found rooms ${userRooms}`);
+
+        return res.status(HttpStatus.OK).json(userRooms);
     },
     
     getRoomDetails: async (req, res)  => {
         const roomid = req.params.room_id;
+        console.log(`Finding room id ${roomid}`);
+
         const room = await RoomORM.findRoomById(roomid);
-        if (!room || room.err) {
-            return res.status(HttpStatus.NOT_FOUND);
+        console.log(`Found room ${room}`);
+
+        if (!room) {
+            return res.status(HttpStatus.NOT_FOUND).end();
         }
-        return res.status(HttpStatus.OK).json({
-            room: room
-        });
+        return res.status(HttpStatus.OK).json(room);
     }
 };
 

@@ -18,6 +18,7 @@ let PubSubSocketManager = (function() {
             socket.emit('subscribe', event);
         });
         socket.on(ROOM_CREATED_TAG, (data) => {
+            console.log(`Received ${JSON.stringify(data)} under '${ROOM_CREATED_TAG}'`)
             createSessionFromRoomId(data.roomId);
         });
     };
