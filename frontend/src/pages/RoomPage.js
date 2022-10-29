@@ -17,6 +17,7 @@ function RoomPage() {
     const [ questionId, setQuestionId ] = useState(1);
     const [ peer, setPeer ] = useState("Peer");
     const [ isPromptOpen, setIsPromptOpen ] = useState(false);
+    const [ isSolutionRevealed, setIsSolutionRevealed ] = useState(false);
     const [ isInterviewer, setIsInterviewer ] = useState(false);
     const [ socket, setSocket ] = useState();
     const { isAuthenticated, isLoading, user, getAccessTokenSilently } = useAuth0();
@@ -38,11 +39,11 @@ function RoomPage() {
                     headers: { Authorization: `Bearer ${token}` }
                 })
                 .then((res) => {
-                    let peerId = res.data.userid1;
-                    if (user.sub === res.data.userid1) {
-                        setIsInterviewer(true);
-                        peerId = res.data.userid2;
-                    }
+                    setIsInterviewer(false);
+                    setQuestionId(res.data.questionid);
+                    let peerId = (user.sub === res.data.userid1)
+                        ? res.data.userid1
+                        : res.data.userid2;
                     axios.get(`${URL_USER_SVC}/username/${peerId}`, {
                             headers: { Authorization: `Bearer ${token}` }
                         })
@@ -53,13 +54,24 @@ function RoomPage() {
                             console.log(error);
                             navigateTo('../');
                         });
-                    setQuestionId(res.data.questionid);
                 })
                 .catch((err) => {
                     console.log(err);
                     navigateTo('../');
                 });
-        })
+            axios.get(`${URI_COLLAB_SVC}/api/session/room/${roomId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
+                .then((res) => {
+                    if (!res.data.isOpen) {
+                        setIsInterviewer(true);
+                        setIsSolutionRevealed(true);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+            });
+        });
 
     }, [getAccessTokenSilently, navigateTo, roomId, user]);
 
@@ -70,12 +82,12 @@ function RoomPage() {
         }
         const handleLeaveRoom = () => {
             console.log('Session is closed');
-            socket.emit('leave-room', `room-${roomId}`);
-            alert('Peer has closed the session');
+            alert('Peer has ended the session, the solution tab is now unlocked');
+            setIsInterviewer(true);
+            setIsSolutionRevealed(true);
             isRunning = false;
-            navigateTo('../dashboard');
         }
-        socket.on('leave-room', handleLeaveRoom);
+        socket.on('end-session', handleLeaveRoom);
 
         const handleBreakRoom = () => {
             if (isRunning) {
@@ -93,22 +105,17 @@ function RoomPage() {
 
     const closeRoom = () => {
         setIsPromptOpen(false);
-        socket.emit('leave-room', `room-${roomId}`);
-        getAccessTokenSilently().then((token) => {
-            axios.put(`${URL_MATCHING_ROOM_SVC}/${roomId}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                })
-                .then((res) => {
-                    console.log(res.status);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        });
-        navigateTo('../dashboard');
+        setIsSolutionRevealed(true);
+        socket.emit('end-session', `room-${roomId}`);
+        alert('You have ended the session, the solution tab is now unlocked');
+        setIsInterviewer(true);
     };
     
     const prompt = () => {
+        if (isSolutionRevealed) {
+            alert('Solution is already unlocked. Check the solution tab');
+            return;
+        }
         setIsPromptOpen(true);
     }
 
@@ -127,15 +134,15 @@ function RoomPage() {
     return (
         <Box>
             <Prompt
-                message={"Are you sure you would like to close the session?"}
+                message={"Are you sure you would like to unlock the solution for both you and your peer?"}
                 isOpen={isPromptOpen}
                 handleYes={closeRoom}
                 handleNo={undoPrompt}
             />
             <Typography>Coding session with {peer}</Typography>
             <QuestionBox questionId={questionId} interviewer={isInterviewer} />
-            <CodeBox roomId={roomId} socket={socket} />
-            <Button variant="contained" onClick={prompt}>End Session</Button>
+            <CodeBox roomId={roomId} socket={socket}/>
+            <Button variant="contained" onClick={prompt}>Reveal Solution</Button>
         </Box>
     );
 }
