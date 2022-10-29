@@ -1,26 +1,21 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import Button from "react-bootstrap/Button";
+import { AUTH0_USER_SERVICE } from "../../configs";
 
 const DeleteAccount = ({ margin, fullWidth }) => {
-  const { user } = useAuth0();
+  const { user, getAccessTokenSilently } = useAuth0();
   const handleClick = async () => {
     const deleteApiUrl = "http://localhost:8393/delete";
-    fetch("https://elgoh.us.auth0.com/oauth/token", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: '{"client_id":"DDzHSSAHN9vZsaGL0BxDQ36vN5U1qOJH","client_secret":"s1eDnY854jJ-Flc06AxkQgHg8CBeikqouBZwY2proDdNKlZGYsRcNCp_wUP210SS","audience":"https://user-service.com","grant_type":"client_credentials"}',
+    getAccessTokenSilently({
+      audience: AUTH0_USER_SERVICE,
     })
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(json);
+      .then((token) => {
         fetch(deleteApiUrl, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${json.access_token}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             id: user.sub,
