@@ -1,26 +1,48 @@
 import "quill/dist/quill.snow.css";
-import Quill from 'quill';
+import axios from 'axios';
 import Box from '@mui/material/Box';
+import Quill from 'quill';
 import { useEffect, useState } from 'react';
+import { useAuth0 } from "@auth0/auth0-react";
+import { URI_COLLAB_SVC } from "../configs";
 
 function CodeBox({ roomId, socket }) {
     const [ quill, setQuill ] = useState();
+    const [ shouldAllowEdit, setShouldAllowEdit ] = useState(true);
+    const { getAccessTokenSilently } = useAuth0();
+
     const saveDocumentIntervalsMs = 3 * 1000;
 
     useEffect(() => {
         if (socket == null || quill == null) {
             return;
         }
+        getAccessTokenSilently().then((token) => {
+            axios.get(`${URI_COLLAB_SVC}/api/session/room/${roomId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
+                .then((res) => {
+                    if (!res.data.isOpen) {
+                        setShouldAllowEdit(false);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+            });
+        });
         socket.once("load-code", document => {
             quill.setText(document);
-            quill.enable();
+            if (shouldAllowEdit) {
+                quill.enable();
+            } else {
+                quill.disable();
+            }
         });
-
         socket.emit("get-code", roomId);
-    }, [socket, quill, roomId]);
+    }, [getAccessTokenSilently, shouldAllowEdit, socket, quill, roomId]);
 
     useEffect(() => {
-        if (socket == null || quill == null) {
+        if (socket == null || quill == null || !shouldAllowEdit) {
             return;
         }
     
@@ -31,7 +53,7 @@ function CodeBox({ roomId, socket }) {
         return () => {
             clearInterval(interval)
         };
-    }, [socket, quill, roomId, saveDocumentIntervalsMs]);
+    }, [socket, quill, roomId, saveDocumentIntervalsMs, shouldAllowEdit]);
     
     useEffect(() => {
         if (socket == null || quill == null) {

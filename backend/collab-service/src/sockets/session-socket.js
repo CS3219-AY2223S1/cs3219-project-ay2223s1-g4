@@ -25,10 +25,9 @@ let SessionSocketManager = (function() {
                 setTimeout(() => socket.broadcast.to(room).emit('peer-join-room'), 1 * 1000);
             });
 
-            socket.on('leave-room', (room) => {
-                console.log(`Socket id ${socket.id} left room ${room}`);
-                socket.broadcast.to(room).emit('leave-room');
-                setTimeout(() => checkIfCanClose(room), 10 * 1000);
+            socket.on('end-session', (room) => {
+                console.log(`Socket id ${socket.id} is ending session for ${room}`);
+                socket.broadcast.to(room).emit('end-session');
             });
 
             socket.on('disconnecting', () => {

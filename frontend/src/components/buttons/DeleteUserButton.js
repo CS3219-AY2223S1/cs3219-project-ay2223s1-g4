@@ -1,12 +1,12 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import Button from "react-bootstrap/Button";
-import { AUTH0_USER_SERVICE } from "../../configs";
+import { AUTH0_USER_SERVICE, URL_USER_SVC } from "../../configs";
 
 const DeleteAccount = ({ margin, fullWidth }) => {
   const { user, getAccessTokenSilently } = useAuth0();
   const handleClick = async () => {
-    const deleteApiUrl = "http://localhost:8393/delete";
+    const deleteApiUrl = `${URL_USER_SVC}/delete`;
     getAccessTokenSilently({
       audience: AUTH0_USER_SERVICE,
     })

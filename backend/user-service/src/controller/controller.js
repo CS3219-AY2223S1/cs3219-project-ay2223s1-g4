@@ -36,10 +36,11 @@ const updateUserPassword = async (req, res, next) => {
 };
 
 const getUsername = (req, res) => {
-  console.log("Get nick name for user with id: " + req.body.id);
+  const userId = decodeURI(req.params.user_id);
+  console.log("Get nickname for user with id: " + userId);
   try {
     auth0
-      .getUser({ id: req.body.id })
+      .getUser({ id: userId })
       .then((data) => {
         console.log(data);
         res.send(data.nickname);

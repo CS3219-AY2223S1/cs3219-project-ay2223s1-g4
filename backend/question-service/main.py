@@ -20,7 +20,7 @@ origins = [
     "http://localhost",
     "http://localhost:3000",
     "http://localhost:8001",
-    "http://localhost:8002",
+    "http://localhost:8002"
 ]
 
 app.add_middleware(
@@ -91,11 +91,11 @@ async def generate_question_id(question: QuestionRequestBody):
 async def getSolution(question_id: int, solution: Optional[bool]):
     if not does_require_database:
         return {
-        'question_id': 0,
-        'title': '2SUM',
-        'question': 'Do 2SUM',
-        'solution': '' if not solution else 'TBC'
-    }
+            'question_id': 0,
+            'title': '2SUM',
+            'question': 'Do 2SUM',
+            'solution': '' if not solution else 'TBC'
+        }
     question = getQuestion(session, question_id)
     output = {
         'question_id': question_id,

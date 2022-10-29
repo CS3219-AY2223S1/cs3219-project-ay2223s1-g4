@@ -14,7 +14,7 @@ const SessionModelSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-});
+}, { timestamps: true });
 
 const SessionModel = mongoose.model('Session', SessionModelSchema);
 
