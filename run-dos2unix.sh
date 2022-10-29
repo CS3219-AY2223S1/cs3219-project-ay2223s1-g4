@@ -5,7 +5,7 @@
 ## sudo apt install dos2unix
 
 main() {
-    scripts=$(find . -name "run*.sh" -not -path "*/node_modules/*")
+    scripts=$(find . -name "run*.sh" -not -path "*/node_modules/*" ! -name "run-dos2unix.sh")
     for script in "${scripts[@]}"; do
         dos2unix $script
     done

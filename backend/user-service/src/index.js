@@ -20,10 +20,10 @@ app.use(cors(corsOptions)); // Use this after the variable declaration
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.delete("/delete", checkJwt, removeUser);
-app.patch("/updateusername", checkJwt, updateUserName);
-app.patch("/changepassword", checkJwt, updateUserPassword);
-app.get("/username", checkJwt, getUsername);
+app.delete("/api/user/delete", checkJwt, removeUser);
+app.patch("/api/user/updateusername", checkJwt, updateUserName);
+app.patch("/api/user/changepassword", checkJwt, updateUserPassword);
+app.get("/api/user/username/:user_id", checkJwt, getUsername);
 
 app.listen(PORT, () => {
   console.log(`user-service listening on port ${PORT}`);
