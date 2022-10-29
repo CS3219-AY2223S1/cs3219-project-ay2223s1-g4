@@ -11,7 +11,7 @@ import Loading from '../components/loading';
 
 function DifficultySelector() {
 
-    const { user, isAuthenticated, isLoading } = useAuth0();
+    const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
 
     let navigateTo = useNavigate();
     
@@ -22,11 +22,14 @@ function DifficultySelector() {
     const difficulties = ['Easy', 'Medium', 'Hard'];
 
     const loadRoom = (difficulty) => {
+        getAccessTokenSilently().then((token) => {
         axios.post(URL_MATCHING_MATCH_SVC, {
                 difficulty: difficulty.toUpperCase(),
                 user: {
                     sub: user.sub
                 }
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
             })
             .then((res) => {
                 console.log(res);
@@ -36,6 +39,7 @@ function DifficultySelector() {
                 console.log(err);
                 alert('Opps... Something went wrong! Please try again.');
             });
+        });
     };
 
     return (
