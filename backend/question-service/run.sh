@@ -5,6 +5,7 @@ build() {
 }
 
 run() {
+    poetry env use 3.10
     poetry run python3 main.py
 }
 

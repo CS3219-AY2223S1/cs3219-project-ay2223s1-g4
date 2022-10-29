@@ -3,6 +3,8 @@ dotenv.config();
 
 const PORT = process.env.SERVICE_PORT || 8002;
 const CLIENT_URL = process.env.CLIENT_URL || '*';
+const QUESTION_URI = process.env.QUESTION_URI || 'http://localhost:8003';
+const SESSION_URI = process.env.SESSION_URI || 'http://localhost:8005';
 
 const PUBSUB_URL = process.env.PUBSUB_URL || 'http://localhost:8004';
 const ROOM_CREATE_TAG = 'room.create';
@@ -26,6 +28,8 @@ export {
     PORT,
     DB_URI,
     CLIENT_URL,
+    QUESTION_URI,
+    SESSION_URI,
     ROOM_CREATE_TAG,
     PUBSUB_URL,
     PUBSUB_SUBSCRIPTIONS,
