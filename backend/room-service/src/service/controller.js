@@ -1,11 +1,16 @@
 import HttpStatus from 'http-status-codes';
+import jwt_decode from 'jwt-decode';
 import RoomORM from '../models/room-orm.js';
 import { getQuestionTitle, getSessionDetails, getUserNickname } from './caller.js';
 
 let RoomController = {    
     getRoomsByUserId: async (req, res)  => {
-        const jwtToken = req.headers.authorization.split(" ")[1] | "";
+        const jwtToken = jwt_decode(req.headers.authorization.split(" ")[1]);
         const userId = decodeURI(req.params.user_id);
+        if (jwtToken.sub !== userId) {
+            console.log(`Invalid user ${jwtToken.sub} vs ${userId}`);
+            return res.status(HttpStatus.FORBIDDEN).end();
+        }
         console.log(`Finding rooms for user id ${userId}`);
         
         const userRooms = await RoomORM.findRoomsByUser(userId);
@@ -27,6 +32,7 @@ let RoomController = {
     },
     
     getRoomDetails: async (req, res)  => {
+        const jwtToken = jwt_decode(req.headers.authorization.split(" ")[1]);
         const roomid = req.params.room_id;
         console.log(`Finding room id ${roomid}`);
 
@@ -35,6 +41,10 @@ let RoomController = {
 
         if (!room) {
             return res.status(HttpStatus.NOT_FOUND).end();
+        }
+        if (jwtToken.sub !== room.userid1 && jwtToken.sub !== room.userid2) {
+            console.log(`Invalid user ${jwtToken.sub} vs ${room.userid1}|${room.userid2}`);
+            return res.status(HttpStatus.FORBIDDEN).end();
         }
         return res.status(HttpStatus.OK).json(room);
     }

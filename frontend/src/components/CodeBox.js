@@ -25,19 +25,20 @@ function CodeBox({ roomId, socket }) {
                     if (!res.data.isOpen) {
                         setShouldAllowEdit(false);
                     }
+                    socket.once("load-code", document => {
+                        quill.setText(document);
+                        if (shouldAllowEdit) {
+                            quill.enable();
+                        } else {
+                            quill.disable();
+                        }
+                    });
                 })
                 .catch((error) => {
                     console.log(error);
-            });
+                });
         });
-        socket.once("load-code", document => {
-            quill.setText(document);
-            if (shouldAllowEdit) {
-                quill.enable();
-            } else {
-                quill.disable();
-            }
-        });
+
         socket.emit("get-code", roomId);
     }, [getAccessTokenSilently, shouldAllowEdit, socket, quill, roomId]);
 

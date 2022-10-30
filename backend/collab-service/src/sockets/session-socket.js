@@ -48,8 +48,15 @@ let SessionSocketManager = (function() {
             
             socket.on("get-code", async (roomId) => {
                 console.log(`Getting code for ${roomId}`);
-                const document = await getDocumentGivenRoomId(roomId);
+                
+                const session = await SessionORM.findSessionByRoomId(roomId);
+                console.log(`Found ${session} to update`);
+                const document = (session == null) ? '' : session.document;
                 socket.emit("load-code", document);
+
+                if (session != null && !session.isOpen) {
+                    socket.disconnect(); // force close as no longer able to edit
+                }
                 
                 socket.on('send-code', (data, room) => {
                     socket.broadcast.to(room).emit('receive-code', data);

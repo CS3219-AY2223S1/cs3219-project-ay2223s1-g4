@@ -31,7 +31,7 @@ function QuestionBox({ questionId = 0, interviewer = false }) {
 
     const handleChange = (event, tabVal) => {
         setTab(tabVal);
-      };
+    };
 
     return (
         <Box
