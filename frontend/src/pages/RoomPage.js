@@ -80,14 +80,14 @@ function RoomPage() {
         if (socket == null) {
             return;
         }
-        const handleLeaveRoom = () => {
+        const endSession = () => {
             console.log('Session is closed');
             alert('Peer has ended the session, the solution tab is now unlocked');
             setIsInterviewer(true);
             setIsSolutionRevealed(true);
             isRunning = false;
         }
-        socket.on('end-session', handleLeaveRoom);
+        socket.on('end-session', endSession);
 
         const handleBreakRoom = () => {
             if (isRunning) {
