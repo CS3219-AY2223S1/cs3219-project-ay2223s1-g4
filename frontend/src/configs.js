@@ -1,8 +1,11 @@
 export const URI_USER_SVC = process.env.URI_USER_SVC || "http://localhost:8393";
-export const URI_MATCHING_SVC = process.env.URI_MATCHING_SVC || "http://localhost:8001";
+export const URI_MATCHING_SVC =
+  process.env.URI_MATCHING_SVC || "http://localhost:8001";
 export const URI_ROOM_SVC = process.env.URI_ROOM_SVC || "http://localhost:8002";
-export const URI_QUESTION_SVC = process.env.URI_QUESTION_SVC || "http://localhost:8003";
-export const URI_COLLAB_SVC = process.env.URI_COLLAB_SVC || "http://localhost:8005";
+export const URI_QUESTION_SVC =
+  process.env.URI_QUESTION_SVC || "http://localhost:8003";
+export const URI_COLLAB_SVC =
+  process.env.URI_COLLAB_SVC || "http://localhost:8005";
 
 const PREFIX_COLLAB_SVC = "/api/collab";
 const PREFIX_USER_SVC = "/api/user";
