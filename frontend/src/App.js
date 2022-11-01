@@ -7,6 +7,7 @@ import DifficultySelector from "./pages/DifficultySelector";
 import LoginPage from "./pages/LoginPage";
 import DashBoard from "./pages/DashBoard";
 import ProfilePage from "./pages/ProfilePage";
+import UserHistoryPage from "./pages/UserHistoryPage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
 import RequireAuth from "./routers/RequireAuth";
 import { Navigate } from "react-router-dom";
@@ -71,6 +72,14 @@ function App() {
               element={
                 <RequireAuth>
                   <ProfilePage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/user-history"
+              element={
+                <RequireAuth>
+                  <UserHistoryPage />
                 </RequireAuth>
               }
             />

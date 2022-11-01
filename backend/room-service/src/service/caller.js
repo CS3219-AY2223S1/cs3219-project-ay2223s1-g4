@@ -22,7 +22,7 @@ async function getQuestionTitle(questionId, jwtToken) {
             headers: { Authorization: `Bearer ${jwtToken}` }
         })
         .then((res) => {
-            return res.data.title | '';
+            return res.data.title;
         })
         .catch((err) => {
             console.error(`Hit error '${err.message}', default to return question title ''`);
@@ -44,7 +44,7 @@ async function getSessionDetails(roomId, jwtToken) {
 }
 
 async function getUserNickname(userId, jwtToken) {
-    return axios.get(`${USER_URI}/username/${encodeURI(userId)}`, {
+    return axios.get(`${USER_URI}/api/user/username/${encodeURI(userId)}`, {
             headers: { Authorization: `Bearer ${jwtToken}` }
         })
         .then((res) => {

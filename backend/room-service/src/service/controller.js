@@ -5,10 +5,11 @@ import { getQuestionTitle, getSessionDetails, getUserNickname } from './caller.j
 
 let RoomController = {    
     getRoomsByUserId: async (req, res)  => {
-        const jwtToken = jwt_decode(req.headers.authorization.split(" ")[1]);
+        const jwtRaw = req.headers.authorization.split(" ")[1];
+        const token = jwt_decode(jwtRaw);
         const userId = decodeURI(req.params.user_id);
-        if (jwtToken.sub !== userId) {
-            console.log(`Invalid user ${jwtToken.sub} vs ${userId}`);
+        if (token.sub !== userId) {
+            console.log(`Invalid user ${token.sub} vs ${userId}`);
             return res.status(HttpStatus.FORBIDDEN).end();
         }
         console.log(`Finding rooms for user id ${userId}`);
@@ -16,16 +17,31 @@ let RoomController = {
         const userRooms = await RoomORM.findRoomsByUser(userId);
         console.log(`Found rooms ${userRooms}, now getting details for each...`);
         const populatedUserRooms = await Promise.all(userRooms.map(async (room) => {
-            let session = await getSessionDetails(room._id, jwtToken);
+            let session = await getSessionDetails(room._id, jwtRaw);
             let sessionEndTime = (!session || session.isOpen) ? null : session.updatedAt;
             let peerId = (userId === room.userid1) ? room.userid2 : room.userid1;
             return {
+                roomId: room._id.toHexString(),
                 startDateTime: room._id.getTimestamp(),
                 endDateTime: sessionEndTime,
-                peerNickname: await getUserNickname(peerId, jwtToken),
-                questionTitle: await getQuestionTitle(room.questionid, jwtToken),
+                peerNickname: await getUserNickname(peerId, jwtRaw),
+                questionTitle: await getQuestionTitle(room.questionid, jwtRaw),
             };
         }));
+
+        populatedUserRooms.sort((detailsA, detailsB) => {
+            if (detailsA.startDateTime.getDate() != detailsB.startDateTime.getDate()) {
+                return (detailsA.startDateTime.getDate() < detailsB.startDateTime.getDate())
+                    ? -1
+                    : 1;
+            }
+            if (detailsA.startDateTime.getTime() != detailsB.startDateTime.getTime()) {
+                return (detailsA.startDateTime.getTime() < detailsB.startDateTime.getTime())
+                    ? -1
+                    : 1;
+            }
+            return 0;
+        });
         console.log(`Updated rooms are ${JSON.stringify(populatedUserRooms)}`);
 
         return res.status(HttpStatus.OK).json(populatedUserRooms);
