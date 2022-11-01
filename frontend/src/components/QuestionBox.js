@@ -17,7 +17,11 @@ function QuestionBox({ questionId = 0, interviewer = false }) {
         getQuestion(questionId, {solution: interviewer}).then((res) => {            
             setTitle(res.title);
             setProblem(res.question);
-            setSolution(res.solution);
+            if (interviewer) {
+                setSolution(res.solution);
+            } else {
+                setSolution("Solution locked. Try the question first before unlocking this tab!");
+            }
         })
         .catch((err) => {
             console.log(err);
@@ -27,7 +31,7 @@ function QuestionBox({ questionId = 0, interviewer = false }) {
 
     const handleChange = (event, tabVal) => {
         setTab(tabVal);
-      };
+    };
 
     return (
         <Box

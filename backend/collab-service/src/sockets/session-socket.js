@@ -25,10 +25,9 @@ let SessionSocketManager = (function() {
                 setTimeout(() => socket.broadcast.to(room).emit('peer-join-room'), 1 * 1000);
             });
 
-            socket.on('leave-room', (room) => {
-                console.log(`Socket id ${socket.id} left room ${room}`);
-                socket.broadcast.to(room).emit('leave-room');
-                setTimeout(() => checkIfCanClose(room), 10 * 1000);
+            socket.on('end-session', (room) => {
+                console.log(`Socket id ${socket.id} is ending session for ${room}`);
+                socket.broadcast.to(room).emit('end-session');
             });
 
             socket.on('disconnecting', () => {
@@ -49,8 +48,15 @@ let SessionSocketManager = (function() {
             
             socket.on("get-code", async (roomId) => {
                 console.log(`Getting code for ${roomId}`);
-                const document = await getDocumentGivenRoomId(roomId);
+                
+                const session = await SessionORM.findSessionByRoomId(roomId);
+                console.log(`Found ${session} to update`);
+                const document = (session == null) ? '' : session.document;
                 socket.emit("load-code", document);
+
+                if (session != null && !session.isOpen) {
+                    socket.disconnect(); // force close as no longer able to edit
+                }
                 
                 socket.on('send-code', (data, room) => {
                     socket.broadcast.to(room).emit('receive-code', data);

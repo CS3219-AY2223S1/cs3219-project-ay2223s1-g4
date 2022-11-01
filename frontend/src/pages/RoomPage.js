@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useAuth0 } from "@auth0/auth0-react";
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { URL_MATCHING_ROOM_SVC } from "../configs";
+import { URL_MATCHING_ROOM_SVC, URL_USER_SVC, URI_COLLAB_SVC } from "../configs";
 import { io } from 'socket.io-client';
 import Loading from "../components/loading";
 
@@ -17,12 +17,13 @@ function RoomPage() {
     const [ questionId, setQuestionId ] = useState(1);
     const [ peer, setPeer ] = useState("Peer");
     const [ isPromptOpen, setIsPromptOpen ] = useState(false);
+    const [ isSolutionRevealed, setIsSolutionRevealed ] = useState(false);
     const [ isInterviewer, setIsInterviewer ] = useState(false);
     const [ socket, setSocket ] = useState();
-    const { isAuthenticated, isLoading, user } = useAuth0();
+    const { isAuthenticated, isLoading, user, getAccessTokenSilently } = useAuth0();
 
     useEffect(() => {
-        const s = io('http://localhost:8005');
+        const s = io(URI_COLLAB_SVC);
         s.emit('join-room', `room-${roomId}`);
         setSocket(s);
         return () => {
@@ -33,35 +34,60 @@ function RoomPage() {
     let navigateTo = useNavigate();
     
     useEffect(() => {
-        axios.get(`${URL_MATCHING_ROOM_SVC}/${roomId}`)
-            .then((res) => {
-                if (user.sub === res.data.userid1) {
-                    setIsInterviewer(true);
-                    setPeer(res.data.userid2)
-                } else {
-                    setPeer(res.data.userid1)
-                }
-                setQuestionId(res.data.questionid);
-            })
-            .catch((err) => {
-                console.log(err);
-                navigateTo('../');
+        getAccessTokenSilently().then((token) => {
+            axios.get(`${URL_MATCHING_ROOM_SVC}/${roomId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
+                .then((res) => {
+                    setIsInterviewer(false);
+                    setQuestionId(res.data.questionid);
+                    let peerId = (user.sub === res.data.userid1)
+                        ? res.data.userid1
+                        : res.data.userid2;
+                    axios.get(`${URL_USER_SVC}/username/${peerId}`, {
+                            headers: { Authorization: `Bearer ${token}` }
+                        })
+                        .then((content) => {
+                            setPeer(content.data);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            navigateTo('../');
+                        });
+                })
+                .catch((err) => {
+                    console.log(err);
+                    navigateTo('../');
+                });
+            axios.get(`${URI_COLLAB_SVC}/api/session/room/${roomId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
+                .then((res) => {
+                    if (!res.data.isOpen) {
+                        setIsInterviewer(true);
+                        setIsSolutionRevealed(true);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
             });
-    }, [navigateTo, roomId, user]);
+        });
+
+    }, [getAccessTokenSilently, navigateTo, roomId, user]);
 
     useEffect(() => {
         let isRunning = true;
         if (socket == null) {
             return;
         }
-        const handleLeaveRoom = () => {
+        const endSession = () => {
             console.log('Session is closed');
-            socket.emit('leave-room', `room-${roomId}`);
-            alert('Peer has closed the session');
+            alert('Peer has ended the session, the solution tab is now unlocked');
+            setIsInterviewer(true);
+            setIsSolutionRevealed(true);
             isRunning = false;
-            navigateTo('../dashboard');
         }
-        socket.on('leave-room', handleLeaveRoom);
+        socket.on('end-session', endSession);
 
         const handleBreakRoom = () => {
             if (isRunning) {
@@ -79,18 +105,17 @@ function RoomPage() {
 
     const closeRoom = () => {
         setIsPromptOpen(false);
-        socket.emit('leave-room', `room-${roomId}`);
-        navigateTo('../dashboard');
-        axios.put(`${URL_MATCHING_ROOM_SVC}/${roomId}`)
-            .then((res) => {
-                console.log(res.status);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        setIsSolutionRevealed(true);
+        socket.emit('end-session', `room-${roomId}`);
+        alert('You have ended the session, the solution tab is now unlocked');
+        setIsInterviewer(true);
     };
     
     const prompt = () => {
+        if (isSolutionRevealed) {
+            alert('Solution is already unlocked. Check the solution tab');
+            return;
+        }
         setIsPromptOpen(true);
     }
 
@@ -109,15 +134,15 @@ function RoomPage() {
     return (
         <Box>
             <Prompt
-                message={"Are you sure you would like to close the session?"}
+                message={"Are you sure you would like to unlock the solution for both you and your peer?"}
                 isOpen={isPromptOpen}
                 handleYes={closeRoom}
                 handleNo={undoPrompt}
             />
-            <Typography>Coding session with {peer} in room {roomId} using question {questionId}</Typography>
+            <Typography>Coding session with {peer}</Typography>
             <QuestionBox questionId={questionId} interviewer={isInterviewer} />
-            <CodeBox roomId={roomId} socket={socket} />
-            <Button variant="contained" onClick={prompt}>End Session</Button>
+            <CodeBox roomId={roomId} socket={socket}/>
+            <Button variant="contained" onClick={prompt}>Reveal Solution</Button>
         </Box>
     );
 }
