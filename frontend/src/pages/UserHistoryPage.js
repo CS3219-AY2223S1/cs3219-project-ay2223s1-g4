@@ -11,29 +11,44 @@ function UserHistoryPage() {
   const { user, isAuthenticated, isLoading, getAccessTokenSilently } =
     useAuth0();
 
-  const { history, updateHistory } = useState([]);
+  const [history, updateHistory] = useState([]);
 
   const navigateTo = useNavigate();
 
   const loadHistory = () => {
     getAccessTokenSilently().then((token) => {
       axios
-        .post(URL_HISTORY_ENDPT + encodeURI(user.id), {
+        .post(URL_HISTORY_ENDPT + encodeURI(user.sub), {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
-          updateHistory(res);
+          updateHistory(res.data);
+        })
+        .catch((err) => {
+          console.log("SET PLEASE");
+          updateHistory([
+            {
+              startDateTime: "15-06-1932",
+              endDateTime: "20-20-2156",
+              roomId: "0",
+              questionTitle: "SUPER DUPER HARD",
+              peerNickname: "Donkey Kong",
+            },
+            {
+              startDateTime: "15-06-1932",
+              endDateTime: "20-20-2156",
+              roomId: "0",
+              questionTitle: "SUPER DUPER EASY",
+              peerNickname: "LUIGI THE LAZY",
+            },
+          ]);
         });
     });
   };
 
   useEffect(() => {
-    let ignore = false;
+    loadHistory();
 
-    if (!ignore) loadHistory();
-    return () => {
-      ignore = true;
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -58,16 +73,16 @@ function UserHistoryPage() {
           </tr>
         </thead>
         <tbody>
-          {history.foreach((item) => {
+          {history.forEach((item) => {
             <tr>
               <td>{item.startDateTime}</td>
               <td>{item.peerNickname}</td>
               <td>
-                <Button onClick={redirectToRoom(item.roomId)}>
+                <Button onClick={() => redirectToRoom(item.roomId)}>
                   {item.questionTitle}
                 </Button>
               </td>
-              <td>{item.endDatetime == null ? "Yes" : item.endDatetime}</td>
+              <td>{item.endDateTime == null ? "Yes" : item.endDateTime}</td>
             </tr>;
           })}
         </tbody>
