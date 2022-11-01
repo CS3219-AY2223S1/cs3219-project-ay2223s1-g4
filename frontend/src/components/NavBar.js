@@ -10,7 +10,7 @@ import LoginButton from "../components/buttons/LoginButton";
 import RegisterButton from "../components/buttons/RegisterButton";
 
 function NavBar() {
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated, isLoading } = useAuth0();
 
   return (
     <Navbar bg="secondary" expand="lg">
@@ -45,6 +45,9 @@ function NavBar() {
                 <NavDropdown.Item href="/profile">
                   View Profile
                 </NavDropdown.Item>
+                <NavDropdown.Item href="/user-history">
+                  User History
+                </NavDropdown.Item>
                 <NavDropdown.Item href="/change-password">
                   Change Password
                 </NavDropdown.Item>
@@ -56,7 +59,7 @@ function NavBar() {
             </Nav>
           </Navbar.Collapse>
         )}
-        {!isAuthenticated && (
+        {!isAuthenticated && !isLoading && (
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link style={{ color: "white" }} href="/">
