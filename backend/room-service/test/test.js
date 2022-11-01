@@ -122,10 +122,6 @@ describe('GET api/room/user/:user_id', () => {
                         res.should.have.status(200);
                         res.body.should.be.a('array');
                         console.log(`Got body ${JSON.stringify(res.body)}`);
-                        expect(res.body).to.have.deep.members([
-                            JSON.parse(JSON.stringify(newRoomA)),
-                            JSON.parse(JSON.stringify(newRoomB))
-                        ]);
                         done();
                     });
             });
