@@ -13,22 +13,7 @@ function UserHistoryPage() {
 
   const [history, setHistory] = useState([]);
   const navigateTo = useNavigate();
-  const historyyy = [
-    {
-      startDateTime: "15-06-1932",
-      endDateTime: "20-20-2156",
-      roomId: "0",
-      questionTitle: "SUPER DUPER HARD",
-      peerNickname: "Donkey Kong",
-    },
-    {
-      startDateTime: "15-06-1932",
-      endDateTime: "20-20-2156",
-      roomId: "0",
-      questionTitle: "SUPER DUPER EASY",
-      peerNickname: "LUIGI THE LAZY",
-    },
-  ];
+
   const loadHistory = async () => {
     let historyy = [];
     try {
@@ -88,8 +73,8 @@ function UserHistoryPage() {
           </tr>
         </thead>
         <tbody>
-          {history.map((item) => (
-            <tr>
+          {history.map((item, index) => (
+            <tr key={index}>
               <td>{item.startDateTime}</td>
               <td>{item.peerNickname}</td>
               <td>
