@@ -25,6 +25,7 @@ function UserHistoryPage() {
         }
       );
       historyy = response.data;
+      console.log(historyy);
       setHistory([...historyy]);
     } catch (e) {
       historyy = [
