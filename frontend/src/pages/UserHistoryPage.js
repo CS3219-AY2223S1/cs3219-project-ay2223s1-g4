@@ -11,41 +11,56 @@ function UserHistoryPage() {
   const { user, isAuthenticated, isLoading, getAccessTokenSilently } =
     useAuth0();
 
-  const [history, updateHistory] = useState([]);
-
+  const [history, setHistory] = useState([]);
   const navigateTo = useNavigate();
-
-  const loadHistory = () => {
-    getAccessTokenSilently().then((token) => {
-      axios
-        .post(URL_HISTORY_ENDPT + encodeURI(user.sub), {
+  const historyyy = [
+    {
+      startDateTime: "15-06-1932",
+      endDateTime: "20-20-2156",
+      roomId: "0",
+      questionTitle: "SUPER DUPER HARD",
+      peerNickname: "Donkey Kong",
+    },
+    {
+      startDateTime: "15-06-1932",
+      endDateTime: "20-20-2156",
+      roomId: "0",
+      questionTitle: "SUPER DUPER EASY",
+      peerNickname: "LUIGI THE LAZY",
+    },
+  ];
+  const loadHistory = async () => {
+    let historyy = [];
+    try {
+      const token = await getAccessTokenSilently();
+      const response = await axios.get(
+        URL_HISTORY_ENDPT + encodeURI(user.sub),
+        {
           headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => {
-          updateHistory(res.data);
-        })
-        .catch((err) => {
-          console.log("SET PLEASE");
-          updateHistory([
-            {
-              startDateTime: "15-06-1932",
-              endDateTime: "20-20-2156",
-              roomId: "0",
-              questionTitle: "SUPER DUPER HARD",
-              peerNickname: "Donkey Kong",
-            },
-            {
-              startDateTime: "15-06-1932",
-              endDateTime: "20-20-2156",
-              roomId: "0",
-              questionTitle: "SUPER DUPER EASY",
-              peerNickname: "LUIGI THE LAZY",
-            },
-          ]);
-        });
-    });
+        }
+      );
+      historyy = response.data;
+      setHistory([...historyy]);
+    } catch (e) {
+      historyy = [
+        {
+          startDateTime: "15-06-1932",
+          endDateTime: "20-20-2156",
+          roomId: "0",
+          questionTitle: "SUPER DUPER HARD",
+          peerNickname: "Donkey Kong",
+        },
+        {
+          startDateTime: "15-06-1932",
+          endDateTime: "20-20-2156",
+          roomId: "0",
+          questionTitle: "SUPER DUPER EASY",
+          peerNickname: "LUIGI THE LAZY",
+        },
+      ];
+      setHistory([...historyy]);
+    }
   };
-
   useEffect(() => {
     loadHistory();
 
@@ -73,7 +88,7 @@ function UserHistoryPage() {
           </tr>
         </thead>
         <tbody>
-          {history.forEach((item) => {
+          {history.map((item) => (
             <tr>
               <td>{item.startDateTime}</td>
               <td>{item.peerNickname}</td>
@@ -83,8 +98,8 @@ function UserHistoryPage() {
                 </Button>
               </td>
               <td>{item.endDateTime == null ? "Yes" : item.endDateTime}</td>
-            </tr>;
-          })}
+            </tr>
+          ))}
         </tbody>
       </Table>
     )
