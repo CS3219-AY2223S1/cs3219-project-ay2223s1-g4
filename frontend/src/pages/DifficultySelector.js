@@ -11,7 +11,7 @@ import Loading from '../components/loading';
 
 function DifficultySelector() {
 
-    const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
+    const { isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
 
     let navigateTo = useNavigate();
     
