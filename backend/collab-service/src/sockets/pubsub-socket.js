@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client'; 
 import { PUBSUB_SUBSCRIPTIONS, ROOM_CREATED_TAG } from '../configs/config.js';
-import { createSessionFromRoomId } from '../service/service.js';
+import CollabService from '../service/service.js';
 
 let PubSubSocketManager = (function() {
     var socket;
@@ -19,7 +19,7 @@ let PubSubSocketManager = (function() {
         });
         socket.on(ROOM_CREATED_TAG, (data) => {
             console.log(`Received ${JSON.stringify(data)} under '${ROOM_CREATED_TAG}'`)
-            createSessionFromRoomId(data.roomId);
+            CollabService.createSessionFromRoomId(data.roomId);
         });
     };
 

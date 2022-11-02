@@ -1,22 +1,21 @@
 import express from 'express';
 import RoomController from '../service/controller.js';
-import { auth } from "express-oauth2-jwt-bearer";
-import { AUTH0_AUDIENCE, AUTH0_ISSUER_BASE_URL } from '../configs/config.js';
+import Authenticator from '../auth/auth.js';
 
 const router = new express.Router();
-const checkJwt = auth({
-    audience: AUTH0_AUDIENCE,
-    issuerBaseURL: AUTH0_ISSUER_BASE_URL,
-});
+
+const verifyJwt = async (req, res, next) => {
+    await Authenticator.checkJwt(req, res, next);
+}
 
 router.get('/', (req, res) => {
     res.send('Hello World from room-service api');
 });
 
 router.route('/room/:room_id')
-    .get(checkJwt, RoomController.getRoomDetails);
+    .get(verifyJwt, RoomController.getRoomDetails);
 
 router.route('/room/user/:user_id')
-    .get(checkJwt, RoomController.getRoomsByUserId);
+    .get(verifyJwt, RoomController.getRoomsByUserId);
 
 export default router;

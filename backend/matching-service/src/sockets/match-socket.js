@@ -41,7 +41,6 @@ let MatchSocketManager = (function() {
                 }, 0.1 * 1000);
             });
         });
-
     }
 
     return {

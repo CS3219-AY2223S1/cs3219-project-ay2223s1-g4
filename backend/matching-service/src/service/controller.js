@@ -1,19 +1,12 @@
 import MatchORM from '../model/match-orm.js';
-import jwt_decode from 'jwt-decode';
+import Authenticator from '../auth/auth.js';
 import { attemptToMatch } from './matcher.js';
 
 let MatchController = {
-    getMatches: async (req, res) => {
-        let matches = await MatchORM.getAllMatches();
-        return res.status(200).json({
-            matches: matches
-        });
-    },
-    
     createMatchEntry: async (req, res) => {
-        const jwtToken = jwt_decode(req.headers.authorization.split(" ")[1]);
+        const userid = Authenticator.extractUserSub(req);
+
         let diff = req.body.difficulty.toUpperCase();
-        let userid = jwtToken.sub;
         let match = await MatchORM.createMatch(userid, diff);
         console.log("\nMatch List:\n" + await MatchORM.getAllMatches());
         // TODO check logic if already exist/in room

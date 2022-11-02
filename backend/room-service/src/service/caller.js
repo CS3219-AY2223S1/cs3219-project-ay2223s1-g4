@@ -26,7 +26,7 @@ async function getQuestionTitle(questionId, jwtToken) {
         })
         .catch((err) => {
             console.error(`Hit error '${err.message}', default to return question title ''`);
-            return '';
+            return 'question';
         });
 }
 
