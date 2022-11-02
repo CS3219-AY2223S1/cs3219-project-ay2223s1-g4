@@ -1,29 +1,17 @@
-import axios from 'axios';
 import HttpStatus from 'http-status-codes';
 import SessionORM from '../models/session-orm.js';
-import { ROOM_URI } from '../configs/config.js';
-
-const checkUserIsInSession = async (roomId, jwtToken) => {
-    const userId = jwtToken.sub;
-    return axios.get(`${ROOM_URI}/api/room/${roomId}`, {
-            headers: { Authorization: `Bearer ${jwtToken}` }
-        })
-        .then((res) => {
-            return res.data.userid1 === userId || res.data.userid2 === userId;
-        })
-        .catch((err) => {
-            console.log(err);
-            return false;
-        });
-};
+import Authenticator from '../auth/auth.js';
+import CollabService from './service.js';
 
 let CollabController = {
     closeSession: async (req, res) => {
         const roomid = req.params.room_id;
 
-        const jwtTokenStr = req.headers.authorization.split(" ")[1];
-        if (!checkUserIsInSession(roomid, jwtTokenStr)) {
-            return res.status(HttpStatus.FORBIDDEN).end();
+        const rawJwt = Authenticator.extractToken(req);
+        const userSub = Authenticator.extractUserSub(req);
+        const isUserInSession =await CollabService.checkUserIsInSession(roomid, userSub, rawJwt);
+        if (!isUserInSession) {
+            return res.status(HttpStatus.UNAUTHORIZED).end();
         }
 
         const session = await SessionORM.findSessionByRoomId(roomid);
@@ -43,9 +31,11 @@ let CollabController = {
     getSession: async (req, res) => {
         const roomid = req.params.room_id;
 
-        const jwtTokenStr = req.headers.authorization.split(" ")[1];
-        if (!checkUserIsInSession(roomid, jwtTokenStr)) {
-            return res.status(HttpStatus.FORBIDDEN).end();
+        const rawJwt = Authenticator.extractToken(req);
+        const userSub = Authenticator.extractUserSub(req);
+        const isUserInSession =await CollabService.checkUserIsInSession(roomid, userSub, rawJwt);
+        if (!isUserInSession) {
+            return res.status(HttpStatus.UNAUTHORIZED).end();
         }
 
         console.log(`Finding session for room id ${roomid}`);

@@ -1,4 +1,6 @@
-import httpServer from "../src/index.js";
+import * as sinon from 'sinon';
+import Authenticator from "../src/auth/auth.js";
+import CollabService from '../src/service/service.js';
 import { createMockPubSub } from "./mock-pubsub.js";
 import chai, { assert, should } from 'chai';
 import chaiHttp from 'chai-http';
@@ -6,14 +8,42 @@ import mongoose from 'mongoose';
 import SessionORM from "../src/models/session-orm.js";
 import SessionModel from "../src/models/session-model.js";
 import { ROOM_CREATED_TAG } from "../src/configs/config.js";
+import httpServer from "../src/index.js";
 
 chai.use(chaiHttp);
 chai.should();
 const expect = chai.expect;
 
+// mock authentication
+sinon.stub(Authenticator, 'checkJwt').callsFake(async (req, res, next) => {
+    console.log('Mocked checkJwt called');
+    next();
+});
+sinon.stub(Authenticator, 'extractUserSub').callsFake((req) => {
+    console.log('Mocked extractUserSub called');
+    return req.headers.authorization;
+});
+sinon.stub(Authenticator, 'extractToken').callsFake((req) => {
+    console.log('Mocked extractToken called');
+    return req.headers.authorization;
+});
+
+// mock verification
+sinon.stub(CollabService, 'checkUserIsInSession').callsFake(async (roomId, userId, jwtToken) => {
+    console.log('Mocked checkUserIsInSession called');
+    return userId === jwtToken;
+});
+
+// mock session creation
 async function createMockSession() {
     return await SessionORM.createSession(new mongoose.Types.ObjectId());
 }
+
+// mock user ids
+const userId1 = '1234567890';
+const userId2 = 'abcdef1234';
+const userId3 = '1122334455';
+
 
 describe('GET api/session/room/:room_id', () => {
     let mockSession = null;
@@ -28,6 +58,7 @@ describe('GET api/session/room/:room_id', () => {
 
         chai.request(httpServer)
             .get(`/api/session/room/${mockRoomId}`)
+            .set({'authorization': userId1})
             .end((err, res) => {
                 res.should.have.status(404);
                 done();
@@ -40,6 +71,7 @@ describe('GET api/session/room/:room_id', () => {
             console.log(`New session id ${mockSession._id} created`);
             chai.request(httpServer)
                 .get(`/api/session/room/${mockSession.roomid}`)
+                .set({'authorization': userId1})
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
@@ -71,6 +103,7 @@ describe('PUT api/session/room/:room_id', () => {
 
         chai.request(httpServer)
             .put(`/api/session/room/${mockRoomId}`)
+            .set({'authorization': userId1})
             .end((err, res) => {
                 res.should.have.status(404);
                 done();
@@ -84,6 +117,7 @@ describe('PUT api/session/room/:room_id', () => {
             console.log(`New session id ${mockSession._id} created`);
             chai.request(httpServer)
                 .put(`/api/session/room/${mockSession.roomid}`)
+                .set({'authorization': userId1})
                 .end((err, res) => {
                     res.should.have.status(200);
                     SessionModel.findOne({ roomid: mockSession.roomid })

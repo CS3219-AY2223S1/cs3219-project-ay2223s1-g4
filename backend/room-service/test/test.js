@@ -24,6 +24,10 @@ sinon.stub(Authenticator, 'extractUserSub').callsFake((req) => {
     console.log('Mocked extractUserSub called');
     return req.headers.authorization;
 });
+sinon.stub(Authenticator, 'extractToken').callsFake((req) => {
+    console.log('Mocked extractToken called');
+    return req.headers.authorization;
+});
 
 // mock room creation
 async function createMockRoom(id1, id2) {

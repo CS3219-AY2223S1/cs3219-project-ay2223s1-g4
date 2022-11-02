@@ -24,10 +24,7 @@ function DifficultySelector() {
     const loadRoom = (difficulty) => {
         getAccessTokenSilently().then((token) => {
         axios.post(URL_MATCHING_MATCH_SVC, {
-                difficulty: difficulty.toUpperCase(),
-                user: {
-                    sub: user.sub
-                }
+                difficulty: difficulty.toUpperCase()
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             })

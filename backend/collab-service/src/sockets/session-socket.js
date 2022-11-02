@@ -1,6 +1,6 @@
 import { Server } from 'socket.io';
 import SessionORM from '../models/session-orm.js';
-import { getDocumentGivenRoomId, updateDocumentFromRoomId } from '../service/service.js';
+import CollabService from '../service/service.js';
 
 let SessionSocketManager = (function() {
     var io;
@@ -63,7 +63,7 @@ let SessionSocketManager = (function() {
                 });
 
                 socket.on("save-code", async (roomId, document) => {
-                    await updateDocumentFromRoomId(roomId, document);
+                    await CollabService.updateDocumentFromRoomId(roomId, document);
                 });
             });
         });
