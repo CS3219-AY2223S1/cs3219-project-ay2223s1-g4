@@ -33,6 +33,7 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
     db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
     db_port = int(os.environ["DB_PORT"])  # e.g. 3306
 
+    print(f"Connecting to mysql+pymysql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}")
     pool = sqlalchemy.create_engine(
         # Equivalent URL:
         # mysql+pymysql://<db_user>:<db_pass>@<db_host>:<db_port>/<db_name>

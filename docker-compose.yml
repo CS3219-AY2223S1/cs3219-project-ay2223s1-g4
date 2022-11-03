@@ -13,14 +13,14 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - collab
-      - matching
-      - room
-      - question
-      - user
+      - collab-service
+      - matching-service
+      - room-service
+      - user-service
+      - question-service
 
   ## backend
-  pubsub:
+  pubsub-service:
     build: 
       dockerfile: Dockerfile
       context: ./backend/pubsub-service
@@ -30,7 +30,7 @@ services:
     expose:
       - "8004"
 
-  collab:
+  collab-service:
     build: 
       dockerfile: Dockerfile
       context: ./backend/collab-service
@@ -40,9 +40,16 @@ services:
     expose:
       - "8005"
     depends_on:
-      - pubsub
-  
-  matching:
+      - pubsub-service
+    links:
+      - collab-db
+  collab-db:
+    image: mongo:latest
+    ports:
+      - "27021:27017"
+    container_name: collab-db
+
+  matching-service:
     build: 
       dockerfile: Dockerfile
       context: ./backend/matching-service
@@ -52,9 +59,16 @@ services:
     expose:
       - "8001"
     depends_on:
-      - pubsub
+      - pubsub-service
+    links:
+      - matching-db
+  matching-db:
+    image: mongo:latest
+    ports:
+      - "27022:27017"
+    container_name: matching-db
 
-  room:
+  room-service:
     build: 
       dockerfile: Dockerfile
       context: ./backend/room-service
@@ -64,19 +78,42 @@ services:
     expose:
       - "8002"
     depends_on:
-      - pubsub
+      - pubsub-service
+    links:
+      - room-db
+  room-db:
+    image: mongo:latest
+    ports:
+      - "27023:27017"
+    container_name: room-db
 
-  question:
+  question-service:
     build: 
       dockerfile: Dockerfile
       context: ./backend/question-service
     restart: always
+    env_file: ./backend/question-service/.env
     ports:
       - "8003:8003"
     expose:
       - "8003"
+    links:
+      - question-db
+    depends_on:
+      - question-db
+  question-db:
+    image: mysql:latest
+    env_file: ./backend/question-service/.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=pass    
+      - MYSQL_DATABASE=question
+    ports:
+      - "3306:3306"
+    container_name: question-db
 
-  user:
+  user-service:
     build: 
       dockerfile: Dockerfile
       context: ./backend/user-service

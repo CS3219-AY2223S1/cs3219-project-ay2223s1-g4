@@ -1,12 +1,25 @@
-version: '3.8'
+version: "3"
 
 services:
-  mysqldb:
-    image: mysql
-    restart: unless-stopped
+  question:
+    build: 
+      dockerfile: Dockerfile
+      context: .
+    restart: always
+    env_file: ./.env
+    ports:
+      - "8003:8003"
+    expose:
+      - "8003"
+    links:
+      - question-db
+
+  question-db:
+    image: mysql:latest
     env_file: ./.env
     environment:
       - MYSQL_ROOT_PASSWORD=$DB_PASS
       - MYSQL_DATABASE=$DB_NAME
     ports:
       - $DB_PORT:$DB_PORT
+    container_name: question-db
