@@ -12,7 +12,7 @@ services:
     restart: always
     ports:
       - "3000:3000"
-    depends_on:
+    links:
       - collab-service
       - matching-service
       - room-service
@@ -45,8 +45,9 @@ services:
       - collab-db
   collab-db:
     image: mongo:latest
-    ports:
-      - "27021:27017"
+    command: mongod --port 27021
+    expose:
+      - "27021"
     container_name: collab-db
 
   matching-service:
@@ -64,8 +65,9 @@ services:
       - matching-db
   matching-db:
     image: mongo:latest
-    ports:
-      - "27022:27017"
+    command: mongod --port 27022
+    expose:
+      - "27022"
     container_name: matching-db
 
   room-service:
@@ -83,16 +85,17 @@ services:
       - room-db
   room-db:
     image: mongo:latest
-    ports:
-      - "27023:27017"
+    command: mongod --port 27023
+    expose:
+      - "27023"
     container_name: room-db
 
-  question:
+  question-service:
     build: 
       dockerfile: Dockerfile
-      context: .
+      context: ./backend/question-service
     restart: always
-    env_file: ./.env
+    env_file: ./backend/question-service/.env
     ports:
       - "8003:8003"
     expose:
@@ -108,9 +111,7 @@ services:
       - MYSQL_ROOT_PASSWORD=pass
       - MYSQL_DATABASE=question-db
       - MYSQL_USER=user
-      - MYSQL_PASSWORD=pass    
-    ports:
-      - 3306:3306
+      - MYSQL_PASSWORD=pass
     expose:
       - "3306"
     container_name: question-db
