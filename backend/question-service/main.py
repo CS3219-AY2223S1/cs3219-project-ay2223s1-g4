@@ -1,4 +1,5 @@
 import os
+import sys
 import uvicorn
 from typing import List, Optional
 from fastapi import FastAPI
@@ -106,9 +107,19 @@ async def getSolution(question_id: int, solution: Optional[bool]):
         output['solution'] = question.explanation
     return output
 
-if __name__ == '__main__':
+
+def main() -> None:
+    global app
+    if len(sys.argv) > 1 and sys.argv[1] == 'scrape':
+        print("Running scraping...")
+        import app.soupScrape
+        print("Scraping complete!")
     uvicorn.run(
         app,
         host=os.environ["SERVICE_HOST"],
         port=int(os.environ["SERVICE_PORT"])
     )
+
+
+if __name__ == '__main__':
+    main()

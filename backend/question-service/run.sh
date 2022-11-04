@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 build() {
-    poetry run python3 app/soupScrape.py
+    poetry run python3 main.py scrape
 }
 
 run() {

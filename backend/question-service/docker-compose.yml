@@ -11,15 +11,21 @@ services:
       - "8003:8003"
     expose:
       - "8003"
+    depends_on:
+      - question-db
     links:
       - question-db
 
   question-db:
     image: mysql:latest
-    env_file: ./.env
+    restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=$DB_PASS
-      - MYSQL_DATABASE=$DB_NAME
+      - MYSQL_ROOT_PASSWORD=pass
+      - MYSQL_DATABASE=question-db
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=pass    
     ports:
-      - $DB_PORT:$DB_PORT
+      - 3306:3306
+    expose:
+      - "3306"
     container_name: question-db

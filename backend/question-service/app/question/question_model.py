@@ -3,7 +3,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String, Enum
 from sqlalchemy.dialects.mysql import MEDIUMTEXT
 from sqlalchemy.orm import relationship
 
-from question.connector import Base
+from app.question.connector import Base
 
 class Difficulty(enum.Enum):
     easy = 1

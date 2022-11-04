@@ -87,30 +87,32 @@ services:
       - "27023:27017"
     container_name: room-db
 
-  question-service:
+  question:
     build: 
       dockerfile: Dockerfile
-      context: ./backend/question-service
+      context: .
     restart: always
-    env_file: ./backend/question-service/.env
+    env_file: ./.env
     ports:
       - "8003:8003"
     expose:
       - "8003"
-    links:
-      - question-db
     depends_on:
+      - question-db
+    links:
       - question-db
   question-db:
     image: mysql:latest
-    env_file: ./backend/question-service/.env
+    restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_ROOT_PASSWORD=pass
+      - MYSQL_DATABASE=question-db
       - MYSQL_USER=user
       - MYSQL_PASSWORD=pass    
-      - MYSQL_DATABASE=question
     ports:
-      - "3306:3306"
+      - 3306:3306
+    expose:
+      - "3306"
     container_name: question-db
 
   user-service:

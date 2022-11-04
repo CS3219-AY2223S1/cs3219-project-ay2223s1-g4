@@ -2,9 +2,10 @@ import re
 import requests
 from bs4 import BeautifulSoup
 import markdownify
-from question.question_model import *
-from question.connector import createSession
-from question.question_crud import getLastQuestionIdScraped
+import app.question.create_tables
+from app.question.question_model import *
+from app.question.connector import createSession
+from app.question.question_crud import getLastQuestionIdScraped
 
 # class Scraper():
 #     def __init__(self, connector: sqlalchemy.engine.Engine):

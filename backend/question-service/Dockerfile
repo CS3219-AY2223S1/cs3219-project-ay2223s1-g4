@@ -12,5 +12,4 @@ RUN poetry install --no-interaction
 
 COPY . /app
 
-RUN poetry run python3 app/soupScrape.py
-CMD ["poetry", "run", "python3", "main.py"]
+CMD ["poetry", "run", "python3", "main.py", "scrape"]
