@@ -1,20 +1,14 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import func
-
-try:
-    from .question_model import *
-    from .connector import createSession
-except:
-    from question_model import *
-    from connector import createSession
+from app.question.question_model import *
+from app.question.connector import createSession
 
 def getQuestion(db:Session, question_id:int) -> Question:
     return db.query(Question).filter(Question.id == question_id).scalar()
 
 def FilterByDifficulty(db:Session, difficulty: Difficulty = Difficulty.medium, company:str = "None", tags:list = [], user_id:str= ""):
     """
-
     :param db:
     :param difficulty:
     :param company:
@@ -33,7 +27,7 @@ def FilterByDifficulty(db:Session, difficulty: Difficulty = Difficulty.medium, c
     return db.execute(queryStmt.order_by(func.rand()))
 
 def getLastQuestionIdScraped(db:Session):
-    return db.query(func.max(Question.id)).scalar()
+    return db.query(func.max(Question.id)).scalar() or 0
 
 def addHistory(db:Session, user_id:str, question_id:int):
     qnId = select(QuestionIndex.id).filter(QuestionIndex.id==question_id)

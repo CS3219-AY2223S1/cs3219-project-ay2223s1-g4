@@ -33,23 +33,25 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
     db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
     db_port = int(os.environ["DB_PORT"])  # e.g. 3306
 
+    # Equivalent URL:
+    # mysql+pymysql://<db_user>:<db_pass>@<db_host>:<db_port>/<db_name>
+    connection_str = sqlalchemy.engine.url.URL.create(
+        drivername="mysql+pymysql",
+        username=db_user,
+        password=db_pass,
+        host=db_host,
+        port=db_port,
+        database=db_name,
+    )
+    print(f"[LOG] Connecting to {connection_str}")
     pool = sqlalchemy.create_engine(
-        # Equivalent URL:
-        # mysql+pymysql://<db_user>:<db_pass>@<db_host>:<db_port>/<db_name>
-        sqlalchemy.engine.url.URL.create(
-            drivername="mysql+pymysql",
-            username=db_user,
-            password=db_pass,
-            host=db_host,
-            port=db_port,
-            database=db_name,
-        ),
-        pool_pre_ping=True,
+        connection_str,
+        pool_pre_ping=True
     )
     return pool
 
 def createSession():
-    return sessionmaker(autocommit=False, autoflush=True,bind=connect_tcp_socket())
+    return sessionmaker(autocommit=False, autoflush=True, bind=connect_tcp_socket())
 
 Base = declarative_base()
 
