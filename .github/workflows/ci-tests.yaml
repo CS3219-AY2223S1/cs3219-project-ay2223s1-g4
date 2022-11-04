@@ -21,7 +21,7 @@ jobs:
       with:
         node-version: '14.x'
 
-    - name: Run backend tests
+    - name: Run tests
       uses: nick-fields/retry@v2
       with:
         timeout_minutes: 5
@@ -35,4 +35,4 @@ jobs:
           echo ${{ secrets.room }} > ./backend/room-service/.env
           echo ${{ secrets.user }} > ./backend/user-service/.env
           echo ${{ secrets.frontend }} > ./frontend/.env
-          ./run-tests
+          ./run-tests.sh
