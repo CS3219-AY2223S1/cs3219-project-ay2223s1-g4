@@ -12,6 +12,7 @@ ROOT_PATH=$(pwd)
 
 test_frontend() {
     cd 'frontend'
+    $(which npm) ci
     $(which npm) run "test"
     cd $ROOT_PATH
 }
