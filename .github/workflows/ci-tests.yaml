@@ -1,21 +1,13 @@
 name: Run CI Tests
 
-on: workflow_dispatch
-
-## TODO (1) find a way to load all .env files as secrets
-## TODO (2) determine docker images neeeded
-## - mongodb
-## - nodejs
-## - mysql
-## - poetry
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     types: [opened, reopened]
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - main
 
 jobs:
   test:
@@ -29,14 +21,21 @@ jobs:
       with:
         node-version: '14.x'
 
+    - name: Prepare .env files
+      command: |
+        echo ${{ secrets.collab }} > ./backend/collab-service/.env
+        echo ${{ secrets.matching }} > ./backend/matching-service/.env
+        echo ${{ secrets.pubsub }} > ./backend/pubsub-service/.env
+        echo ${{ secrets.question }} > ./backend/question-service/.env
+        echo ${{ secrets.room }} > ./backend/room-service/.env
+        echo ${{ secrets.user }} > ./backend/user-service/.env
+        echo ${{ secrets.frontend }} > ./frontend/.env
+
     - name: Run backend tests
-      env:
-        MONGODB_URI: ${{ secrets.mongodb_path }}
       uses: nick-fields/retry@v2
       with:
         timeout_minutes: 5
         max_attempts: 10
         retry_wait_seconds: 15
         command: |
-          ./run-backend.sh b
           ./run-tests

@@ -10,7 +10,7 @@ run() {
 
 verify() {
     set -e
-    $(which npm) run "test"
+    docker run --rm $(docker build -q -f Dockerfile.dev .)
 }
 
 main() {
