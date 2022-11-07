@@ -27,8 +27,8 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
     # secure - consider a more secure solution such as
     # Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
     # keep secrets safe.
-    # db_host = '0.0.0.0'
-    db_host = os.environ.get("DB_HOST", 'localhost')   # e.g. '127.0.0.1' ('172.17.0.1' if deployed to GAE Flex)
+    db_host = '0.0.0.0'
+    # db_host = os.environ.get("DB_HOST", 'localhost')   # e.g. '127.0.0.1' ('172.17.0.1' if deployed to GAE Flex)
     db_user = os.environ.get("DB_USER", 'root') # e.g. 'my-db-user'
     db_pass = os.environ.get("DB_PASS", "pass")  # e.g. 'my-db-password'
     db_name = os.environ.get("DB_NAME", 'question-db')  # e.g. 'my-database'
