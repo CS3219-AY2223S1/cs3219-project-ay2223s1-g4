@@ -12,11 +12,12 @@ services:
     restart: always
     ports:
       - "3000:3000"
-    links:
+    depends_on:
       - collab-service
       - matching-service
       - room-service
       - user-service
+      - question-service
     networks:
       - servicenet
 
@@ -30,6 +31,8 @@ services:
       - "8004:8004"
     expose:
       - "8004"
+    networks:
+      - servicenet
 
   collab-service:
     build: 
@@ -42,8 +45,8 @@ services:
       - "8005"
     depends_on:
       - pubsub-service
-    links:
-      - collab-db
+    networks:
+      - servicenet
 
   collab-db:
     image: mongo:latest
@@ -51,6 +54,8 @@ services:
     expose:
       - "27021"
     container_name: collab-db
+    networks:
+      - servicenet
 
   matching-service:
     build: 
@@ -63,8 +68,8 @@ services:
       - "8001"
     depends_on:
       - pubsub-service
-    links:
-      - matching-db
+    networks:
+      - servicenet
 
   matching-db:
     image: mongo:latest
@@ -72,6 +77,8 @@ services:
     expose:
       - "27022"
     container_name: matching-db
+    networks:
+      - servicenet
 
   room-service:
     build: 
@@ -84,8 +91,8 @@ services:
       - "8002"
     depends_on:
       - pubsub-service
-    links:
-      - room-db
+    networks:
+      - servicenet
 
   room-db:
     image: mongo:latest
@@ -93,6 +100,8 @@ services:
     expose:
       - "27023"
     container_name: room-db
+    networks:
+      - servicenet
 
   question-service:
     build: 
@@ -136,6 +145,8 @@ services:
       - "8393:8393"
     expose:
       - "8393"
+    networks:
+      - servicenet
 
 networks:
   servicenet:

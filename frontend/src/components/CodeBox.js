@@ -14,9 +14,6 @@ function CodeBox({ roomId, socket }) {
     const saveDocumentIntervalsMs = 3 * 1000;
 
     useEffect(() => {
-        if (socket == null || quill == null) {
-            return;
-        }
         getAccessTokenSilently().then((token) => {
             axios.get(`${URI_COLLAB_SVC}/api/session/room/${roomId}`, {
                     headers: { Authorization: `Bearer ${token}` }
@@ -25,22 +22,32 @@ function CodeBox({ roomId, socket }) {
                     if (!res.data.isOpen) {
                         setShouldAllowEdit(false);
                     }
-                    socket.once("load-code", document => {
-                        quill.setText(document);
-                        if (shouldAllowEdit) {
-                            quill.enable();
-                        } else {
-                            quill.disable();
-                        }
-                    });
+                    console.log(`data ${JSON.stringify(res.data)}`);
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         });
 
+    }, [getAccessTokenSilently, roomId]);
+
+    useEffect(() => {
+        if (socket == null || quill == null) {
+            return;
+        }
+        console.log(`shouldAllowEdit ${shouldAllowEdit}`);
+        socket.once("load-code", document => {
+            quill.setText(document);
+            if (shouldAllowEdit) {
+                console.log('Enabling quill');
+                quill.enable();
+            } else {
+                console.log('Disabling quill');
+                quill.disable();
+            }
+        });
         socket.emit("get-code", roomId);
-    }, [getAccessTokenSilently, shouldAllowEdit, socket, quill, roomId]);
+    }, [shouldAllowEdit, socket, quill, roomId])
 
     useEffect(() => {
         if (socket == null || quill == null || !shouldAllowEdit) {

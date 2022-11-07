@@ -293,3 +293,4 @@ cython_debug/
 
 # Database
 data/
+cloud_sql_proxy

@@ -40,7 +40,7 @@ let CollabService = {
                 return res.data.userid1 === userId || res.data.userid2 === userId;
             })
             .catch((err) => {
-                console.log(err);
+                console.log(err.message);
                 return false;
             });
     },
