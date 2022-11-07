@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from fastapi.encoders import jsonable_encoder
 from dotenv import load_dotenv
+from app.soupScrape import runScrape
 
 load_dotenv()
 
@@ -112,7 +113,18 @@ def main() -> None:
     global app
     if len(sys.argv) > 1 and sys.argv[1] == 'scrape':
         print("Running scraping...")
-        import app.soupScrape
+        if len(sys.argv) == 3 and sys.argv[2] == 'limit':
+            runScrape(int(sys.argv[2]))
+        else:
+            runScrape()
+        print("Scraping complete!")
+    elif len(sys.argv) > 1 and sys.argv[1] == 'scrapeReset':
+        print("Running scraping...")
+        import app.question.create_tables
+        if len(sys.argv) == 3 and sys.argv[2] == 'limit':
+            runScrape(int(sys.argv[2]))
+        else:
+            runScrape()
         print("Scraping complete!")
     uvicorn.run(
         app,

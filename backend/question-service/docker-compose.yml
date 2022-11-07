@@ -2,19 +2,19 @@ version: "3"
 
 services:
   question-service:
-    build: 
-      dockerfile: Dockerfile
-      context: .
-    restart: always
-    env_file: ./.env
-    ports:
-      - "8003:8003"
-    expose:
-      - "8003"
-    depends_on:
-      - question-db
-    links:
-      - question-db
+   build: 
+     dockerfile: Dockerfile
+     context: .
+   restart: always
+   env_file: ./.env
+   ports:
+     - "8003:8003"
+   expose:
+     - "8003"
+   depends_on:
+     - question-db
+   networks:
+     - questionnet
 
   question-db:
     image: mysql:latest
@@ -23,9 +23,17 @@ services:
       - MYSQL_ROOT_PASSWORD=pass
       - MYSQL_DATABASE=question-db
       - MYSQL_USER=user
-      - MYSQL_PASSWORD=pass    
+      - MYSQL_PASSWORD=pass
+    volumes:
+      - ./data:/var/lib/mysql
     ports:
       - 3306:3306
     expose:
       - "3306"
     container_name: question-db
+    networks:
+      - questionnet
+
+networks:
+  questionnet:
+    driver: bridge

@@ -17,7 +17,8 @@ services:
       - matching-service
       - room-service
       - user-service
-      - question-service
+    networks:
+      - servicenet
 
   ## backend
   pubsub-service:
@@ -43,6 +44,7 @@ services:
       - pubsub-service
     links:
       - collab-db
+
   collab-db:
     image: mongo:latest
     command: mongod --port 27021
@@ -63,6 +65,7 @@ services:
       - pubsub-service
     links:
       - matching-db
+
   matching-db:
     image: mongo:latest
     command: mongod --port 27022
@@ -83,6 +86,7 @@ services:
       - pubsub-service
     links:
       - room-db
+
   room-db:
     image: mongo:latest
     command: mongod --port 27023
@@ -102,19 +106,26 @@ services:
       - "8003"
     depends_on:
       - question-db
-    links:
-      - question-db
+    networks:
+      - servicenet
+
   question-db:
     image: mysql:latest
     restart: always
+    volumes:
+      - ./backend/question-service/data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=pass
       - MYSQL_DATABASE=question-db
       - MYSQL_USER=user
       - MYSQL_PASSWORD=pass
+    ports:
+      - "3306:3306"
     expose:
       - "3306"
     container_name: question-db
+    networks:
+      - servicenet
 
   user-service:
     build: 
@@ -125,3 +136,7 @@ services:
       - "8393:8393"
     expose:
       - "8393"
+
+networks:
+  servicenet:
+    driver: bridge

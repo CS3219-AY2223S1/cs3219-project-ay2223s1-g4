@@ -1,4 +1,4 @@
-FROM python:latest
+FROM python:3.10
 
 ENV PIP_DISABLE_PIP_VERSION_CHECK=on
 
@@ -10,6 +10,11 @@ COPY poetry.lock pyproject.toml /app/
 RUN poetry config virtualenvs.create false
 RUN poetry install --no-interaction
 
+EXPOSE 8003
+
 COPY . /app
 
-CMD ["poetry", "run", "python3", "main.py", "scrape"]
+CMD ["poetry", "run", "python3", "main.py"]
+#, "scrapeReset" ]
+#, "scrape", "-1"]
+
