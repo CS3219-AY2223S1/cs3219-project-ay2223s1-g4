@@ -10,6 +10,14 @@ BACKEND_SERVICES=(
 )
 ROOT_PATH=$(pwd)
 
+test_backend() {
+    for service in "${BACKEND_SERVICES[@]}"; do
+        cd $service
+        ./run.sh t
+        cd $ROOT_PATH
+    done
+}
+
 test_frontend() {
     cd 'frontend'
     $(which npm) ci
@@ -20,11 +28,7 @@ test_frontend() {
 main() {
     set -e
     set -x
-    for service in "${BACKEND_SERVICES[@]}"; do
-        cd $service
-        ./run.sh t
-        cd $ROOT_PATH
-    done
+    test_backend
     test_frontend
 }
 

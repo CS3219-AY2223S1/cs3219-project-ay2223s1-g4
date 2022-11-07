@@ -49,7 +49,7 @@ function LoadingPage() {
 
     return (
         <Box>
-            <Typography>Loading match 30s using match id {matchid}</Typography>
+            <Typography>Finding a peer for you. Hold on...</Typography>
             <Countdown 
                 date={Date.now() + 30 * 1000}
             >
