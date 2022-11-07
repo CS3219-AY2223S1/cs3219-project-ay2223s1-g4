@@ -28,7 +28,14 @@ def getPage(url:str) -> BeautifulSoup:
 #         problem.find
 
 
-def scrapeIndex(index:int = 1, populate:bool = True) -> list:
+def scrapeIndex(index:int = 1, populate:bool = True, limit=100) -> list:
+    '''
+    if limit is -1 do everythng
+    :param index:
+    :param populate:
+    :param limit:
+    :return:
+    '''
     url = f'{base_url}/all/problems.html'
     soup = getPage(url)
     tableRows = soup.findAll('tr')
@@ -46,6 +53,8 @@ def scrapeIndex(index:int = 1, populate:bool = True) -> list:
         print(questions)
         if populate:
             session.add(questions)
+        if (not limit == -1) and int(id) > limit:
+            break
         ids.append((int(id), problemTitle, subUrl, questions))
     return ids
 # scrapeIndex(1)
@@ -96,29 +105,35 @@ def getPythonSolutions(id:int):
     print("\n".join(list( filter( lambda x: len(x) > 0, code))))
 
 
-def populateTags() -> None:
-    url = 'https://leetcode.ca/tags/'
-    soup = getPage(url)
-    tagsToId = soup.find_all('h2')
+# def populateTags() -> None:
+#     url = 'https://leetcode.ca/tags/'
+#     soup = getPage(url)
+#     tagsToId = soup.find_all('h2')
+#
+#     # print(tagsToId.find_next_sibling())
+#     # print(re.search('\d+', tagsToId.find_all('a')[0].getText()).group())
+#     for t in tagsToId:
+#         tag = t['id'].replace('.', '').lower()
+#         anchors = t.find_next_sibling()
+#
+#         for i in anchors.find_all('a'):
+#             id = re.search('\d+', i.getText()).group()
+#             t = Tag(tag=tag, id=int(id))
+#             # print(t)
+#             session.add(t)
+def runScrape(limit=100):
+    ids = scrapeIndex(getLastQuestionIdScraped(session)+1, populate=True, limit=limit)
+    # print(session.query(QuestionIndex).all())
 
-    # print(tagsToId.find_next_sibling())
-    # print(re.search('\d+', tagsToId.find_all('a')[0].getText()).group())
-    for t in tagsToId:
-        tag = t['id'].replace('.', '').lower()
-        anchors = t.find_next_sibling()
+    session.commit()
+    populateProblems(ids)
+    session.commit()
+# populateTags()
+# session.commit()
 
-        for i in anchors.find_all('a'):
-            id = re.search('\d+', i.getText()).group()
-            t = Tag(tag=tag, id=int(id))
-            # print(t)
-            session.add(t)
-
-ids = scrapeIndex(getLastQuestionIdScraped(session)+1, populate=False)
-session.commit()
-populateProblems(ids)
-session.commit()
-populateTags()
-session.commit()
+# def scrapeStuff()
 
 # for header in soup.find_all('h2'):
 #     print(header['id'].replace('.', '').lower())
+if __name__ == '__main__':
+    runScrape()
