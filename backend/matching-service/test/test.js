@@ -241,7 +241,7 @@ describe("Testing Matching Service", () => {
         });
     });
 
-    it("Should support up to 1000 sessions", async () => {
+    it("Should be able to support 2000 match requests", async () => {
         for (let i = 0; i < 2000; i++) {
             chai.request(httpServer)
                 .post('/api/match')
