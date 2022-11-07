@@ -82,7 +82,9 @@ function RoomPage() {
         }
         const endSession = () => {
             console.log('Session is closed');
-            alert('Peer has ended the session, the solution tab is now unlocked');
+            if (!isSolutionRevealed) {
+                alert('Peer has unlocked the solutions tab!');
+            }
             setIsInterviewer(true);
             setIsSolutionRevealed(true);
             isRunning = false;
@@ -101,13 +103,13 @@ function RoomPage() {
         }
         socket.on('peer-join-room', handlePeerJoinRoom);
         return;
-    }, [navigateTo, socket, roomId]);
+    }, [navigateTo, isSolutionRevealed, socket, roomId]);
 
     const closeRoom = () => {
         setIsPromptOpen(false);
         setIsSolutionRevealed(true);
         socket.emit('end-session', `room-${roomId}`);
-        alert('You have ended the session, the solution tab is now unlocked');
+        alert('You have unlocked the solutions tab!');
         setIsInterviewer(true);
     };
     

@@ -3,7 +3,7 @@ dotenv.config();
 
 const PORT = process.env.SERVICE_PORT || 8005;
 const CLIENT_URL = process.env.CLIENT_URL || '*';
-const ROOM_URI = process.env.CLIENT_URL || 'http://localhost:8002';
+const ROOM_URI = process.env.ROOM_URL || 'http://localhost:8002';
 
 const PUBSUB_URL = process.env.PUBSUB_URL || 'http://localhost:8004';
 const ROOM_CREATED_TAG = 'room.created';

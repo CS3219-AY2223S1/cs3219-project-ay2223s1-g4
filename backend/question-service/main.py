@@ -7,24 +7,23 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from fastapi.encoders import jsonable_encoder
 from dotenv import load_dotenv
+from app.soupScrape import runScrape
+from app.question.connector import createSession
+from app.question.question_crud import *
+
 
 load_dotenv()
 
-does_require_database = bool(os.environ["DB_HOST"])
-if does_require_database:
-    from app.question.question_crud import *
-    from app.question.connector import createSession
-    session = createSession()() 
 
-app = FastAPI()
+session = createSession()() 
+application = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:3000",
     "http://localhost:8001",
     "http://localhost:8002"
 ]
-
-app.add_middleware(
+application.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=False,
@@ -32,7 +31,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/api/question")
+
+class QuestionRequestBody(BaseModel):
+    user_id: str
+    difficulty: str = Field (default="medium")
+    tags: Optional[List[str]]
+    company: Optional[str]
+
+
+@application.get("/api/question")
 def info():
     return {
         "GET: api/question/index": {
@@ -69,34 +76,24 @@ def info():
         }
     }
 
-@app.get("/api/question/index")
+
+@application.get("/api/question/index")
 async def get_all_questions():
-    if not does_require_database:
-        return {"questions": []}
     return {"questions": jsonable_encoder(getQuestionIndex(session))}
 
-class QuestionRequestBody(BaseModel):
-    user_id: str
-    difficulty: str = Field (default="medium")
-    tags: Optional[List[str]]
-    company: Optional[str]
 
-@app.post("/api/question/id")
+@application.post("/api/question/id")
 async def generate_question_id(question: QuestionRequestBody):
-    if not does_require_database:
-        return {"id": 0}
+    print(f"Received {question=}")
     difficulty = Difficulty[question.difficulty]
-    return {"id": FilterByDifficulty(session, difficulty).scalar()}
+    id = FilterByDifficulty(session, difficulty).scalar()
+    return {"id": id}
 
-@app.get("/api/question/{question_id}")
+
+@application.get("/api/question/{question_id}")
 async def getSolution(question_id: int, solution: Optional[bool]):
-    if not does_require_database:
-        return {
-            'question_id': 0,
-            'title': '2SUM',
-            'question': 'Do 2SUM',
-            'solution': '' if not solution else 'TBC'
-        }
+    print(f"Received {question_id=}")
+    print(f"Received {solution=}")
     question = getQuestion(session, question_id)
     output = {
         'question_id': question_id,
@@ -109,13 +106,27 @@ async def getSolution(question_id: int, solution: Optional[bool]):
 
 
 def main() -> None:
-    global app
+    global application
+
     if len(sys.argv) > 1 and sys.argv[1] == 'scrape':
         print("Running scraping...")
-        import app.soupScrape
+        if len(sys.argv) == 3 and sys.argv[2] == 'limit':
+            runScrape(int(sys.argv[2]))
+        else:
+            runScrape()
         print("Scraping complete!")
+
+    elif len(sys.argv) > 1 and sys.argv[1] == 'scrapeReset':
+        print("Running scraping...")
+        import app.question.create_tables
+        if len(sys.argv) == 3 and sys.argv[2] == 'limit':
+            runScrape(int(sys.argv[2]))
+        else:
+            runScrape()
+        print("Scraping complete!")
+
     uvicorn.run(
-        app,
+        application,
         host=os.environ["SERVICE_HOST"],
         port=int(os.environ["SERVICE_PORT"])
     )

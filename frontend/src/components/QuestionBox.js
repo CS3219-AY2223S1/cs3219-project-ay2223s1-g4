@@ -27,7 +27,7 @@ function QuestionBox({ questionId = 0, interviewer = false }) {
             console.log(err);
             alert('Opps... Something went wrong! Please try again.');
         });
-    });
+    }, [questionId, interviewer]);
 
     const handleChange = (event, tabVal) => {
         setTab(tabVal);
