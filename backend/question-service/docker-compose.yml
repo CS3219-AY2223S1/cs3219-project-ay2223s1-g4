@@ -6,7 +6,7 @@ services:
     build: 
       dockerfile: Dockerfile.dev
       context: .
-    restart: always
+    restart: on-failure
     env_file: ./.env
     ports:
       - "8003:8003"
