@@ -14,4 +14,5 @@ EXPOSE 8003
 
 COPY . /app
 
-CMD ["poetry", "run", "python3", "main.py", "scrapeReset"]
+CMD ["poetry", "run", "python3", "main.py"]
+#, "scrapeReset"]
