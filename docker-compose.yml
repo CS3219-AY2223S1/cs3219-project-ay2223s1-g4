@@ -7,7 +7,6 @@ services:
     build: 
       dockerfile: Dockerfile
       context: ./frontend
-    container_name: frontend
     volumes:
       - ./frontend:/usr/app
     restart: always
@@ -24,7 +23,6 @@ services:
 
   ## backend
   pubsub-service:
-    container_name: pubsub
     build: 
       dockerfile: Dockerfile
       context: ./backend/pubsub-service
@@ -37,7 +35,6 @@ services:
       - servicenet
 
   collab-service:
-    container_name: collab
     build: 
       dockerfile: Dockerfile
       context: ./backend/collab-service
@@ -52,7 +49,6 @@ services:
       - servicenet
 
   collab-db:
-    container_name: collab-db
     image: mongo:latest
     command: mongod --port 27021
     expose:
@@ -62,7 +58,6 @@ services:
       - servicenet
 
   matching-service:
-    container_name: matching
     build: 
       dockerfile: Dockerfile
       context: ./backend/matching-service
@@ -77,7 +72,6 @@ services:
       - servicenet
 
   matching-db:
-    container_name: matching-db
     image: mongo:latest
     command: mongod --port 27022
     expose:
@@ -87,7 +81,6 @@ services:
       - servicenet
 
   room-service:
-    container_name: room
     build: 
       dockerfile: Dockerfile
       context: ./backend/room-service
@@ -102,7 +95,6 @@ services:
       - servicenet
 
   room-db:
-    container_name: room-db
     image: mongo:latest
     command: mongod --port 27023
     expose:
@@ -112,7 +104,6 @@ services:
       - servicenet
 
   question-service:
-    container_name: question
     build: 
       dockerfile: Dockerfile
       context: ./backend/question-service
@@ -128,7 +119,6 @@ services:
       - servicenet
 
   question-db:
-    container_name: question-db
     image: mysql:latest
     restart: always
     volumes:
@@ -147,7 +137,6 @@ services:
       - servicenet
 
   user-service:
-    container_name: user
     build: 
       dockerfile: Dockerfile
       context: ./backend/user-service

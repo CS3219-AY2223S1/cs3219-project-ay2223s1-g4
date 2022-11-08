@@ -10,8 +10,7 @@ run() {
 
 verify() {
     set -e
-    echo "No tests specified"
-    ## TODO ADD TEST AND SCRIPT
+    docker-compose up --force-recreate --renew-anon-volumes
 }
 
 main() {
