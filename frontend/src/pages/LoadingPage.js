@@ -48,22 +48,19 @@ function LoadingPage() {
   }
 
   return (
-    <Box
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Typography>Finding a peer for you. Hold on...</Typography>
-      <br />
-      <br />
-      <br />
+    <Box>
+      <Typography
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        Finding a peer for you. Hold on for...
+        <Countdown date={Date.now() + 30 * 1000}></Countdown>
+      </Typography>
+
       <Loading />
-      <br />
-      <br />
-      <br />
-      <Countdown date={Date.now() + 30 * 1000}></Countdown>
     </Box>
   );
 }

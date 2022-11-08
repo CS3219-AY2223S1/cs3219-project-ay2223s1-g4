@@ -83,7 +83,7 @@ function UserHistoryPage() {
                   {item.questionTitle}
                 </Button>
               </td>
-              <td>{item.endDateTime == null ? "Yes" : item.endDateTime}</td>
+              <td>{item.endDateTime == null ? "Yes" : "No"}</td>
             </tr>
           ))}
         </tbody>
