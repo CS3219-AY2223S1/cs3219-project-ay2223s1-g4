@@ -10,8 +10,20 @@ run() {
 
 verify() {
     set -e
-    echo "No tests specified"
-    ## TODO ADD TEST AND SCRIPT
+    docker-compose up -d --force-recreate --renew-anon-volumes
+    sleep 5
+    while [ true ]
+    do
+        docker-compose logs -t | tail
+        lines=$(docker ps | wc -l)
+        if [ $lines -eq 2 ]; then
+            break
+        else
+            echo "Test is still ongoing..."
+        fi
+        sleep 5
+    done
+    docker-compose down
 }
 
 main() {

@@ -92,8 +92,8 @@ async def generate_question_id(question: QuestionRequestBody):
 
 @application.get("/api/question/{question_id}")
 async def getSolution(question_id: int, solution: Optional[bool]):
-    print(f"Received {question_id=}")
-    print(f"Received {solution=}")
+    print(f"Received {question_id}")
+    print(f"Received {solution}")
     question = getQuestion(session, question_id)
     output = {
         'question_id': question_id,
