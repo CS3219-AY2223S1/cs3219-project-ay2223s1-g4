@@ -20,15 +20,20 @@ Note that Auth0 is also used for authentication and its services are called upon
 
 ## Running the application with Docker Compose
 
-1. Run `./run-docker.sh` to run all the services.
-2. To kill services, run `./run-docker.sh k`.
+1. For each of the services present, 
+   1. Rename `.env.example` file to `.env`.
+   2. Update relevant variables in the `.env` file.
+2. Run `./run-docker.sh` to run all the services.
+3. To stop services, run `./run-docker.sh stop`.
 
 ## Running individual service locally
 
 ### Frontend Service
 
-1. Install npm packages using `npm i`.
-2. Run Frontend using `npm start`.
+1. Rename `.env.example` file to `.env`.
+2. Update relevant variables in the `.env` file.
+3. Install npm packages using `npm ci`.
+4. Run Frontend using `npm start`.
 
 ### Backend Services
 
@@ -36,5 +41,6 @@ Note that Auth0 is also used for authentication and its services are called upon
 2. Update relevant variables in the `.env` file.
 3. Install npm packages using `./run.sh b`.
 4. Run service using `./run.sh r`.
+4. To run tests use `./run.sh t`.
 
 Note: For `question-service` under the backend side, explore its `README.md` to setup locally.

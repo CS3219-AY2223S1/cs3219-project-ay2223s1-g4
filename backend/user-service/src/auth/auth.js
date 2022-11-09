@@ -14,18 +14,6 @@ const checkJwt = auth({
   issuerBaseURL: ISSUER_BASE_URL,
 });
 
-// const jwtCheck = expressjwt({
-//     secret: jwksRsa.expressJwtSecret({
-//         cache: true,
-//         rateLimit: true,
-//         jwksRequestsPerMinute: 5,
-//         jwksUri: JWKS_URI,
-//     }),
-//     audience: AUDIENCE,
-//     issuer: ISSUER_BASE_URL,
-//     algorithms: ["RS256"],
-// });
-
 const auth0 = new ManagementClient({
   domain: AUTH0_DOMAIN,
   clientId: AUTH0_CLIENT_ID,
