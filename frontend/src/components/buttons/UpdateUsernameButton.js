@@ -47,9 +47,6 @@ const UpdateUsernameButton = (props) => {
         }
       }}
     >
-      {/*  TODO: 1. Add a flag is_active in metadata or 2.
-    https://community.auth0.com/t/allow-currently-logged-in-user-of-web-app-to-delete-their-account/60022 
-    */}
       Update nickname
     </Button>
   );

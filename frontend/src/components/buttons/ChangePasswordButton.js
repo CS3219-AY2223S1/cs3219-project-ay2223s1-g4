@@ -32,7 +32,6 @@ const ChangePasswordButton = (props) => {
       })
       .catch((e) => {
         console.log(e.message);
-        // TODO: extract error message from e.
         window.confirm("Password failed to get updated");
       });
   };
@@ -54,9 +53,6 @@ const ChangePasswordButton = (props) => {
         }
       }}
     >
-      {/*  TODO: 1. Add a flag is_active in metadata or 2.
-    https://community.auth0.com/t/allow-currently-logged-in-user-of-web-app-to-delete-their-account/60022 
-    */}
       Change password
     </Button>
   );

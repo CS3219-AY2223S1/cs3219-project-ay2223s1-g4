@@ -24,8 +24,6 @@ const UpdateDetailsForm =  () => {
         formData.append("password", password);
 
         formData.append("file", selectedFile);
-        // TODO: Add upload url or Auth0 call here
-        // user.sub
         axios
           .post('UPLOAD_URL', formData)
           .then((res) => {
