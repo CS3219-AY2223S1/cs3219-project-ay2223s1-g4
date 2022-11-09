@@ -1,7 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
-import { useNavigate, NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Loading from "../components/loading";
 import Table from "react-bootstrap/Table";
 import axios from "axios";
@@ -60,7 +60,6 @@ function UserHistoryPage() {
   const redirectToRoom = (roomid) => {
     navigateTo(`../room/${roomid}`);
   };
-
   // GET 8002/api/room/user/ + {encodeURI(user.id)}
   if (history.length > 0) {
     return (
@@ -78,7 +77,7 @@ function UserHistoryPage() {
           <tbody>
             {history.map((item, index) => (
               <tr key={index}>
-                <td>{item.startDateTime}</td>
+                <td>{new Date(item.startDateTime).toUTCString()}</td>
                 <td>{item.peerNickname}</td>
                 <td>{item.questionTitle}</td>
                 <td>{item.endDateTime == null ? "Yes" : "No"}</td>
@@ -108,7 +107,10 @@ function UserHistoryPage() {
         }}
       >
         You have yet to attempt anything! click{" "}
-        <Button className="mx-2" href="/train">here</Button> to start!
+        <Button className="mx-2" href="/train">
+          here
+        </Button>{" "}
+        to start!
       </div>
     )
   );
