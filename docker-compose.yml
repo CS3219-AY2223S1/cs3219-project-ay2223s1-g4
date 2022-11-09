@@ -7,8 +7,6 @@ services:
     build: 
       dockerfile: Dockerfile
       context: ./frontend
-    volumes:
-      - ./frontend:/usr/app
     restart: always
     ports:
       - "3000:3000"
@@ -121,8 +119,6 @@ services:
   question-db:
     image: mysql:latest
     restart: always
-    volumes:
-      - ./backend/question-service/data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=pass
       - MYSQL_DATABASE=question-db

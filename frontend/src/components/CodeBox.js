@@ -100,6 +100,7 @@ function CodeBox({ roomId, socket }) {
       },
       theme: "snow",
     });
+    q.root.setAttribute('spellcheck', false);
     q.disable();
     setQuill(q);
   }, []);
