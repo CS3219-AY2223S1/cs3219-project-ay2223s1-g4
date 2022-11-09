@@ -1,0 +1,149 @@
+version: "3"
+
+services:
+
+  ## frontend
+  frontend:
+    build: 
+      dockerfile: Dockerfile
+      context: ./frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - collab-service
+      - matching-service
+      - room-service
+      - user-service
+      - question-service
+    networks:
+      - servicenet
+
+  ## backend
+  pubsub-service:
+    build: 
+      dockerfile: Dockerfile
+      context: ./backend/pubsub-service
+    restart: always
+    ports:
+      - "8004:8004"
+    expose:
+      - "8004"
+    networks:
+      - servicenet
+
+  collab-service:
+    build: 
+      dockerfile: Dockerfile
+      context: ./backend/collab-service
+    restart: always
+    ports:
+      - "8005:8005"
+    expose:
+      - "8005"
+    depends_on:
+      - pubsub-service
+    networks:
+      - servicenet
+
+  collab-db:
+    image: mongo:latest
+    command: mongod --port 27021
+    expose:
+      - "27021"
+    container_name: collab-db
+    networks:
+      - servicenet
+
+  matching-service:
+    build: 
+      dockerfile: Dockerfile
+      context: ./backend/matching-service
+    restart: always
+    ports:
+      - "8001:8001"
+    expose:
+      - "8001"
+    depends_on:
+      - pubsub-service
+    networks:
+      - servicenet
+
+  matching-db:
+    image: mongo:latest
+    command: mongod --port 27022
+    expose:
+      - "27022"
+    container_name: matching-db
+    networks:
+      - servicenet
+
+  room-service:
+    build: 
+      dockerfile: Dockerfile
+      context: ./backend/room-service
+    restart: always
+    ports:
+      - "8002:8002"
+    expose:
+      - "8002"
+    depends_on:
+      - pubsub-service
+    networks:
+      - servicenet
+
+  room-db:
+    image: mongo:latest
+    command: mongod --port 27023
+    expose:
+      - "27023"
+    container_name: room-db
+    networks:
+      - servicenet
+
+  question-service:
+    build: 
+      dockerfile: Dockerfile
+      context: ./backend/question-service
+    restart: always
+    env_file: ./backend/question-service/.env
+    ports:
+      - "8003:8003"
+    expose:
+      - "8003"
+    depends_on:
+      - question-db
+    networks:
+      - servicenet
+
+  question-db:
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass
+      - MYSQL_DATABASE=question-db
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=pass
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    container_name: question-db
+    networks:
+      - servicenet
+
+  user-service:
+    build: 
+      dockerfile: Dockerfile
+      context: ./backend/user-service
+    restart: always
+    ports:
+      - "8393:8393"
+    expose:
+      - "8393"
+    networks:
+      - servicenet
+
+networks:
+  servicenet:
+    driver: bridge

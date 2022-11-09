@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  question-service:
+    container_name: question-service
+    build: 
+      dockerfile: Dockerfile.dev
+      context: .
+    restart: on-failure
+    env_file: ./.env
+    ports:
+      - "8003:8003"
+    expose:
+      - "8003"
+    depends_on:
+      - question-db
+    networks:
+      - servicenet
+
+  question-db:
+    container_name: question-db
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass
+      - MYSQL_DATABASE=question-db
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=pass
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    networks:
+      - servicenet
+
+networks:
+  servicenet:
+    driver: bridge
