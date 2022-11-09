@@ -6,12 +6,14 @@ import Loading from "../components/loading";
 import Table from "react-bootstrap/Table";
 import axios from "axios";
 import { URL_HISTORY_ENDPT } from "../configs";
+import { Typography } from "@mui/material";
 
 function UserHistoryPage() {
   const { user, isAuthenticated, isLoading, getAccessTokenSilently } =
     useAuth0();
 
   const [history, setHistory] = useState([]);
+  const [loaded, setLoaded] = useState(false);
   const navigateTo = useNavigate();
 
   const loadHistory = async () => {
@@ -45,11 +47,12 @@ function UserHistoryPage() {
         },
       ];
       setHistory([...historyy]);
+    } finally {
+      setLoaded(true)
     }
   };
   useEffect(() => {
     loadHistory();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -61,33 +64,70 @@ function UserHistoryPage() {
     navigateTo(`../room/${roomid}`);
   };
 
-  // GET 8002/api/room/user/ + {encodeURI(user.id)}
+  if (history.length > 0) {
+    return (
+      isAuthenticated && (
+        <div>
+          <Typography
+            variant="h3"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: "30px"
+            }}
+          >
+            History
+          </Typography>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Peer name</th>
+                <th>Question title</th>
+                <th>Ongoing</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            <tbody>
+              {history.map((item, index) => (
+                <tr key={index}>
+                  <td>{new Date(item.startDateTime).toUTCString()}</td>
+                  <td>{item.peerNickname}</td>
+                  <td>{item.questionTitle}</td>
+                  <td>{item.endDateTime == null ? "Yes" : "No"}</td>
+                  <td>
+                    <Button
+                      variant="link"
+                      onClick={() => redirectToRoom(item.roomId)}
+                    >
+                      Question link
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+      )
+    );
+  }
+
   return (
-    isAuthenticated && (
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Peer name</th>
-            <th>Question title</th>
-            <th>Ongoing</th>
-          </tr>
-        </thead>
-        <tbody>
-          {history.map((item, index) => (
-            <tr key={index}>
-              <td>{item.startDateTime}</td>
-              <td>{item.peerNickname}</td>
-              <td>
-                <Button onClick={() => redirectToRoom(item.roomId)}>
-                  {item.questionTitle}
-                </Button>
-              </td>
-              <td>{item.endDateTime == null ? "Yes" : item.endDateTime}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+    isAuthenticated && loaded &&(
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        You have yet to attempt anything! click{" "}
+        <Button className="mx-2" href="/train">
+          here
+        </Button>{" "}
+        to start!
+      </div>
     )
   );
 }
