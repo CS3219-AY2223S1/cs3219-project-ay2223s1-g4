@@ -13,7 +13,7 @@ function ProfilePage() {
   const [nickname, setNickname] = useState(user.nickname);
 
   if (isLoading) {
-    return <Loading/>;
+    return <Loading />;
   }
 
   const handleUpdate = (event) => {
@@ -38,8 +38,13 @@ function ProfilePage() {
             <br />
             <h4>Nickname: </h4>
             <body>{nickname}</body>
-            <br/>
-            <input placeholder="New nickname" type="text" value={username} onChange={handleUpdate} />
+            <br />
+            <input
+              placeholder="New nickname"
+              type="text"
+              value={username}
+              onChange={handleUpdate}
+            />
             <br />
             <br />
             <UpdateUsernameButton

@@ -1,7 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import Loading from "../components/loading";
 import Table from "react-bootstrap/Table";
 import axios from "axios";
@@ -62,32 +62,54 @@ function UserHistoryPage() {
   };
 
   // GET 8002/api/room/user/ + {encodeURI(user.id)}
+  if (history.length > 0) {
+    return (
+      isAuthenticated && (
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Peer name</th>
+              <th>Question title</th>
+              <th>Ongoing</th>
+              <th>link</th>
+            </tr>
+          </thead>
+          <tbody>
+            {history.map((item, index) => (
+              <tr key={index}>
+                <td>{item.startDateTime}</td>
+                <td>{item.peerNickname}</td>
+                <td>{item.questionTitle}</td>
+                <td>{item.endDateTime == null ? "Yes" : "No"}</td>
+                <td>
+                  <Button
+                    variant="link"
+                    onClick={() => redirectToRoom(item.roomId)}
+                  >
+                    Question link
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )
+    );
+  }
+
   return (
     isAuthenticated && (
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Peer name</th>
-            <th>Question title</th>
-            <th>Ongoing</th>
-          </tr>
-        </thead>
-        <tbody>
-          {history.map((item, index) => (
-            <tr key={index}>
-              <td>{item.startDateTime}</td>
-              <td>{item.peerNickname}</td>
-              <td>
-                <Button onClick={() => redirectToRoom(item.roomId)}>
-                  {item.questionTitle}
-                </Button>
-              </td>
-              <td>{item.endDateTime == null ? "Yes" : "No"}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        You have yet to attempt anything! click{" "}
+        <Button className="mx-2" href="/train">here</Button> to start!
+      </div>
     )
   );
 }
